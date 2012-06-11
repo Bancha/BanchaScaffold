@@ -1170,20 +1170,53 @@ Ext.define('Bancha.scaffold', {
             text: 'Reset'
         },
         /**
-         * @private
-         * build the form api config, used only by buildConfig()
+         * Build the form api config, used only by buildConfig()
          * just for separation of concern, since this is the only 
-         * part which deals with Bancha
+         * part which deals with Proxy
          */
         buildApiConfig: function (model) {
+
+            if(Bancha.getModel) {
+                // the user is using the full Bancha stack
+                return this.buildBanchaApiConfig();
+            } else{
+                // IFDEBUG
+                // warn the user that we can just guess part of the api
+                if (window.console && Ext.isFunction(window.console.warn)) {
+                    window.console.warn([
+                        'Bancha Scaffold: Please define Bancha.scaffold.Form.buildApiConfig ',
+                        'if you want Bancha Scaffold to define an Form API. Bancha Scaffold ',
+                        'can only try to get the load function, but not submit.'
+                        ].join(''));
+                }
+                // ENDIF
+            }
+
+            // try to find the proxy configuration for load
+            var proxy = model.getProxy(),
+                load = proxy && proxy.api && proxy.api.read ? proxy.api.read :
+                        (proxy && proxy.directFn ? proxy.directFn : undefined);
+
+            return load ? {load: load} : undefined;
+        },
+
+        /**
+         * @private
+         * This function is used if you are using Bancha.scaffold.Form with 
+         * the full Bancha library. It will automatically find all 
+         * api configurations
+         */
+         buildBanchaApiConfig: function(model) {
             // IFDEBUG
             if (!Bancha.initialized) {
+                // the user is using Bancha, but hasn't initialized yet
                 Ext.Error.raise({
                     plugin: 'Bancha.scaffold',
                     msg: 'Bancha Scaffold: Bancha is not yet initalized, please init before using Bancha.scaffold.Form.buildConfig().'
                 });
             }
             // ENDIF
+
             var modelName = Ext.ClassManager.getName(model),
                 stubName = modelName.substr(Bancha.modelNamespace.length + 1),
                 stub = Bancha.getStubsNamespace()[stubName];
