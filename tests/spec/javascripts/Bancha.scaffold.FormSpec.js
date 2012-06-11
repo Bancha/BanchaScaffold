@@ -1,20 +1,29 @@
 /*!
+ *
+ * Bancha Scaffolding Library
+ * Copyright 2011-2012 Roland Schuetz
+ *
  * Bancha.scaffold.Form Tests
- * Copyright(c) 2011-2012 Roland Schuetz
- * @author Roland Schuetz <mail@rolandschuetz.at>
- * @copyright (c) 2011-2012 Roland Schuetz
+ *
+ * @copyright     Copyright 2011-2012 Roland Schuetz
+ * @link          http://banchaproject.org/bancha-scaffold.html
+ * @author        Roland Schuetz <mail@rolandschuetz.at>
+ *
+ * For more information go to http://banchaproject.org/bancha-scaffold.html
  */
-/*jslint browser: true, vars: true, plusplus: true, white: true, sloppy: true */
-/*global Ext, Bancha, describe, it, beforeEach, expect, jasmine, Mock, BanchaSpecHelper */
+/*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
+/*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
+/*global Ext, Bancha, describe, it, beforeEach, expect, jasmine, Mock, BanchaScaffoldSpecHelper */
+
 
 describe("Bancha.scaffold.Form tests",function() {
-    var model = BanchaScaffoldSpecHelper.getSampleModel,
-        formScaf = Bancha.scaffold.Form; //shortcut
+    var model = BanchaScaffoldSpecHelper.getSampleModel, //shortcut
+        formScaf = Bancha.scaffold.Form, //shortcut
         // take the defaults
         // (actually this is also copying all the function references, but it doesn't matter)
         testDefaults = Ext.clone(formScaf);
     
-    afterEach(function() {
+    beforeEach(function() {
         // re-enforce defaults
         Ext.apply(formScaf, testDefaults);
     });
@@ -150,7 +159,8 @@ describe("Bancha.scaffold.Form tests",function() {
         })).toEqualConfig(getSimpleFormExpected('MyTest.model.FormConfigTest'));
     });
     
-    it("should clone all configs, so that you can create multiple forms from the same defaults (component test)", function() {
+    it("should clone all configs, so that you can create multiple forms from the same defaults "+
+        "(component test)", function() {
         // prepare
         model('MyTest.model.FormConfigTwoTimesTest');
         
@@ -177,7 +187,8 @@ describe("Bancha.scaffold.Form tests",function() {
                 {type:'length', name:'login', min:3, max:64},
                 {type:'format', name:'login', matcher: /^[a-zA-Z0-9_]+$/},
                 {type:'presence', name:'email'},
-                {type:'format', name:'email', matcher: /^(\w+)([\-+.][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/},
+                {type:'format', name:'email', matcher: 
+                                    /^(\w+)([\-+.][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/},
                 {type:'numberformat', name:'weight', precision:2},
                 {type:'numberformat', name:'height', min:50, max:300},
                 {type:'file', name:'avatar', extension:['gif', 'jpeg', 'png', 'jpg']}
@@ -292,7 +303,7 @@ describe("Bancha.scaffold.Form tests",function() {
                 return config;
             }
         });
-        result = formScaf.buildConfig('MyTest.model.FormConfigWithClassInterceptorsTest');
+        var result = formScaf.buildConfig('MyTest.model.FormConfigWithClassInterceptorsTest');
         
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqualConfig(['before','after']);

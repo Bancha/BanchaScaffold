@@ -1,11 +1,19 @@
 /*!
- * Bancha.scaffold.Form Tests
- * Copyright(c) 2011-2012 Roland Schuetz
- * @author Roland Schuetz <mail@rolandschuetz.at>
- * @copyright (c) 2011-2012 Roland Schuetz
+ *
+ * Bancha Scaffolding Library
+ * Copyright 2011-2012 Roland Schuetz
+ *
+ * Ext.grid.Panel extension tests
+ *
+ * @copyright     Copyright 2011-2012 Roland Schuetz
+ * @link          http://banchaproject.org/bancha-scaffold.html
+ * @author        Roland Schuetz <mail@rolandschuetz.at>
+ *
+ * For more information go to http://banchaproject.org/bancha-scaffold.html
  */
-/*jslint browser: true, vars: true, plusplus: true, white: true, sloppy: true */
-/*global Ext, Bancha, describe, it, beforeEach, expect, jasmine, Mock, BanchaSpecHelper */
+/*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
+/*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
+/*global Ext, Bancha, describe, it, beforeEach, expect, jasmine, Mock, BanchaScaffoldSpecHelper */
 
 describe("Ext.grid.Panel scaffold extension tests",function() {
     var model = BanchaScaffoldSpecHelper.getSampleModel, //shortcut
