@@ -3,12 +3,12 @@
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
  *
- * @package       Scaffold
+ * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://banchaproject.org/bancha-scaffold.html
- * @since         Scaffold 0.0.1
+ * @since         Bancha.scaffold 0.3.0
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Scaffold v 0.5.1
+ * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://banchaproject.org/bancha-scaffold.html
  */
@@ -17,12 +17,12 @@
 /*global Ext:false, Bancha:false, window:false */
 
 
-Ext.require(['Ext.form.Panel', 'Bancha.Scaffold'], function () {
+Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
 
     /**
      * @class Ext.form.Panel
      * The Ext.form.Panel is extended for scaffolding. For an usage example see 
-     * {@link Bancha.Scaffold.Form}
+     * {@link Bancha.scaffold.Form}
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
@@ -33,9 +33,9 @@ Ext.require(['Ext.form.Panel', 'Bancha.Scaffold'], function () {
          * Guesses are made by model field configs and validation rules.
          *
          * The config object must have the model name defined in config.target. Any property
-         * from {@link Bancha.Scaffold.Form} can be defined here.
+         * from {@link Bancha.scaffold.Form} can be defined here.
          *
-         * See {@link Bancha.Scaffold.Form} for an example.
+         * See {@link Bancha.scaffold.Form} for an example.
          */
         /**
          * @property {Object|False} scaffold
@@ -46,7 +46,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.Scaffold'], function () {
          * @cfg {Boolean} enableReset
          * If true and scaffold is defined, a reset button will be added to all scaffolded grids
          * (only if enableCreate or enableUpdate is true).  
-         * If undefined, the default from {@link Bancha.Scaffold.Form} is used.
+         * If undefined, the default from {@link Bancha.scaffold.Form} is used.
          */
         enableReset: undefined,
         /**
@@ -71,7 +71,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.Scaffold'], function () {
                 // IFDEBUG
                 if (!Ext.isDefined(this.scaffold.target)) {
                     Ext.Error.raise({
-                        plugin: 'Bancha.Scaffold',
+                        plugin: 'Bancha.scaffold',
                         msg: 'Bancha Scaffold: When using the form scaffolding please provide an model name in config.target.'
                     });
                 }
@@ -82,7 +82,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.Scaffold'], function () {
                     this.scaffold.enableReset = this.enableReset;
                 }
                 // scaffold
-                var config = Bancha.Scaffold.Form.buildConfig(this.scaffold.target, this.scaffoldLoadRecord, this.scaffold, this.initialConfig);
+                var config = Bancha.scaffold.Form.buildConfig(this.scaffold.target, this.scaffoldLoadRecord, this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }

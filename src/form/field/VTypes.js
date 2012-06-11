@@ -3,12 +3,12 @@
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
  *
- * @package       Scaffold
+ * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://banchaproject.org/bancha-scaffold.html
- * @since         Scaffold 0.0.1
+ * @since         Bancha.scaffold 0.2.5
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Scaffold v 0.5.1
+ * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://banchaproject.org/bancha-scaffold.html
  */

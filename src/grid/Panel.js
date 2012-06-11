@@ -3,12 +3,12 @@
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
  *
- * @package       Scaffold
+ * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://banchaproject.org/bancha-scaffold.html
- * @since         Scaffold 0.0.1
+ * @since         Bancha.scaffold 0.3.0
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Scaffold v 0.5.1
+ * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://banchaproject.org/bancha-scaffold.html
  */
@@ -17,13 +17,13 @@
 /*global Ext:false, Bancha:false, window:false */
 
 
-Ext.require(['Ext.grid.Panel', 'Bancha.Scaffold'], function () {
+Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
 
 
     /**
      * @class Ext.grid.Panel
      * The Ext.grid.Panel is extended for scaffolding. For an usage example see
-     * {@link Bancha.Scaffold.Grid}
+     * {@link Bancha.scaffold.Grid}
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
@@ -34,9 +34,9 @@ Ext.require(['Ext.grid.Panel', 'Bancha.Scaffold'], function () {
          * Guesses are made by model field configs and validation rules.
          *
          * The config object must have the model name defined in config.target. Any property
-         * from {@link Bancha.Scaffold.Grid} can be defined here.
+         * from {@link Bancha.scaffold.Grid} can be defined here.
          *
-         * See {@link Bancha.Scaffold.Grid} for an example.
+         * See {@link Bancha.scaffold.Grid} for an example.
          */
         /**
          * @property {Object|False} scaffold
@@ -47,24 +47,24 @@ Ext.require(['Ext.grid.Panel', 'Bancha.Scaffold'], function () {
          * @cfg {Boolean} enableCreate
          * If true and scaffold is defined, a create button will be added to all scaffolded grids.  
          * See class descrition on how the fields are created.  
-         * If undefined, the default from {@link Bancha.Scaffold.Grid} is used.
+         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
          */
         /**
          * @cfg {Boolean} enableUpdate
          * If true and scaffold is defined, a editor field is added to all columns for scaffolded grids.  
-         * See {@link Bancha.Scaffold.Grid} on how the fields are created.  
-         * If undefined, the default from {@link Bancha.Scaffold.Grid} is used.
+         * See {@link Bancha.scaffold.Grid} on how the fields are created.  
+         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
          */
         /**
          * @cfg {Boolean} enableDestroy
          * If true and scaffold is defined, a delete button is added to all rows for scaffolded grids.  
-         * If undefined, the default from {@link Bancha.Scaffold.Grid} is used.
+         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
          */
         /**
          * @cfg {Boolean} enableReset
          * If true and scaffold is defined, a reset button will be added to all scaffolded grids
          * (only if enableCreate or enableUpdate is true).  
-         * If undefined, the default from {@link Bancha.Scaffold.Grid} is used.
+         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
          */
     });
 
@@ -101,7 +101,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.Scaffold'], function () {
                     this.scaffold.enableReset = this.enableReset;
                 }
                 // scaffold
-                var config = Bancha.Scaffold.Grid.buildConfig(this.scaffold.target, this.scaffold, this.initialConfig);
+                var config = Bancha.scaffold.Grid.buildConfig(this.scaffold.target, this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
