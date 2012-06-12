@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="lib/phing-grammar.rng" type="xml"?>
+<project name="Bancha.scaffold" default="deploy" basedir="../"
+        description="This package tests and creates a release for Bancha.scaffold">        
+		
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!--                  Filesets                     -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+
+        <!-- a fileset for the source code (files and folders) -->
+        <fileset dir="${sourcedir}" id="files.source.sourcecode">
+                <include name="**/*"/>
+                <exclude name="**/.settings/**"/>
+                <exclude name="**/.project"/>
+                <exclude name="**/.git/**"/>
+                <exclude name="**/.git*"/>
+                <exclude name="**/builder/**"/>
+                <exclude name="**/docs/**"/>
+                <exclude name="**/production/**"/>
+                <exclude name="**/build.xml"/>
+                <exclude name="**/production-tmp/**"/>
+        </fileset>
+        
+        <!-- api docs bancha style -->
+        <fileset dir="${sourcedir}/builder/docs_content/resources" id="files.source.jsDocRessources"> <!-- TOOD does this work? -->
+                <include name="**/*"/>
+        </fileset>
+        
+        <!-- a fileset for the source code in the tmp build folder (folders and files) -->
+        <fileset dir="${tmpdir}" id="files.tmp.sourcecode">
+                <include name="**/*"/>
+                <exclude name="**/.settings/**"/>
+                <exclude name="**/.project"/>
+                <exclude name="**/.git/**"/>
+                <exclude name="**/.git*"/>
+                <exclude name="**/builder/**"/>
+				<!-- need to be copied to the tmp dir for compressing files, 
+					 but should not be deployed -->
+                <exclude name="**/deploy.jsb2"/>
+        </fileset>
+        
+        <!-- a fileset for the source code in the tmp build folder (files only) -->
+        <fileset dir="${tmpdir}" id="files.tmp.files">
+                <include name="**/*.*"/> <!-- files -->
+                <exclude name="**/.settings/**"/>
+                <exclude name="**/.project"/>
+                <exclude name="**/.git/**"/>
+                <exclude name="**/.git*"/>
+                <exclude name="**/builder/**"/>
+				<!-- need to be copied to the tmp dir for compressing files, 
+					 but should not be deployed -->
+                <exclude name="**/deploy.jsb2"/>
+        </fileset>
+        
+        <fileset dir="${builddir}/docs" id="files.build.docs.part1">
+                <include name="**/*"/>
+        </fileset>
+        <fileset dir="${builddir}/docs" id="files.build.docs.part2">
+                <include name="js/**"/>
+        </fileset>
+
+
+
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!-- (DEFAULT)  Target: deploy                     -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+
+        <target name="deploy">
+                <echo msg="Building distritution for deployment:"/>
+                
+                <!-- load properties -->
+                <property file="builder/config/production.properties"/>
+                <property file="${sourcedir}/VERSION.properties"/>
+                
+		<!-- set local time zone -->
+		<adhoc-task name="timezone"><![CDATA[
+			class TimezoneTask extends Task {
+				private $timezone;
+				function setBar($timezone) {
+					$this->timezone = $timezone;
+				}
+				function main() {
+					date_default_timezone_set($this->timezone);
+					$this->log("Setting timezone to ".$this->timezone);
+				}
+			}
+		]]></adhoc-task>
+		<timezone bar="${timezone}"/>
+				
+		<!-- Make the current buildtime available as a property -->
+                <tstamp>
+	                <!-- Format is, e.g. 2009-10-03 16:31:15 -->
+                        <format property="build_time" pattern="%Y-%m-%d %H:%m:%s"/>
+	       </tstamp>
+
+                <!-- test the code -->
+                <phingcall target="test"/>
+                
+                <!-- build js -->
+                <phingcall target="build"/>
+                
+                <!-- build api docs -->
+                <phingcall target="docs"/>
+
+                <!-- build the downloadable Bancha release for the website -->
+                <phingcall target="buildReleasePackage"/>
+                
+                <!-- deploy files -->
+                <phingcall target="deployToServer"/>
+                
+                <echo msg="Files copied and compressed in ${builddir} directory OK!"/>
+        </target>
+        
+        
+        
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!-- Target: test                                  -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <target name="test">
+                <echo msg="No automated testing yet!"/>
+        </target>
+        
+        
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!-- Target: build                                 -->
+        <!-- copy files to destination, versionize,        -->
+        <!-- and replace tokens                            -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <target name="build">
+                <echo msg="Copying files to tmp build folder..."/>
+                
+                <!-- delete old tmp and create new -->
+                <available file="${tmpdir}" type="dir" property="tmp_dir_exists" value="Yes"/>
+                <if>
+                    <isset property="tmp_dir_exists" />
+                    <then>
+                        <delete dir="${tmpdir}" failonerror="true" verbose="false" includeemptydirs="true"/>
+                    </then>
+                </if>
+                <mkdir dir="${tmpdir}"/>
+                
+                <!-- copy files to tmp building folder -->
+                <copy todir="${tmpdir}">
+                        <fileset refid="files.source.sourcecode"/>
+                </copy>
+		
+		<!-- rename VERSION.properties into VERSION.txt -->
+		<move file="${tmpdir}/VERSION.properties" tofile="${tmpdir}/VERSION.txt"/>
+		
+
+                <!-- Combine all to one bancha-scaffold-debug.js -->
+                <echo msg="Combining files..." />
+                <exec command="java -jar &quot;${builderdir}/lib/JSBuilder/JSBuilder2.jar&quot; --projectFile &quot;${builderdir}/config/deploy.jsb2&quot; --homeDir &quot;${tmpdir}/&quot; &gt; &quot;${tmpdir}/report-jsbuilder.txt&quot;" escape="false" />
+
+                <!-- create a production version without debugging statements -->
+                <copy file="${tmpdir}/bancha-scaffold-debug.js" tofile="${tmpdir}/bancha-scaffold-production.js"/>
+
+                <!-- Delete debugging stuff from production version -->
+                <exec checkreturn="true" dir="${gema.path}" command="./gema -f &quot;${builderdir}/config/gema-production-patterns.js&quot; -p &quot;DEBUG_LEVEL=${debug_level}&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; -backup &quot;.gemaBak&quot;"/>
+
+
+                <!-- versionize build -->
+                <foreach target="exec-gema-versionize" param="file">
+                        <fileset refid="files.tmp.files"/>
+                </foreach>
+                <!-- GEMA allways creates backup files when writing 
+                      to the same file, we force to use .gemaBak
+                      Now clean them all up
+                -->
+                <delete failonerror="true">
+                    <fileset dir="${tmpdir}">
+                        <include name="**/*.gemaBak"/>
+                    </fileset>
+                </delete>
+
+                <!-- minify production version -->
+                <exec command="java -jar ${yuicompressor.file} -o ${tmpdir}/bancha-scaffold.js ${tmpdir}/bancha-scaffold-production.js" checkreturn="true" />
+        </target>
+        
+        
+	<target name="exec-gema-versionize">
+                <!-- Replace version placeholders -->
+                <exec checkreturn="true" dir="${gema.path}" command="./gema -p &quot;PRECOMPILER_ADD_RELEASE_VERSION=${release_version}&quot; &quot;${tmpdir}/${file}&quot; &quot;${tmpdir}/${file}&quot; -backup &quot;.gemaBak&quot;"/>
+        </target>
+        
+        
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!--  Target: docs                                 -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+
+        <target name="docs">
+                <echo msg="Building API docs for JS"/>
+                
+                <!-- build the docs with jsduck -->
+                <!-- see: https://github.com/senchalabs/jsduck -->
+                
+                <!-- api docs -->
+                <mkdir dir="${tmpdir}/docs"/>
+                <echo msg="${jsduck.file} &quot;${sourcedir}/src/*.js&quot; --output &quot;${tmpdir}/docs&quot; --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" />
+                <exec command="${jsduck.file} &quot;${sourcedir}/src&quot; --output &quot;${tmpdir}/docs&quot; --verbose --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" escape="false" />
+                <!-- add Bancha styling -->
+                <copy todir="${tmpdir}/docs/resources" overwrite="true">
+                        <fileset refid="files.source.jsDocRessources"/>
+                </copy>
+                <copy file="${sourcedir}/builder/docs_content/index.html" tofile="${tmpdir}/docs/index.html" overwrite="true" />
+                
+                <echo msg="All API Docs created!"/>
+        </target>
+        
+        
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!-- Target: deployToServer                        -->
+        <!-- Pushes all files from tmp to the deployment   -->
+        <!-- folder                                        -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <target name="deployToServer">
+                <echo msg="Deploying files..."/>
+                
+                <!-- create new build-->
+                <available file="${builddir}" type="dir" property="build_dir_exists" value="Yes"/>
+                <if>
+                    <isset property="build_dir_exists" />
+                    <then>
+                        <delete failonerror="true" verbose="false" includeemptydirs="true">
+                            <fileset dir="${builddir}">
+                                <include name="**/*" />
+                            </fileset>
+                        </delete>
+                    </then>
+                    <else>
+                        <mkdir dir="${builddir}"/>
+                    </else>
+                </if>
+                
+                
+                <!-- copy files -->
+                <echo msg="Copy files..."/>
+                <copy todir="${builddir}">
+                        <fileset refid="files.tmp.sourcecode"/>
+                </copy>
+                
+                
+                <!-- upload files to the server -->
+                <echo msg="Upload docs to server..."/>
+                <!-- upload is three parts 
+                <ftpdeploy
+                    host="${ftp.destination.host}"
+                    port="${ftp.destination.port}"
+                    username="${ftp.destination.username}"
+                    password="${ftp.destination.password}"
+                    mode="${ftp.destination.mode}"
+                    dir="docs"
+                    clearfirst="true">
+                    <fileset refid="files.build.docs.part1" />
+                </ftpdeploy>
+                <echo msg="Part 1 uploaded."/>
+                <ftpdeploy
+                    host="${ftp.destination.host}"
+                    port="${ftp.destination.port}"
+                    username="${ftp.destination.username}"
+                    password="${ftp.destination.password}"
+                    mode="${ftp.destination.mode}"
+                    dir="docs"
+                    clearfirst="true">
+                    <fileset refid="files.build.docs.part2" />
+                </ftpdeploy>
+                <echo msg="Part 2 uploaded."/>
+                <- - the internal js is not uploaded anymore
+				< ftpdeploy
+                    host="${ftp.destination.host}"
+                    port="${ftp.destination.port}"
+                    username="${ftp.destination.username}"
+                    password="${ftp.destination.password}"
+                    mode="${ftp.destination.mode}"
+                    dir="docs"
+                    clearfirst="true">
+                    <fileset refid="files.build.docs.part3" />
+                </ ftpdeploy>
+                < echo msg="Part 3 uploaded."/ >
+				-->
+                
+				<!-- TODO maybe ?
+                <echo msg="Chmod for files..."/>
+                <!- - if needed some time...
+                        <chmod file="/home/test" mode="0775" verbose="true" />
+                        Supported Nested Tags: fileset
+                -->
+                
+                <!-- delete tmp folder -->
+                <delete dir="${tmpdir}" failonerror="true" verbose="false" includeemptydirs="true"/>
+
+                <echo msg="Done." />
+        </target>
+
+
+		
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!-- Target: selenium                              -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <target name="selenium" description="Wrapper for Selenium execution">
+            
+                <!-- load properties -->
+                <property file="builder/config/production.properties"/>
+                
+				<!-- TODO 
+                <phpunit printsummary="true" haltonerror="true" haltonfailure="true" >
+                        <formatter type="xml" todir="${reportsdir}" outfile="${selenium.reportsfile}" />
+                        <batchtest>
+                                <fileset dir="${selenium.dir}">
+                                        <include name="**/*Test.php" />
+                                </fileset>
+                        </batchtest>
+                </phpunit> -->
+        </target>
+        
+        
+		
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!-- Target: buildReleasePackage                   -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <target name="buildReleasePackage">
+            
+	       <!-- remove the reports -->
+               <delete file="${tmpdir}/report-jsbuilder.txt" failonerror="true" verbose="false" includeemptydirs="true"/>
+            
+                <!-- zip package -->
+                <zip destfile="bancha-scaffold-${release_version}.zip">
+                        <fileset dir="${tmpdir}">
+	                       <include name="**/**" />
+	                       <exclude name="**/empty" />
+                        </fileset>
+                </zip>
+        </target>
+
+</project>

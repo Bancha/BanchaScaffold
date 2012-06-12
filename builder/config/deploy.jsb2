@@ -1,0 +1,27 @@
+{
+    projectName: 'Bancha Scaffold',
+    deployDir: '.',
+    oldlicenseText: "Bancha\nCopyright(c) 2011-2012 Roland Schuetz\nroland@banchaproject.org",
+    pkgs: [{
+        name: 'Bancha Scaffold Package',
+        file: 'bancha-scaffold.js',
+        isDebug: true,
+        fileIncludes: [{
+            text: 'VTypes.js',
+            path: '../../src/form/field/'
+        },
+        {
+            text: 'scaffold.js',
+            path: '../../src/'
+        },
+        {
+            text: 'Panel.js',
+            path: '../../src/form/'
+        },
+        {
+            text: 'Panel.js',
+            path: '../../src/grid/'
+        }]
+    }],
+    resources: []
+}
