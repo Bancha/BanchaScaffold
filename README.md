@@ -1,3 +1,6 @@
+[![Bancha Scaffold - Easy Prototyping](http://banchaproject.org/tl_files/Bancha/images/bancha-scaffold.jpg)](http://scaffold.banchaproject.org/)
+
+
 Bancha Scaffold Library
 =======================
 
@@ -17,8 +20,12 @@ Features
 License
 -------
 
-This library is freely available both under the GPL and the MIT license. Please keep the original file headers and if you further develop it, provide a reference to the original project.
+For everything except the builder-folder:
 
+__This library is open source and freely available both under the GPL and the MIT license.__
+Please keep the original file headers and if you further develop it, provide a reference to the original project.
+
+We are also happy for any additions, bug reports and feedback!
 
 ------------------------------
 For any further questions just ask us: mail@banchaproject.com
