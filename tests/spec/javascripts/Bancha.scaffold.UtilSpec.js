@@ -6,10 +6,10 @@
  * Bancha.scaffold.Util Tests
  *
  * @copyright     Copyright 2011-2012 Roland Schuetz
- * @link          http://banchaproject.org/bancha-scaffold.html
+ * @link          http://scaffold.banchaproject.org
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  *
- * For more information go to http://banchaproject.org/bancha-scaffold.html
+ * For more information go to http://scaffold.banchaproject.org
  */
 /*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
 /*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
