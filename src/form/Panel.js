@@ -1,4 +1,4 @@
-/*!
+/*
  *
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz

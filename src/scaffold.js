@@ -1,4 +1,4 @@
-/*!
+/*
  *
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
@@ -25,14 +25,16 @@
 /**
  * @class Bancha.scaffold
  * 
- * A Scaffold Library for rapid prototyping
+ * The Bancha ExtJS 4 Scaffold library helps you easily prototype Ext.grid.Panels and Ext.form.Panels, 
+ * helping you creating beautiful prototypes in minutes. And it it completly free and open source!
  * 
- * example usage:
- * Ext.create('Ext.grid.Panel',{
- *     scaffold: 'User',
- *     title: 'User Grid',
- *     renderTo: 'gridpanel'
- * });
+ * Example usage:
+ *
+ *     Ext.create('Ext.grid.Panel',{
+ *         scaffold: 'User',
+ *         title: 'User Grid',
+ *         renderTo: 'gridpanel'
+ *     });
  *
  * @singleton
  * @author Roland Schuetz <mail@rolandschuetz.at>
@@ -169,9 +171,9 @@ Ext.define('Bancha.scaffold', {
      * {@link Bancha.scaffold.Form} to create the editor fields.
      *
      * You have three possible interceptors:  
-     *  - beforeBuild      : executed before {@link #buildGrid}  
-     *  - guessColumnConfig: executed after a column config is created, see {@link #guessColumnConfig}  
-     *  - afterBuild       : executed after {@link #buildGrid} created the config
+     *  - beforeBuild      : executed before {@link #buildConfig}  
+     *  - guessFieldConfigs: executed after a column config is created, see {@link #guessFieldConfigs}  
+     *  - afterBuild       : executed after {@link #buildConfig} created the config
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -569,7 +571,7 @@ Ext.define('Bancha.scaffold', {
         },
         /**
          * Builds grid columns from the model definition, for scaffolding purposes.  
-         * Please use {@link #createPanel} or {@link #buildConfig} if you want 
+         * Please use {@link #Ext.grid.Panel} or {@link #buildConfig} if you want 
          * support for create,update and/or destroy!
          * 
          * @param {Ext.data.Model|String} model The model class or model name
@@ -833,9 +835,9 @@ Ext.define('Bancha.scaffold', {
      *  - presence  
      *
      * You have three possible interceptors:  
-     *  - beforeBuild     : executed before {@link #buildGrid}  
-     *  - guessFieldConfig: executed after a field config is created, see {@link #guessFieldConfig}  
-     *  - afterBuild      : executed after {@link #buildGrid} created the config  
+     *  - beforeBuild      : executed before {@link #buildConfig}  
+     *  - guessFieldConfigs: executed after a field config is created, see {@link #guessFieldConfigs}  
+     *  - afterBuild       : executed after {@link #buildConfig} created the config  
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -1075,7 +1077,7 @@ Ext.define('Bancha.scaffold', {
          * @param {String} fieldName (optional) the name of the field, neccessary for applying validation rules
          * @param {Object} defaults (optional) Defaults like textfieldDefaults as 
          *                 property of this config. See {@link #buildConfig}'s config property
-         * @param {Array} validations An array of Ext.data.validations of the model
+         * @param {Array} validations (optional) An array of Ext.data.validations of the model
          * @param {Object} isEditorfield (optional) True to don't add field label (usefull e.g. in an editor grid)
          * @return {Object} Returns a field config
          */
