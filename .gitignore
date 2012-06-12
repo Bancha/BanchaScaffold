@@ -2,3 +2,5 @@
 .DS_Store
 
 tests/lib/ext-all-debug-w-comments.js
+
+builder/config/ftp.properties
