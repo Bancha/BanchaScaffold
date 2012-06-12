@@ -1177,21 +1177,28 @@ Ext.define('Bancha.scaffold', {
         /**
          * Build the form api config, used only by buildConfig()
          * just for separation of concern, since this is the only 
-         * part which deals with Proxy
+         * part which deals with proxies
          */
-        buildApiConfig: function (model) {
+        buildApiConfig: function (model,initialApi) {
 
             if(Bancha.getModel) {
                 // the user is using the full Bancha stack
-                return this.buildBanchaApiConfig();
+                return this.buildBanchaApiConfig(model,initialApi);
             } else{
+
+                if(initialApi) {
+                    // just use the configured api
+                    return initialApi;
+                }
+                
                 // IFDEBUG
                 // warn the user that we can just guess part of the api
                 if (window.console && Ext.isFunction(window.console.warn)) {
                     window.console.warn([
-                        'Bancha Scaffold: Please define Bancha.scaffold.Form.buildApiConfig ',
-                        'if you want Bancha Scaffold to define an Form API. Bancha Scaffold ',
-                        'can only try to get the load function, but not submit.'
+                        'Bancha Scaffold: You have not defined any form api. If you want',
+                        'Bancha Scaffold to guess it, please define Bancha.scaffold.Form.',
+                        'buildApiConfig. Bancha Scaffold can only try to get the load ',
+                        'function from the model proxy, but not the submit function.'
                         ].join(''));
                 }
                 // ENDIF
@@ -1211,7 +1218,9 @@ Ext.define('Bancha.scaffold', {
          * the full Bancha library. It will automatically find all 
          * api configurations
          */
-         buildBanchaApiConfig: function(model) {
+         buildBanchaApiConfig: function(model, initialApi) {
+            initialApi = initialApi || {};
+
             // IFDEBUG
             if (!Bancha.initialized) {
                 // the user is using Bancha, but hasn't initialized yet
@@ -1234,12 +1243,13 @@ Ext.define('Bancha.scaffold', {
                 });
             }
             // ENDIF
+
             return {
                 // The server-side method to call for load() requests
-                load: stub.read,
+                load: initialApi.read || stub.read,
                 // as first and only param you must add data: {id: id} when loading
                 // The server-side must mark the submit handler as a 'formHandler'
-                submit: stub.submit
+                submit: initialApi.submit || stub.submit
             };
         },
         /**
@@ -1403,7 +1413,7 @@ Ext.define('Bancha.scaffold', {
             // extend formConfig
             Ext.apply(formConfig, additionalFormConfig, {
                 id: id,
-                api: this.buildApiConfig(model),
+                api: this.buildApiConfig(model,additionalFormConfig.api),
                 paramOrder: ['data'],
                 items: fields,
                 buttons: buttons
