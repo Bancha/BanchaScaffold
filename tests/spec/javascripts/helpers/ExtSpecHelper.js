@@ -3,6 +3,9 @@
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
  *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
  * ExtJS and Sencha Touch specific helper functions
  *
  * @copyright     Copyright 2011-2012 Roland Schuetz
