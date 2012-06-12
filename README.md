@@ -1,4 +1,4 @@
-[![Bancha Scaffold - Easy Prototyping](http://banchaproject.org/tl_files/Bancha/images/bancha-scaffold.jpg)](http://scaffold.banchaproject.org/)
+[![Bancha Scaffold - Easy Prototyping](http://scaffold.banchaproject.org/images/bancha-scaffold.jpg)](http://scaffold.banchaproject.org/)
 
 
 Bancha Scaffold Library
