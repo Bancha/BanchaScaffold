@@ -481,7 +481,7 @@ Ext.define('Bancha.scaffold', {
             var store = grid.getStore(),
                 rec = store.getAt(rowIndex),
                 name = Ext.getClassName(rec),
-                displayName = Ext.scaffold.Util.humanizeClassName(name);
+                displayName = Bancha.scaffold.Util.humanizeClassName(name);
 
             // instantly remove vom ui
             store.remove(rec);
