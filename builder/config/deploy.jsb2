@@ -7,6 +7,10 @@
         file: 'bancha-scaffold.js',
         isDebug: true,
         fileIncludes: [{
+            text: 'validations.js',
+            path: '../../src/data/'
+        },
+        {
             text: 'VTypes.js',
             path: '../../src/form/field/'
         },
