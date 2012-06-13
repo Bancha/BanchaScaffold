@@ -19,16 +19,15 @@
 /*global Ext, Bancha, describe, it, beforeEach, expect, jasmine, Mock, BanchaScaffoldSpecHelper */
 
 describe("Bancha.scaffold.Util tests",function() {
+    var util = Bancha.scaffold.Util;
         
     it("should pass all Bancha.scaffold.Util.toFirstUpper tests", function() {
-        var util = Bancha.scaffold.Util;
         expect('User').toEqual(util.toFirstUpper('user'));
         expect('UserName').toEqual(util.toFirstUpper('userName'));
     });
 
 
     it("should pass all Bancha.scaffold.Util.humanize tests", function() {
-        var util = Bancha.scaffold.Util;
 
         // first upper case
         expect('User').toEqual(util.humanize('user'));
@@ -51,6 +50,15 @@ describe("Bancha.scaffold.Util tests",function() {
                'and all UPPER CASE words!'));
     });
     
+    it("should humanize class names", function() {
+        // Standard namespaced and not namespaced
+        expect('User').toEqual(util.humanizeClassName('Bancha.model.User'));
+        expect('User').toEqual(util.humanizeClassName('Bancha.User'));
+        expect('User').toEqual(util.humanizeClassName('User'));
+
+        // check humanizing part
+        expect('Awesome class').toEqual(util.humanizeClassName('Bancha.model.AwesomeClass'));
+    });
 }); //eo scaffold util functions
 
 //eof

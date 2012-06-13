@@ -95,6 +95,18 @@ Ext.define('Bancha.scaffold', {
             return this.toFirstUpper(str);
         },
         /**
+         * Takes a full class name like 'Bancha.model.AwesomeArticles' and 
+         * a name you can show to users, in this case 'Awesome article'
+         * For details on how the naming is changed see {@link #humanize}
+         */
+        humanizeClassName: function(classname) {
+            // get the class name without any namespacing
+            if(classname.indexOf('.')) {
+                classname = classname.substr(classname.lastIndexOf('.')+1);
+            }
+            return this.humanize(classname);
+        },
+        /**
          * DEPRECATED - CURRENTLY NOT USED  
          * This enables the developer to change the default scaffolding functions at any time
          * and the Scaffold Library will always use the current functions, since there are no references
