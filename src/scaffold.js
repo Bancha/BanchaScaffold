@@ -1095,9 +1095,10 @@ Ext.define('Bancha.scaffold', {
          *                 property of this config. See {@link #buildConfig}'s config property
          * @param {Array} validations (optional) An array of Ext.data.validations of the model
          * @param {Object} isEditorfield (optional) True to don't add field label (usefull e.g. in an editor grid)
+         * @param {Object} nonEditorFieldModelField (optional) Dirty hack to set the fieldname on form panel creations, should be refactored!
          * @return {Object} Returns a field config
          */
-        buildFieldConfig: function (type, fieldName, defaults, validations, isEditorfield) {
+        buildFieldConfig: function (type, fieldName, defaults, validations, isEditorfield, nonEditorFieldModelField) {
             defaults = Ext.applyIf({}, defaults, Ext.clone(this));
             var field = this.buildDefaultFieldFromModelType(type, defaults);
 
@@ -1105,6 +1106,11 @@ Ext.define('Bancha.scaffold', {
             field.name = fieldName;
             if (!isEditorfield) {
                 field.fieldLabel = Bancha.scaffold.Util.humanize(fieldName);
+            }
+
+            // infer date format into editor (not needed for editor fields)
+            if(type==='date' && !isEditorfield) {
+                field.format = nonEditorFieldModelField.dateFormat;
             }
 
             // add some additional validation rules from model validation rules
@@ -1117,7 +1123,7 @@ Ext.define('Bancha.scaffold', {
                 field = defaults.guessFieldConfigs(field, type);
             }
 
-            // fileuploads are currently not siupported in editor fields (ext doesn't render them usable)
+            // fileuploads are currently not supported in editor fields (ext doesn't render them usable)
             if (isEditorfield && field.xtype === 'fileuploadfield') {
                 field = undefined;
             }
@@ -1387,7 +1393,7 @@ Ext.define('Bancha.scaffold', {
             validations = model.prototype.validations;
             model.prototype.fields.each(function (field) {
                 fields.push(
-                Bancha.scaffold.Form.buildFieldConfig(field.type.type, field.name, config, validations));
+                    Bancha.scaffold.Form.buildFieldConfig(field.type.type, field.name, config, validations, false, field));
             });
 
             // probably not neccessary in extjs4!
