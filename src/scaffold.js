@@ -1109,7 +1109,7 @@ Ext.define('Bancha.scaffold', {
             }
 
             // infer date format into editor (not needed for editor fields)
-            if(type==='date' && !isEditorfield) {
+            if(type==='date' && !isEditorfield && typeof nonEditorFieldModelField==='object') {
                 field.format = nonEditorFieldModelField.dateFormat;
             }
 

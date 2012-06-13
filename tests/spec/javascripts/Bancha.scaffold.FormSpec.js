@@ -45,6 +45,7 @@ describe("Bancha.scaffold.Form tests",function() {
         };
         formScaf.datefieldDefaults = {};
         
+        // check that all default vallues are added, as well as name and label
         expect(formScaf.buildFieldConfig('string','someName')).toEqual({
             forAllFields: 'added',
             justForText: true,
@@ -53,7 +54,7 @@ describe("Bancha.scaffold.Form tests",function() {
             name: 'someName'
         });
         
-        // now there should be just added the first one
+        // same for date field
         expect(formScaf.buildFieldConfig('date','someName')).toEqual({
             forAllFields: 'added',
             xtype : 'datefield',
@@ -92,7 +93,18 @@ describe("Bancha.scaffold.Form tests",function() {
         });
     });
     
-    // some form-spcific helper functions
+    it("should add an format property to all datefield configs, which are created for an form panel", function() {
+        var field = new Ext.data.Field({name:'someName', type:'date', dateFormat: 'Y-m-d H:i:s'});
+
+        expect(formScaf.buildFieldConfig('date','someName', {}, {}, false, field)).toEqual({
+            xtype : 'datefield',
+            fieldLabel: 'Some name',
+            name: 'someName',
+            format: 'Y-m-d H:i:s'
+        });
+    });
+
+    // some form-sepcific helper functions
     var getButtonConfig = function(id) {
         return [{
             iconCls: 'icon-reset',
@@ -133,7 +145,8 @@ describe("Bancha.scaffold.Form tests",function() {
             },{
                 xtype: 'datefield',
                 name: 'created',
-                fieldLabel: 'Created'
+                fieldLabel: 'Created',
+                format: 'Y-m-d H:i:s'
             },{
                 xtype: 'textfield',
                 name: 'email',
@@ -165,7 +178,7 @@ describe("Bancha.scaffold.Form tests",function() {
             id: 'MyTest.model.FormConfigTest-id'
         })).toEqualConfig(getSimpleFormExpected('MyTest.model.FormConfigTest'));
     });
-    
+
     it("should clone all configs, so that you can create multiple forms from the same defaults "+
         "(component test)", function() {
         // prepare
@@ -237,7 +250,8 @@ describe("Bancha.scaffold.Form tests",function() {
             },{
                 xtype: 'datefield',
                 fieldLabel: 'Created',
-                name: 'created'
+                name: 'created',
+                format: 'Y-m-d H:i:s'
             },{
                 xtype: 'textfield',
                 fieldLabel: 'Email',
@@ -352,7 +366,6 @@ describe("Bancha.scaffold.Form tests",function() {
             expect(item.isAugmented).toEqual(true);
         });
     });
-
 }); //eo scaffold form functions
 
 //eof

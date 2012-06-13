@@ -37,7 +37,7 @@ BanchaScaffoldSpecHelper = {
             {name:'id', type:'int'},
             {name:'name', type:'string'},
             {name:'login', type:'string'},
-            {name:'created', type:'date'},
+            {name:'created', type:'date', dateFormat: 'Y-m-d H:i:s'},
             {name:'email', type:'string'},
             {name:'avatar', type:'string'},
             {name:'weight', type:'float'},
