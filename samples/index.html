@@ -59,11 +59,11 @@
           margin: 50px 0;
       }
 
-      .icon-add { background-image:url(/img/icons/add.png) ! important; }
-      .icon-save { background-image:url(/img/icons/disk.png) ! important; }
-      .icon-reset { background-image:url(/img/icons/arrow_undo.png) ! important; }
-      .icon-upload { background-image:url(/img/icons/image_add.png) ! important; }
-      .icon-edit-user { background-image:url(/img/icons/user_edit.png) ! important; }
+      .icon-add { background-image:url(img/icons/add.png) ! important; }
+      .icon-save { background-image:url(img/icons/disk.png) ! important; }
+      .icon-reset { background-image:url(img/icons/arrow_undo.png) ! important; }
+      .icon-upload { background-image:url(img/icons/image_add.png) ! important; }
+      .icon-edit-user { background-image:url(img/icons/user_edit.png) ! important; }
     </style>
 </head>
 <body style="background-color: #fffbe5">
@@ -98,13 +98,50 @@
         </div>
     </div>
 
-<!--
+
+
+
+<!-- include ExtJS -->
+<!--IFDEBUG -->
 <script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all-debug.js"></script>
--->
-<script type="text/javascript" charset="utf-8" src="js/ext-all-debug.js"></script>
+<!-- ENDIF -->
+<!-- IFPRODUCTION
+<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all.js"></script>
+ENDIF -->
+
+<!-- error handling -->
+<script type="text/javascript">
+// catch every debug exception thrown from either ExtJS or Bancha
+Ext.Error.handle = function(err) {
+    Ext.Msg.alert('Error', err.msg);
+};
+</script>
+
+<!-- include Bancha Scaffold -->
+<!--IFDEBUG -->
+<script type="text/javascript" src="../src/data/validations.js"></script>
+<script type="text/javascript" src="../src/form/field/VTypes.js"></script>
+<script type="text/javascript" src="../src/scaffold.js"></script>
+<script type="text/javascript" src="../src/form/Panel.js"></script>
+<script type="text/javascript" src="../src/grid/Panel.js"></script>
+<!-- ENDIF -->
+<!-- IFPRODUCTION
+<script type="text/javascript" src="js/bancha-scaffold.js"></script>
+ENDIF -->
+
+<!-- include the remote API -->
+<script type="text/javascript" src="direct-api.php"></script>
+
+<!-- include sample code -->
+<script type="text/javascript" src="js/samples.js"></script>
+
+
+
+<!-- google analytics -->
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-10118336-4']);
+  _gaq.push(['_setDomainName', 'scaffold-samples.banchaproject.org']);
   _gaq.push(['_gat._anonymizeIp']);
   _gaq.push(['_trackPageview']);
 
@@ -113,20 +150,7 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
  })();
-
-// catch every debug exception thrown from either ExtJS or Bancha
-Ext.Error.handle = function(err) {
-    Ext.Msg.alert('Error', err.msg);
-};
 </script>
 
-<!-- include Bancha Scaffold and the remote API -->
-<script type="text/javascript" src="bancha-scaffold-ck.js"></script>
-<script type="text/javascript" src="direct-api.php"></script>
-
-<!-- include sample code -->
-<script type="text/javascript" src="js/samples.js"></script>
-
-</script>
 </body>
 </html>

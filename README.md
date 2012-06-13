@@ -27,5 +27,23 @@ Please keep the original file headers and if you further develop it, provide a r
 
 We are also happy for any additions, bug reports and feedback!
 
+
+Setting up the samples
+----------------------
+
+To use the samples locally just point your apache root to this folder and open your browser with localhost/samples/
+
+
+Building an release
+-------------------
+
+1. Install Phing
+1. Configure builder/config/production.properties
+1. Open the terminal/console and type
+
+    cd builder
+    phing
+
+
 ------------------------------
 For any further questions just ask us: mail@banchaproject.com

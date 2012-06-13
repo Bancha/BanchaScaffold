@@ -25,7 +25,7 @@ if(empty($HTTP_RAW_POST_DATA) && empty($_POST)) {
 	exit('
 		Ext.ns("Bancha");
 		Bancha.REMOTE_API={
-		  "url":"\/direct-api.php",
+		  "url":"direct-api.php",
 		  "namespace":"Bancha.RemoteStubs",
 		  "type":"remoting",
 		  "actions":{
