@@ -19,6 +19,7 @@
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://scaffold.banchaproject.org
  * @since         Bancha.scaffold 0.2.5
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha.scaffold v 0.5.1
  *

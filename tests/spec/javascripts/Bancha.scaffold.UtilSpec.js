@@ -8,9 +8,13 @@
  *
  * Bancha.scaffold.Util Tests
  *
+ * @package       Bancha.scaffold.Test
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://scaffold.banchaproject.org
+ * @since         Bancha.scaffold 0.5.0
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
+ * @version       Bancha v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */
