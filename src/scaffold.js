@@ -480,7 +480,8 @@ Ext.define('Bancha.scaffold', {
         onDelete: function (grid, rowIndex, colIndex) {
             var store = grid.getStore(),
                 rec = store.getAt(rowIndex),
-                name = Ext.getClassName(rec);
+                name = Ext.getClassName(rec),
+                displayName = Ext.scaffold.Util.humanizeClassName(name);
 
             // instantly remove vom ui
             store.remove(rec);
@@ -490,10 +491,9 @@ Ext.define('Bancha.scaffold', {
             // since they were added in 4.1
             store.sync({
                 success: function (record, operation) {
-
                     Ext.MessageBox.show({
-                        title: name + ' record deleted',
-                        msg: name + ' record was successfully deleted.',
+                        title: displayName + ' record deleted',
+                        msg: displayName + ' record was successfully deleted.',
                         icon: Ext.MessageBox.INFO,
                         buttons: Ext.Msg.OK
                     });
@@ -505,8 +505,8 @@ Ext.define('Bancha.scaffold', {
 
                     // inform user
                     Ext.MessageBox.show({
-                        title: name + ' record could not be deleted',
-                        msg: operation.getError() || (name + ' record could not be deleted.'),
+                        title: displayName + ' record could not be deleted',
+                        msg: operation.getError() || (displayName + ' record could not be deleted.'),
                         icon: Ext.MessageBox.ERROR,
                         buttons: Ext.Msg.OK
                     });
@@ -1258,7 +1258,7 @@ Ext.define('Bancha.scaffold', {
 
             return {
                 // The server-side method to call for load() requests
-                load: initialApi.read || stub.read,
+                load: initialApi.read || stub.read,
                 // as first and only param you must add data: {id: id} when loading
                 // The server-side must mark the submit handler as a 'formHandler'
                 submit: initialApi.submit || stub.submit
