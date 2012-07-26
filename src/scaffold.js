@@ -656,13 +656,13 @@ Ext.define('Bancha.scaffold', {
          * @method
          * You can replace this fucntion! This function will be executed after each 
          * {@link #buildConfig} as interceptor.
-         * @param {Object} columnConfig just build grid panel config
+         * @param {Object} gridConfig just build grid panel config
          * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
          * @param {Object} {Object} config (optional) see {@link #buildConfig}
          * @param {Object} additionalGridConfig (optional) see {@link #buildConfig}
          * @return {Object|undefined} object with final Ext.grid.Panel configs
          */
-        afterBuild: function (columnConfig, model, config, additionalGridConfig) {},
+        afterBuild: function (gridConfig, model, config, additionalGridConfig) {},
         /**
          * Builds a grid config from a model definition, for scaffolding purposes.  
          * Guesses are made by model field configs and validation rules.

@@ -364,14 +364,14 @@ Ext.define('Bancha.scaffold', {
             };
         }()),
         /**
-         * @property {Function|False} guessFieldConfigs Writable function used to guess some default behaviour.
+         * @property {Function|False} guessColumnConfigs Writable function used to guess some default behaviour.
          * Can be set to false to don't guess at all.
          * Default function just hides id columns and makes it uneditable.
          * @param {Object} configs A column config
          * @param {String} modelType A standard model field type like 'string' (also supports 'file' from compability with http://banchaproject.org)
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        guessColumnConfigs: function (configs, modelType) {
+        guessColumnConfigs: function (configs, modelType) { // TODO CHANGE TO guessColumnConfig witout s
             if (configs.dataIndex === 'id') {
                 configs.hidden = true;
                 configs.field = undefined;
@@ -1254,7 +1254,7 @@ Ext.define('Bancha.scaffold', {
 
             if(Bancha.getModel) {
                 // the user is using the full Bancha stack
-                return this.buildBanchaApiConfig();
+                return this.buildBanchaApiConfig(model);
             } else{
                 // IFDEBUG
                 // warn the user that we can just guess part of the api
