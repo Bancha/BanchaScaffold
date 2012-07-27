@@ -60,6 +60,15 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
     Ext.override(Ext.form.Panel, {
         initComponent: function () {
             if (Ext.isString(this.scaffold)) {
+                // IFDEBUG
+                if (!Ext.ModelManager.isRegistered(this.scaffold)) {
+                    Ext.Error.raise({
+                        plugin: 'Bancha.scaffold',
+                        msg: ['Bancha Scaffold: Expected form panels scaffold property to be a valid model name, ',
+                             'instead got ' + this.scaffold + ' (of type ' + (typeof this.scaffold) + ')'].join('')
+                    });
+                }
+                // ENDIF
                 this.scaffold = {
                     target: this.scaffold
                 };
@@ -67,10 +76,11 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
 
             if (Ext.isObject(this.scaffold)) {
                 // IFDEBUG
-                if (!Ext.isDefined(this.scaffold.target)) {
+                if (!Ext.ModelManager.isRegistered(this.scaffold.target)) {
                     Ext.Error.raise({
                         plugin: 'Bancha.scaffold',
-                        msg: 'Bancha Scaffold: When using the form scaffolding please provide an model name in config.target.'
+                        msg: ['Bancha Scaffold: Expected form panels scaffold.target property to be a valid model name, ',
+                             'instead got ' + this.scaffold.target + ' (of type ' + (typeof this.scaffold.target) + ')'].join('')
                     });
                 }
                 // ENDIF
