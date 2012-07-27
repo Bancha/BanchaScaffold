@@ -54,6 +54,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
          */
         enableReset: undefined,
         /**
+         * @depracted
          * @cfg {String|Number|False} scaffoldLoadRecord
          * Define a record id here to autolaod this record for editing in this form, or choose
          * false to create a new record onSave (if default onSave is used).
