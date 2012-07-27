@@ -136,6 +136,7 @@ Ext.define('Bancha.scaffold', {
         /**
          * This function will search for 'create', 'reset' and 'save' and will 
          * properly replace them with the values from the config object
+         *
          * @param buttons the  button config, e.g. ['->','create','reset','save']
          * @param config the config which holds all necessary replacements 
          *               (config.onCreate, config.createButtonConfig, config.onReset, ...)
@@ -412,16 +413,14 @@ Ext.define('Bancha.scaffold', {
          * Editable function to be called when the create button is pressed.  
          * To change the default scaffolding behaviour just replace this function.  
          *   
-         * Default scope is following object:
-         *     {  
-         *      store:       the grids store  
-         *      cellEditing: the grids cell editing plugin  
-         *     }
+         * The scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
          */
         onCreate: function () { // scope is a config object
-            var edit = this.cellEditing,
+            var edit = this.getCellEditing(),
                 grid = edit.grid,
-                store = this.store,
+                store = this.getStore(),
                 model = store.getProxy().getModel(),
                 rec, visibleColumn = false;
 
@@ -455,17 +454,15 @@ Ext.define('Bancha.scaffold', {
          * Editable function to be called when the save button is pressed.  
          * To change the default scaffolding behaviour just replace this function.  
          *   
-         * Default scope is following object:
-         *     {  
-         *      store:       the grids store  
-         *      cellEditing: the grids cell editing plugin  
-         *     }
+         * The scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
          */
         onSave: function () { // scope is the store
             var valid = true,
                 msg = '',
                 name,
-                store = this.store;
+                store = this.getStore();
 
             // check if all changes are valid
             store.each(function (el) {
@@ -496,15 +493,13 @@ Ext.define('Bancha.scaffold', {
          * Editable function to be called when the reset button is pressed.  
          * To change the default scaffolding behaviour just replace this function.  
          *   
-         * Default scope is following object:
-         *     {  
-         *      store:       the grids store  
-         *      cellEditing: the grids cell editing plugin  
-         *     }
+         * The scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
          */
         onReset: function () { // scope is the store
             // reject all changes
-            var store = this.store;
+            var store = this.getStore();
             store.each(function (rec) {
                 if (rec.modified) {
                     rec.reject();
@@ -577,6 +572,12 @@ Ext.define('Bancha.scaffold', {
          * If an array of elements, a footer toolbar is rendered.
          * 'create','reset' and 'save' will be replaced by scaffolded
          * buttons, other elements are treated like default ExtJS items.
+         *    
+         * Inside your own buttons you can set the scope property to
+         * 'scaffold-scope-me', this scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
+         *    
          * Default: ['->','create','reset','save']
          */
         buttons: ['->','create','reset','save'],
@@ -772,8 +773,12 @@ Ext.define('Bancha.scaffold', {
             if(config.buttons && config.buttons.length) {
                 
                 scope = {
-                    cellEditing: cellEditing,
-                    store: store
+                    getCellEditing: function() {
+                        return cellEditing;
+                    },
+                    getStore: function() {
+                        return store;
+                    }
                 };
                 config.buttons = Bancha.scaffold.Util.replaceButtonPlaceHolders(config.buttons, config, scope);
 
@@ -1179,7 +1184,7 @@ Ext.define('Bancha.scaffold', {
          *   
          * The default scope provides two functions:  
          *  - this.getPanel() to get the form panel  
-         *  - this.getForm() to get the basic form
+         *  - this.getForm() to get the basic form  
          */
         onReset: function () {
             this.getForm().reset();
@@ -1189,7 +1194,13 @@ Ext.define('Bancha.scaffold', {
          * If an array of elements, a footer toolbar is rendered.
          * reset' and 'save' will be replaced by scaffolded
          * buttons, other elements are treated like default ExtJS items.
-         * Default: ['->','create','reset','save']
+         *    
+         * Inside your own buttons you can set the scope property to
+         * 'scaffold-scope-me', this scope provides two functions:  
+         *  - this.getPanel() to get the form panel  
+         *  - this.getForm() to get the basic form  
+         *
+         * Default: ['reset','save']
          */
         buttons: ['reset','save'],
         /**
