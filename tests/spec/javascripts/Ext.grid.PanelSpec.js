@@ -25,54 +25,53 @@
 describe("Ext.grid.Panel scaffold extension tests",function() {
     var model = BanchaScaffoldSpecHelper.getSampleModel, //shortcut
         gridScaf = Bancha.scaffold.Grid; //shortcut
-    
-    it("should help when creating a new scaffold panel", function() {
-        // prepare
-        model('MyTest.model.GridPanelTest');
-        
-        // since this function is using #buildConfig,
-        // just test that it is applied
-
-        expect(Ext.create('Ext.grid.Panel', {
-            scaffold: 'MyTest.model.GridPanelTest'
-        })).property('columns.length').toEqual(8);
-    });
 	
-	it("should augment the class Ext.grid.Panel and use simple scaffold:modelname", function() {
-        model('MyTest.model.GridPanelExtensionTestUser');
+    beforeEach(function() {
+        gridScaf.storeDefaults = {autoLoad: false}; // don't load anything on tests
+    });
 
+	it("should augment the class Ext.grid.Panel and use simple scaffold:modelname", function() {
+        // prepare
+        model('MyTest.model.GridPanelExtensionTestModel');
+        
 		var panel = Ext.create("Ext.grid.Panel", {
-			scaffold: 'MyTest.model.GridPanelExtensionTestUser'
+			scaffold: 'MyTest.model.GridPanelExtensionTestModel'
 		});
 		
-		// check if the grid really got scaffolded
-		expect(panel.columns.length).toEqual(8);
+        // since this function is using #buildConfig,
+        // just test that it is applied
+        
+		expect(panel).property('columns.length').toEqual(9); // 8 columns + destroy column
 	});
 	
 	it("should augment the class Ext.grid.Panel and use scaffold config object", function() {
-        model('MyTest.model.GridPanelExtensionConfigObjectTestUser');
+        model('MyTest.model.GridPanelExtensionConfigObjectTestModel');
 		
 		var onSave = function() {};
 		var panel = Ext.create("Ext.grid.Panel", {
-            enableCreate : true,
-            enableUpdate : true,
-            enableReset  : true,
-            enableDestroy: true,
 			scaffold: {
-				target: 'MyTest.model.GridPanelExtensionConfigObjectTestUser',
-				onSave: onSave
+				target: 'MyTest.model.GridPanelExtensionConfigObjectTestModel',
+				onSave: onSave,
+				deletable: false
 			}
 		});
 		
-		// check if the grid really got scaffolded including a delete button
-		expect(panel.columns.length).toEqual(9);
-		
+		// check if the grid really got scaffolded without a delete button
+		expect(panel.columns.length).toEqual(8);
+
+		// check that the first element really is your toolbar
+		expect(panel.getDockedItems()).property('0.dock').toEqual('bottom');
+
 		// check that the create, save and reset buttons are created (plus one filler)
-		expect(panel.getDockedItems()[0].items.items.length).toEqual(4);
+		expect(panel.getDockedItems()).property('0.items.items.length').toEqual(4);
 		
 		// check that the onSave function is used
-		expect(panel.getDockedItems()[0].items.items[3].handler).toEqual(onSave);
+		expect(panel.getDockedItems()).property('0.items.items.3.handler').toEqual(onSave);
 	});
+
+    it('This just reset configs, since jasmin doesn\' provide a after suite function', function() {
+        gridScaf.storeDefaults = {autoLoad: true}; // reset defaults
+    });
 
 }); //eo scaffold grid functions
 

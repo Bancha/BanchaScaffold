@@ -63,6 +63,67 @@ describe("Bancha.scaffold.Util tests",function() {
         // check humanizing part
         expect('Awesome class').toEqual(util.humanizeClassName('Bancha.model.AwesomeClass'));
     });
+
+    it("should replace button placeholder from an button config", function() {
+
+        expect().toEqual(util.replaceButtonPlaceHolders()); //undefined
+        expect([]).toEqual(util.replaceButtonPlaceHolders([])); //empty
+
+        var config = {
+            createButtonConfig: {
+                myCreate: true
+            },
+            resetButtonConfig: {
+                myReset: true
+            },
+            saveButtonConfig: {
+                mySave: true
+            },
+            onCreate: function(a) {},
+            onReset: function(b) {},
+            onSave: function(c) {}
+        };
+        var scope =  {
+            scoped:true
+        };
+
+
+        // test create button
+        var expected = ['->',{
+            myCreate: true,
+            scope: scope,
+            handler: config.onCreate
+        }];
+        expect(util.replaceButtonPlaceHolders(['->','create'], config, scope)).toEqual(expected);
+
+
+        // test reset button
+        expected.push({
+            myReset: true,
+            scope: scope,
+            handler: config.onReset
+        });
+        expect(expected).toEqual(util.replaceButtonPlaceHolders(['->','create','reset'], config, scope));
+
+
+        // test save button
+        expected.push({
+            mySave: true,
+            scope: scope,
+            handler: config.onSave
+        });
+        expect(expected).toEqual(util.replaceButtonPlaceHolders(['->','create','reset','save'], config, scope));
+
+        // test with only the save button
+        expected = [expected[3]];
+        expect(expected).toEqual(util.replaceButtonPlaceHolders(['save'], config, scope));
+
+        // test support for custom configs
+        expected.push({
+            myCustom: 'button-config'
+        });
+        expect(expected).toEqual(util.replaceButtonPlaceHolders(['save', {myCustom: 'button-config'}], config, scope));
+    });
 }); //eo scaffold util functions
 
 //eof

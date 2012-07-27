@@ -47,13 +47,6 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
          */
         scaffold: false,
         /**
-         * @cfg {Boolean} enableReset
-         * If true and scaffold is defined, a reset button will be added to all scaffolded grids
-         * (only if enableCreate or enableUpdate is true).  
-         * If undefined, the default from {@link Bancha.scaffold.Form} is used.
-         */
-        enableReset: undefined,
-        /**
          * @depracted
          * @cfg {String|Number|False} scaffoldLoadRecord
          * Define a record id here to autolaod this record for editing in this form, or choose
@@ -82,10 +75,6 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
                 }
                 // ENDIF
 
-                // push all basic configs in the scaffold config
-                if (Ext.isDefined(this.enableReset)) {
-                    this.scaffold.enableReset = this.enableReset;
-                }
                 // scaffold
                 var config = Bancha.scaffold.Form.buildConfig(this.scaffold.target, this.scaffoldLoadRecord, this.scaffold, this.initialConfig);
                 Ext.apply(this, config);

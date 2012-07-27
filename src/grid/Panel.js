@@ -47,29 +47,6 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
          * If this panel was scaffolded, all initial configs are stored here, otherwise False.
          */
         scaffold: false
-        /**
-         * @cfg {Boolean} enableCreate
-         * If true and scaffold is defined, a create button will be added to all scaffolded grids.  
-         * See class descrition on how the fields are created.  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
-        /**
-         * @cfg {Boolean} enableUpdate
-         * If true and scaffold is defined, a editor field is added to all columns for scaffolded grids.  
-         * See {@link Bancha.scaffold.Grid} on how the fields are created.  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
-        /**
-         * @cfg {Boolean} enableDestroy
-         * If true and scaffold is defined, a delete button is added to all rows for scaffolded grids.  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
-        /**
-         * @cfg {Boolean} enableReset
-         * If true and scaffold is defined, a reset button will be added to all scaffolded grids
-         * (only if enableCreate or enableUpdate is true).  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
     });
 
     // add scaffolding support
@@ -91,19 +68,6 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                 }
                 // ENDIF
 
-                // push all basic configs in the scaffold config
-                if (Ext.isDefined(this.enableCreate)) {
-                    this.scaffold.enableCreate = this.enableCreate;
-                }
-                if (Ext.isDefined(this.enableUpdate)) {
-                    this.scaffold.enableUpdate = this.enableUpdate;
-                }
-                if (Ext.isDefined(this.enableDestroy)) {
-                    this.scaffold.enableDestroy = this.enableDestroy;
-                }
-                if (Ext.isDefined(this.enableReset)) {
-                    this.scaffold.enableReset = this.enableReset;
-                }
                 // scaffold
                 var config = Bancha.scaffold.Grid.buildConfig(this.scaffold.target, this.scaffold, this.initialConfig);
                 Ext.apply(this, config);

@@ -28,6 +28,7 @@ describe("Bancha.scaffold.Form tests",function() {
         formScaf = Bancha.scaffold.Form, //shortcut
         // take the defaults
         // (actually this is also copying all the function references, but it doesn't matter)
+        originalFormScaf = Ext.clone(formScaf),
         testDefaults = Ext.clone(formScaf);
     
     beforeEach(function() {
@@ -120,7 +121,7 @@ describe("Bancha.scaffold.Form tests",function() {
         }];
     };
     
-    var getSimpleFormExpected = function(modelName,config) {
+    var getSimpleFormExpectation = function(modelName,config) {
         return Ext.apply({
             id: modelName+'-id', // forced
             // configs for BasicForm
@@ -176,7 +177,7 @@ describe("Bancha.scaffold.Form tests",function() {
 
         expect(formScaf.buildConfig('MyTest.model.FormConfigTest',false,false,{
             id: 'MyTest.model.FormConfigTest-id'
-        })).toEqualConfig(getSimpleFormExpected('MyTest.model.FormConfigTest'));
+        })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTest'));
     });
 
     it("should clone all configs, so that you can create multiple forms from the same defaults "+
@@ -187,12 +188,12 @@ describe("Bancha.scaffold.Form tests",function() {
         // first
         expect(formScaf.buildConfig('MyTest.model.FormConfigTwoTimesTest',false,false,{
             id: 'MyTest.model.FormConfigTwoTimesTest-id'
-        })).toEqualConfig(getSimpleFormExpected('MyTest.model.FormConfigTwoTimesTest'));
+        })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTwoTimesTest'));
         
         // second
         expect(formScaf.buildConfig('MyTest.model.FormConfigTwoTimesTest',false,false,{
             id: 'MyTest.model.FormConfigTwoTimesTest-id'
-        })).toEqualConfig(getSimpleFormExpected('MyTest.model.FormConfigTwoTimesTest'));
+        })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTwoTimesTest'));
     });
     
     it("should build a form config, where it recognizes the type from the field type, when no "+
@@ -365,6 +366,10 @@ describe("Bancha.scaffold.Form tests",function() {
         Ext.each(result.items, function(item) {
             expect(item.isAugmented).toEqual(true);
         });
+    });
+
+    it('This just reset configs, since jasmin doesn\' provide a after suite function', function() {
+        Ext.apply(formScaf, originalFormScaf);
     });
 }); //eo scaffold form functions
 

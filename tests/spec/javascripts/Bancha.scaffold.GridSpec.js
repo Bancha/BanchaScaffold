@@ -27,16 +27,16 @@ describe("Bancha.scaffold.Grid tests",function() {
         gridScaf = Bancha.scaffold.Grid,
         // take the defaults
         // (actually this is also copying all the function references, but it doesn't matter)
+        originalGridScaf = Ext.clone(gridScaf),
         testDefaults = Ext.clone(gridScaf);
     
     // force easiert defaults for unit testing
     testDefaults = Ext.apply(testDefaults,{
-        enableCreate:  false,
-        enableUpdate:  false,
-        enableDestroy: false,
-        enableReset:   false,
+        editable: false,
+        deletable: false,
+        buttons: [],
         storeDefaults: {
-            autoLoad: false // since we only want to unit-test and not laod data
+            autoLoad: false // since we only want to unit-test and not load data
         }
     });
     beforeEach(function() {
@@ -108,8 +108,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         xtype    : 'numbercolumn',
         format   : '0',
         text     : 'Id',
-        hidden   : true,
-        dataIndex: 'id'
+        dataIndex: 'id',
+        hidden   : true
     }, {
         flex     : 1,
         xtype   : 'gridcolumn',
@@ -160,8 +160,8 @@ describe("Bancha.scaffold.Grid tests",function() {
     });
     
     
-    it("should build a grid column config with #buildColumns with update "+
-        "and delete functions (component test)", function() {
+    it("should build a editable grid column config with #buildColumns with "+
+        "delete icons (component test)", function() {
         // prepare
         model('MyTest.model.GridColumnsConfigWithUpdateDeleteTest');
 
@@ -229,8 +229,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         
         // test
         var result = gridScaf.buildColumns('MyTest.model.GridColumnsConfigWithUpdateDeleteTest', {
-            enableUpdate  : true,
-            enableDestroy : true
+            editable  : true,
+            deletable : true
         });
 
         // compare
@@ -275,15 +275,16 @@ describe("Bancha.scaffold.Grid tests",function() {
     });
     
     
-    it("should build a grid panel config with update and delete support with "+
+    it("should build a editable grid panel config with update and delete support with "+
         "#buildConfig (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigWithUpdateDeleteTest');
 
         // test
         var result = gridScaf.buildConfig('MyTest.model.GridConfigWithUpdateDeleteTest', {
-            enableUpdate  : true,
-            enableDestroy : true
+            editable  : true,
+            deletable : true,
+            buttons: ['save']
         });
 
         // should have a store
@@ -305,7 +306,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         expect(result).property("plugins.0.clicksToEdit").toEqual(2);
         
         // should have an update button
-        expect(result).property("dockedItems.0.items.1.iconCls").toEqual("icon-save");
+        expect(result).property("dockedItems.0.items.0.iconCls").toEqual('icon-save');
     });
     
     
@@ -316,10 +317,9 @@ describe("Bancha.scaffold.Grid tests",function() {
 
         // test
         var result = gridScaf.buildConfig('MyTest.model.GridConfigWithCRUDTest', {
-            enableCreate    : true,
-            enableUpdate    : true,
-            enableReset : true,
-            enableDestroy   : true
+            editable  : true,
+            deletable : true,
+            buttons: ['->','create','reset','save']
         },{
             additionalGridConfig: true
         });
@@ -413,6 +413,10 @@ describe("Bancha.scaffold.Grid tests",function() {
         });
     });
 	
+    it('This just reset configs, since jasmin doesn\' provide a after suite function', function() {
+        Ext.apply(gridScaf, originalGridScaf);
+    });
+    
 }); //eo scaffold grid functions
 
 // eof

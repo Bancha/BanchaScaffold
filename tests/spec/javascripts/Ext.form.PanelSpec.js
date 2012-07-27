@@ -26,54 +26,40 @@ describe("Ext.form.Panel scaffold extension tests",function() {
     var model = BanchaScaffoldSpecHelper.getSampleModel, //shortcut
         formScaf = Bancha.scaffold.Form; //shortcut
     
-    it("should help when creating a new scaffold panel", function() {
-        // prepare
-        model('MyTest.model.FormPanelTest');
+    it("should augment the class Ext.form.Panel and use simple scaffold:modelname", function() {
+        model('MyTest.model.FormPanelExtensionTestModel');
+
+        var panel = Ext.create("Ext.form.Panel", {
+            scaffold: 'MyTest.model.FormPanelExtensionTestModel'
+        });
         
         // since this function is using #buildConfig,
         // just test that it is applied
 
-        expect(Ext.create('Ext.form.Panel', {
-            scaffold: 'MyTest.model.FormPanelTest'
-        })).property('items.items.length').toEqual(8);
+        expect(panel).property('items.items.length').toEqual(8);
     });
     
-    it("should augment the class Ext.form.Panel and use simple scaffold:modelname", function() {
-        model('MyTest.model.FormPanelExtensionTestUser');
-
-        var panel = Ext.create("Ext.form.Panel", {
-            scaffold: 'MyTest.model.FormPanelExtensionTestUser'
-        });
-        
-        // check if the form really got scaffolded
-        expect(panel.items.items.length).toEqual(8);
-    });
-    
-    it("should augment the class Ext.form.Panel and use scaffold config object", function() {
-        model('MyTest.model.FormPanelExtensionConfigObjectTestUser');
+    it("should augment the class Ext.form.Panel and use the scaffold config object", function() {
+        model('MyTest.model.FormPanelExtensionConfigObjectTestModel');
         
         var onSave = function() {};
         var panel = Ext.create("Ext.form.Panel", {
-            enableReset: true,
-            scaffoldLoadRecord: 3,
             scaffold: {
-                target: 'MyTest.model.FormPanelExtensionConfigObjectTestUser',
-                onSave: onSave
+                target: 'MyTest.model.FormPanelExtensionConfigObjectTestModel',
+                onSave: onSave,
+                buttons: ['reset','->','save']
             }
         });
         
-        Ext.panelD = panel;
         // check if the model got used
-        expect(panel.items.items.length).toEqual(8);
+        expect(panel).property('items.items.length').toEqual(8);
         
-        // check if the record id got used
-        expect(panel.scaffold.recordId).toEqual(3);
-        
-        // check that the reset button is created
-        expect(panel.getDockedItems()[0].items.items.length).toEqual(2);
+        // check that the buttons got correctly applied
+        expect(panel.getDockedItems()[0]).property('items.items.length').toEqual(3);
+        expect(panel.getDockedItems()[0]).property('items.items.0.iconCls').toEqual('icon-reset');
         
         // check that the onSave function is used
-        expect(panel.getDockedItems()[0].items.items[1].handler).toEqual(onSave);
+        expect(panel.getDockedItems()[0].items.items[2].handler).toEqual(onSave);
     });
 
 }); //eo scaffold form functions
