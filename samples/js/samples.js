@@ -50,7 +50,7 @@ Ext.onReady(function() {
 
     // ... a simple example how you can extend it with regular code
     Ext.create('Ext.grid.Panel', {
-        title: 'Starting from the Scaffoldign you can easily add your own code',
+        title: 'Starting from the Scaffolding you can easily add your own code',
         
         // we don't need an editable grid for this example
         enableCreate: false,
