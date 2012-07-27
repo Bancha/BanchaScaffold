@@ -31,13 +31,7 @@ Ext.onReady(function() {
         title: 'Easily scaffold full CRUD support, based on the models proxy',
 
         // define the model
-        scaffold: 'Bancha.model.User', 
-        
-        // basic scaffold configs con be set directly
-        enableCreate : true,
-        enableUpdate : true,
-        enableDestroy: true,
-        enableReset  : true,
+        scaffold: 'Bancha.model.User',
         
         // some additional styles
         height: 350,
@@ -50,17 +44,18 @@ Ext.onReady(function() {
 
     // ... a simple example how you can extend it with regular code
     Ext.create('Ext.grid.Panel', {
-        title: 'Starting from the Scaffolding you can easily add your own code',
+        title: 'Starting from the scaffolded code you can easily add your own code',
         
-        // we don't need an editable grid for this example
-        enableCreate: false,
-        enableUpdate: false,
-        enableDestroy: false,
-        
-        // more advanced scaffolding options
+        // use scaffolding
         scaffold: {
+
             // define the model
             target: 'Bancha.model.Article',
+
+            // we don't need an editable grid for this example
+            editable: false,
+            deletable: false, // records won't be deletable
+            buttons: false, // there will be toolbar
 
             // configure paging
             storeDefaults: {
@@ -95,20 +90,14 @@ Ext.onReady(function() {
     Ext.create('Ext.form.Panel', {
         title: 'Demonstration of a scaffolded Form',
         
-        // basic scaffold configs can be set directly
-        banchaLoadRecord: false,
-        enableReset: true,
-        
-        // model name and advanced configs can be set here
+        // use scaffolding
         scaffold: {
+
             // define the model
             target: 'Bancha.model.User',
             
-            // we're using the after interceptor for more complex changes
-            afterBuild: function(formConfig) {
-                
-                // add another button at the left side
-                formConfig.buttons.unshift({
+            // simply add you own buttons
+            buttons: ['->',{
                     text: 'Load Sample Record',
                     iconCls: 'icon-edit-user',
                     handler: function() {
@@ -125,11 +114,8 @@ Ext.onReady(function() {
                         // change the header title
                         panel.setTitle('Demonstration of a scaffolded Form - Change Record 1');
                     },
-                    scope: this.buildButtonScope(formConfig.id) // this is currently not very elegant, we will solve this in future releases
-                });
-                
-                return formConfig;
-            } //eo afterBuild
+                    scope: Bancha.scaffold.Form.buildButtonScope('form') // this is currently not very elegant, we will solve this in future releases
+                },'reset','save']
         }, // eo scaffoldConfig
         
         api: {
