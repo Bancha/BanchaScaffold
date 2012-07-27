@@ -136,6 +136,9 @@ Ext.define('Bancha.scaffold', {
         /**
          * This function will search for 'create', 'reset' and 'save' and will 
          * properly replace them with the values from the config object
+         *    
+         * It will also inject the scope into all elements where the scope 
+         * equals 'scaffold-scope-me'
          *
          * @param buttons the  button config, e.g. ['->','create','reset','save']
          * @param config the config which holds all necessary replacements 
@@ -149,23 +152,30 @@ Ext.define('Bancha.scaffold', {
             }
 
             for(var i=0, len=buttons.length; i<len; i++) {
-                if(buttons[i] === 'create') {
-                    buttons[i] = Ext.apply(config.createButtonConfig, {
-                        scope: buttonScope,
-                        handler: config.onCreate
-                    });
-                }
-                if(buttons[i] === 'reset') {
-                    buttons[i] = Ext.apply(config.resetButtonConfig, {
-                        scope: buttonScope,
-                        handler: config.onReset
-                    });
-                }
-                if(buttons[i] === 'save') {
-                    buttons[i] = Ext.apply(config.saveButtonConfig, {
-                        scope: buttonScope,
-                        handler: config.onSave
-                    });
+                switch(buttons[i]) {
+                    case 'create': 
+                        buttons[i] = Ext.apply(config.createButtonConfig, {
+                            scope: buttonScope,
+                            handler: config.onCreate
+                        });
+                        break;
+                    case 'reset': 
+                        buttons[i] = Ext.apply(config.resetButtonConfig, {
+                            scope: buttonScope,
+                            handler: config.onReset
+                        });
+                        break;
+                    case 'save': 
+                        buttons[i] = Ext.apply(config.saveButtonConfig, {
+                            scope: buttonScope,
+                            handler: config.onSave
+                        });
+                        break;
+                    default: 
+                        // check if we should inject a scope
+                        if(buttons[i].scope === 'scaffold-scope-me') {
+                            buttons[i].scope = buttonScope;
+                        }
                 }
             }
             return buttons;

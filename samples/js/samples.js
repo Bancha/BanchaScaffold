@@ -114,7 +114,7 @@ Ext.onReady(function() {
                         // change the header title
                         panel.setTitle('Demonstration of a scaffolded Form - Change Record 1');
                     },
-                    scope: Bancha.scaffold.Form.buildButtonScope('form') // this is currently not very elegant, we will solve this in future releases
+                    scope: 'scaffold-scope-me'
                 },'reset','save']
         }, // eo scaffoldConfig
         

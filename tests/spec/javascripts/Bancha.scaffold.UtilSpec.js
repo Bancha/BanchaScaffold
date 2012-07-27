@@ -103,7 +103,7 @@ describe("Bancha.scaffold.Util tests",function() {
             scope: scope,
             handler: config.onReset
         });
-        expect(expected).toEqual(util.replaceButtonPlaceHolders(['->','create','reset'], config, scope));
+        expect(util.replaceButtonPlaceHolders(['->','create','reset'], config, scope)).toEqual(expected);
 
 
         // test save button
@@ -112,7 +112,7 @@ describe("Bancha.scaffold.Util tests",function() {
             scope: scope,
             handler: config.onSave
         });
-        expect(expected).toEqual(util.replaceButtonPlaceHolders(['->','create','reset','save'], config, scope));
+        expect(util.replaceButtonPlaceHolders(['->','create','reset','save'], config, scope)).toEqual(expected);
 
         // test with only the save button
         expected = [expected[3]];
@@ -122,7 +122,24 @@ describe("Bancha.scaffold.Util tests",function() {
         expected.push({
             myCustom: 'button-config'
         });
-        expect(expected).toEqual(util.replaceButtonPlaceHolders(['save', {myCustom: 'button-config'}], config, scope));
+        expect(util.replaceButtonPlaceHolders(['save', {myCustom: 'button-config'}], config, scope)).toEqual(expected);
+    });
+
+    it("should inject buttons scopes for #replaceButtonPlaceHolders", function() {
+        var input = [{
+            myButton: true,
+            scope: 'scaffold-scope-me'
+        }];
+        var scope =  {
+            scoped:true
+        };
+        var expected = [{
+            myButton: true,
+            scope: {
+                scoped:true
+            }
+        }];
+        expect(util.replaceButtonPlaceHolders(input, {}, scope)).toEqual(expected);
     });
 }); //eo scaffold util functions
 
