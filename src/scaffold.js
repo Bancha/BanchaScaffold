@@ -32,10 +32,29 @@
  * The Bancha ExtJS 4 Scaffold library helps you easily prototype Ext.grid.Panels and Ext.form.Panels, 
  * helping you creating beautiful prototypes in minutes. And it it completly free and open source!
  * 
- * Example usage:
+ * Simple grid example:
  *
  *     Ext.create('Ext.grid.Panel',{
- *         scaffold: 'User',
+ *         scaffold: 'MyApp.model.User',
+ *         title: 'User Grid',
+ *         renderTo: 'gridpanel'
+ *     });
+ *
+ * Simple form example:
+ *
+ *     Ext.create('Ext.form.Panel',{
+ *         scaffold: 'MyApp.model.User',
+ *         title: 'User Grid',
+ *         renderTo: 'gridpanel'
+ *     });
+ *
+ * Custom button structure example:
+ *
+ *     Ext.create('Ext.grid.Panel',{
+ *         scaffold: {
+ *              target: 'MyApp.model.User',
+ *              buttons: ['->','save']
+ *         },
  *         title: 'User Grid',
  *         renderTo: 'gridpanel'
  *     });
