@@ -21,7 +21,6 @@
 /*global Ext:false, Bancha:false, window:false */
 
 
-
 // This file should be separated in three clean singleton classes
 
 
@@ -254,9 +253,9 @@ Ext.define('Bancha.scaffold', {
      * {@link Bancha.scaffold.Form} is used to create the editor fields.
      *
      * You have three possible interceptors:  
-     *  - beforeBuild      : executed before {@link #buildConfig}  
-     *  - guessFieldConfigs: executed after a column config is created, see {@link #guessFieldConfigs}  
-     *  - afterBuild       : executed after {@link #buildConfig} created the config
+     *  - beforeBuild         : executed before {@link #buildConfig}  
+     *  - transformFieldConfig: executed after a field config is created, see {@link #transformFieldConfigs}  
+     *  - afterBuild          : executed after {@link #buildConfig} created the config
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -373,14 +372,23 @@ Ext.define('Bancha.scaffold', {
             };
         }()),
         /**
-         * @property {Function|False} guessColumnConfigs Writable function used to guess some default behaviour.
-         * Can be set to false to don't guess at all.
-         * Default function just hides id columns and makes it uneditable.
+         * @property {Function} transformColumnConfig Writable function used to add some custom behaviour.
+         *
+         * This function can be overwritten by any custom function.
          * @param {Object} configs A column config
-         * @param {String} modelType A standard model field type like 'string' (also supports 'file' from compability with http://banchaproject.org)
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        guessColumnConfigs: function (configs, modelType) {
+        transformFieldConfigs: function (configs, modelType) {},
+        /**
+         * @private
+         * @property {Function} internalTransformColumnConfig 
+         * This function just hides id columns and makes it uneditable.
+         * @param {Object} configs A column config
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+         * @return {Object} Returns an Ext.grid.column.* configuration object
+         */
+        internalTransformColumnConfig: function (configs, modelType) {
             if (configs.dataIndex === 'id') {
                 configs.hidden = true;
                 configs.field = undefined;
@@ -430,9 +438,10 @@ Ext.define('Bancha.scaffold', {
                 column.field = Bancha.scaffold.Form.buildFieldConfig(type, columnName, defaults.formConfig, validations, true);
             }
 
-            // now make some crazy guesses ;)
-            if (typeof defaults.guessColumnConfigs === 'function') {
-                column = defaults.guessColumnConfigs(column, type);
+            // now make custom transforms
+            defaults.internalTransformColumnConfig(column, type);
+            if (typeof defaults.transformColumnConfig === 'function') {
+                column = defaults.transformColumnConfig(column, type);
             }
 
             return column;
@@ -903,9 +912,9 @@ Ext.define('Bancha.scaffold', {
      *  - presence  
      *
      * You have three possible interceptors:  
-     *  - beforeBuild      : executed before {@link #buildConfig}  
-     *  - guessFieldConfigs: executed after a field config is created, see {@link #guessFieldConfigs}  
-     *  - afterBuild       : executed after {@link #buildConfig} created the config  
+     *  - beforeBuild         : executed before {@link #buildConfig}  
+     *  - transformFieldConfig: executed after a field config is created, see {@link #transformFieldConfig}  
+     *  - afterBuild          : executed after {@link #buildConfig} created the config  
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -974,14 +983,23 @@ Ext.define('Bancha.scaffold', {
             uncheckedValue: false
         },
         /**
-         * @property {Function|False} guessFieldConfigs Writable function used to guess some default behaviour.
-         * Can be set to false to don't guess at all.  
-         * Default function just hides id fields.
-         * @param {Object} configs a form field config
-         * @param {String} modelType A standard model field type like 'string' (also supports 'file' from compability with http://banchaproject.org)
-         * @return {Object} Returns a field config
+         * @property {Function} transformFieldConfig Writable function used to add some custom behaviour.
+         *
+         * This function can be overwritten by any custom function.
+         * @param {Object} configs A column config
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+         * @return {Object} Returns an Ext.form.field.* configuration object
          */
-        guessFieldConfigs: function (configs, modelType) {
+         transformFieldConfig: function (configs, modelType) {},
+        /**
+         * @private
+         * @property {Function} internalTransformFieldConfig 
+         * This function just hides id columns and makes it uneditable.
+         * @param {Object} configs A column config
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+         * @return {Object} Returns an Ext.form.field.* configuration object
+         */
+        internalTransformFieldConfig: function (configs, modelType) {
             if (configs.name === 'id') {
                 configs.xtype = 'hiddenfield';
             }
@@ -1169,9 +1187,10 @@ Ext.define('Bancha.scaffold', {
                 field = this.addValidationRuleConfigs(field, validations, defaults);
             }
 
-            // now make some crazy guesses ;)
-            if (typeof defaults.guessFieldConfigs === 'function') {
-                field = defaults.guessFieldConfigs(field, type);
+            // now transform config
+            defaults.internalTransformColumnConfig(field,type);
+            if (typeof defaults.transformFieldConfig === 'function') {
+                field = defaults.transformFieldConfig(field, type);
             }
 
             // fileuploads are currently not supported in editor fields (ext doesn't render them usable)
