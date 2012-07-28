@@ -80,26 +80,26 @@
                 <property file="builder/config/production.properties"/>
                 <property file="${sourcedir}/VERSION.properties"/>
                 
-		<!-- set local time zone -->
-		<adhoc-task name="timezone"><![CDATA[
-			class TimezoneTask extends Task {
-				private $timezone;
-				function setBar($timezone) {
-					$this->timezone = $timezone;
-				}
-				function main() {
-					date_default_timezone_set($this->timezone);
-					$this->log("Setting timezone to ".$this->timezone);
-				}
-			}
-		]]></adhoc-task>
-		<timezone bar="${timezone}"/>
+				<!-- set local time zone -->
+				<adhoc-task name="timezone"><![CDATA[
+					class TimezoneTask extends Task {
+						private $timezone;
+						function setBar($timezone) {
+							$this->timezone = $timezone;
+						}
+						function main() {
+							date_default_timezone_set($this->timezone);
+							$this->log("Setting timezone to ".$this->timezone);
+						}
+					}
+				]]></adhoc-task>
+				<timezone bar="${timezone}"/>
 				
-		<!-- Make the current buildtime available as a property -->
+				<!-- Make the current buildtime available as a property -->
                 <tstamp>
-	                <!-- Format is, e.g. 2009-10-03 16:31:15 -->
+	                	<!-- Format is, e.g. 2009-10-03 16:31:15 -->
                         <format property="build_time" pattern="%Y-%m-%d %H:%m:%s"/>
-	       </tstamp>
+	       		</tstamp>
 
                 <!-- test the code -->
                 <phingcall target="test"/>
@@ -160,8 +160,8 @@
                         <fileset refid="files.source.sourcecode"/>
                 </copy>
 		
-		<!-- rename VERSION.properties into VERSION.txt -->
-		<move file="${tmpdir}/VERSION.properties" tofile="${tmpdir}/VERSION.txt"/>
+				<!-- rename VERSION.properties into VERSION.txt -->
+				<move file="${tmpdir}/VERSION.properties" tofile="${tmpdir}/VERSION.txt"/>
 		
 
                 <!-- Combine all to one bancha-scaffold-debug.js -->
@@ -170,10 +170,7 @@
 
                 <!-- create a production version without debugging statements -->
                 <copy file="${tmpdir}/bancha-scaffold-debug.js" tofile="${tmpdir}/bancha-scaffold-production.js"/>
-
-                <!-- Delete debugging stuff from production version -->
                 <exec checkreturn="true" dir="${gema.path}" command="./gema -f &quot;${builderdir}/config/gema-production-patterns.js&quot; -p &quot;DEBUG_LEVEL=${debug_level}&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; -backup &quot;.gemaBak&quot;"/>
-
 
                 <!-- versionize build -->
                 <foreach target="exec-gema-versionize" param="file">
@@ -193,8 +190,8 @@
                 <exec command="java -jar ${yuicompressor.file} -o ${tmpdir}/bancha-scaffold.js ${tmpdir}/bancha-scaffold-production.js" checkreturn="true" />
         </target>
         
-        
-	<target name="exec-gema-versionize">
+       
+		<target name="exec-gema-versionize">
                 <!-- Replace version placeholders -->
                 <exec checkreturn="true" dir="${gema.path}" command="./gema -p &quot;PRECOMPILER_ADD_RELEASE_VERSION=${release_version}&quot; &quot;${tmpdir}/${file}&quot; &quot;${tmpdir}/${file}&quot; -backup &quot;.gemaBak&quot;"/>
         </target>
@@ -352,8 +349,8 @@
         <!-- ============================================  -->
         <target name="buildReleasePackage">
             
-	       <!-- remove the reports -->
-               <delete file="${tmpdir}/report-jsbuilder.txt" failonerror="true" verbose="false" includeemptydirs="true"/>
+				<!-- remove the reports -->
+				<delete file="${tmpdir}/report-jsbuilder.txt" failonerror="true" verbose="false" includeemptydirs="true"/>
             
                 <!-- zip package -->
                 <zip destfile="bancha-scaffold-${release_version}.zip">
