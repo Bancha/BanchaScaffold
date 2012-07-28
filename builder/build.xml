@@ -106,6 +106,9 @@
                 
                 <!-- build js -->
                 <phingcall target="build"/>
+
+                <!-- build samples for deployment -->
+                <phingcall target="buildSamples"/>
                 
                 <!-- build api docs -->
                 <phingcall target="docs"/>
@@ -196,6 +199,31 @@
                 <exec checkreturn="true" dir="${gema.path}" command="./gema -p &quot;PRECOMPILER_ADD_RELEASE_VERSION=${release_version}&quot; &quot;${tmpdir}/${file}&quot; &quot;${tmpdir}/${file}&quot; -backup &quot;.gemaBak&quot;"/>
         </target>
         
+
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <!--                                               -->
+        <!-- Target: buildSamples                          -->
+        <!--                                               -->
+        <!-- ============================================  -->
+        <!-- ============================================  -->
+        <target name="buildSamples">
+				<!-- change samples code to production version -->
+        		<exec checkreturn="true" dir="${gema.path}" command="./gema -f &quot;${builderdir}/config/gema-production-patterns.html&quot; -p &quot;DEBUG_LEVEL=${debug_level}&quot; &quot;${tmpdir}/samples/index.html&quot; &quot;${tmpdir}/samples/index.html&quot; -backup &quot;.gemaBak&quot;"/>
+            	<!-- GEMA allways creates backup files when writing 
+                  	to the same file, we force to use .gemaBak
+                  	Now clean them all up
+            	-->
+            	<delete failonerror="true">
+                		<fileset dir="${tmpdir}">
+                    			<include name="**/*.gemaBak"/>
+                		</fileset>
+            	</delete>
+
+				<!-- add library to samples dir -->
+                <copy file="${tmpdir}/bancha-scaffold-production.js" tofile="${tmpdir}/samples/js/bancha-scaffold-production.js"/>
+		</target>
+
         
         <!-- ============================================  -->
         <!-- ============================================  -->
