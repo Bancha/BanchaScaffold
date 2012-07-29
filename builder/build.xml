@@ -23,6 +23,7 @@
 				<exclude name="**/production/**"/>
 				<exclude name="**/build.xml"/>
 				<exclude name="**/production-tmp/**"/>
+				<exclude name="**/website/**"/>
 		</fileset>
 		
 		<!-- api docs bancha style -->
@@ -41,6 +42,7 @@
 				<!-- need to be copied to the tmp dir for compressing files, 
 					 but should not be deployed -->
 				<exclude name="**/deploy.jsb2"/>
+				<exclude name="**/website/**"/>
 		</fileset>
 		
 		<!-- a fileset for the source code in the tmp build folder (files only) -->
@@ -54,6 +56,7 @@
 				<!-- need to be copied to the tmp dir for compressing files, 
 					 but should not be deployed -->
 				<exclude name="**/deploy.jsb2"/>
+				<exclude name="**/website/**"/>
 		</fileset>
 		
 		<fileset dir="${builddir}/docs" id="files.build.docs.part1">
