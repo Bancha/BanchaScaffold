@@ -40,7 +40,7 @@ Setting up the samples
 To use the samples locally just point your apache root to this folder and open your browser with localhost/samples/
 
 
-Building an release
+Building a release
 -------------------
 
 1. Install Phing
