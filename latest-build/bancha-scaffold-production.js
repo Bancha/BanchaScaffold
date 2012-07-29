@@ -12,7 +12,7 @@
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.1
+ * @version       Bancha.scaffold v 0.5.2
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -99,7 +99,7 @@ Ext.require(['Ext.data.validations'], function() {
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.1
+ * @version       Bancha.scaffold v 0.5.2
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -164,7 +164,7 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * @since         Bancha.scaffold 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.1
+ * @version       Bancha.scaffold v 0.5.2
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1648,7 +1648,7 @@ Ext.define('Bancha.scaffold', {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.1
+ * @version       Bancha.scaffold v 0.5.2
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1723,7 +1723,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.1
+ * @version       Bancha.scaffold v 0.5.2
  *
  * For more information go to http://scaffold.banchaproject.org
  */
