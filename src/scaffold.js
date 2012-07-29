@@ -375,26 +375,28 @@ Ext.define('Bancha.scaffold', {
          * @property {Function} transformColumnConfig Writable function used to add some custom behaviour.
          *
          * This function can be overwritten by any custom function.
-         * @param {Object} configs A column config
+         * @param {Object} columnConfig the column config to transform
          * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        transformFieldConfigs: function (configs, modelType) {},
+        transformColumnConfig: function (columnConfig, modelType) {
+            return columnConfig;
+        },
         /**
          * @private
          * @property {Function} internalTransformColumnConfig 
          * This function just hides id columns and makes it uneditable.
-         * @param {Object} configs A column config
+         * @param {Object} columnConfig the column config to transform
          * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        internalTransformColumnConfig: function (configs, modelType) {
-            if (configs.dataIndex === 'id') {
-                configs.hidden = true;
-                configs.field = undefined;
+        internalTransformColumnConfig: function (columnConfig, modelType) {
+            if (columnConfig.dataIndex === 'id') {
+                columnConfig.hidden = true;
+                columnConfig.field = undefined;
             }
 
-            return configs;
+            return columnConfig;
         },
         /**
          * @private
@@ -417,7 +419,7 @@ Ext.define('Bancha.scaffold', {
          * Creates a Ext.grid.Column config from an model field type
          * @param {Sring} type The model field type
          * @param {String} columnName (optional) The name of the column
-         * @param {Object} defaults (optional) Defaults like numbercolumnDefaults as property of this config.
+         * @param {Object} config the grid config object
          * See {@link #buildConfig}'s config property
          * @param {Array} (optional) validations An array of Ext.data.validations of the model
          * @return {Object} Returns an Ext.grid.column.* configuration object
@@ -439,9 +441,9 @@ Ext.define('Bancha.scaffold', {
             }
 
             // now make custom transforms
-            defaults.internalTransformColumnConfig(column, type);
-            if (typeof defaults.transformColumnConfig === 'function') {
-                column = defaults.transformColumnConfig(column, type);
+            column = config.internalTransformColumnConfig(column, type);
+            if (typeof config.transformColumnConfig === 'function') {
+                column = config.transformColumnConfig(column, type);
             }
 
             return column;
@@ -711,7 +713,7 @@ Ext.define('Bancha.scaffold', {
             validations = model.prototype.validations;
             model.prototype.fields.each(function (field) {
                 columns.push(
-                Bancha.scaffold.Grid.buildColumnConfig(field.type.type, field.name, config, validations));
+                    Bancha.scaffold.Grid.buildColumnConfig(field.type.type, field.name, config, validations));
             });
 
             // add a destroy button
@@ -986,25 +988,27 @@ Ext.define('Bancha.scaffold', {
          * @property {Function} transformFieldConfig Writable function used to add some custom behaviour.
          *
          * This function can be overwritten by any custom function.
-         * @param {Object} configs A column config
+         * @param {Object} fieldConfig the field config to transform
          * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
          * @return {Object} Returns an Ext.form.field.* configuration object
          */
-         transformFieldConfig: function (configs, modelType) {},
+         transformFieldConfig: function (fieldConfig, modelType) {
+            return fieldConfig;
+         },
         /**
          * @private
          * @property {Function} internalTransformFieldConfig 
          * This function just hides id columns and makes it uneditable.
-         * @param {Object} configs A column config
+         * @param {Object} fieldConfig the field config to transform
          * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
          * @return {Object} Returns an Ext.form.field.* configuration object
          */
-        internalTransformFieldConfig: function (configs, modelType) {
-            if (configs.name === 'id') {
-                configs.xtype = 'hiddenfield';
+        internalTransformFieldConfig: function (fieldConfig, modelType) {
+            if (fieldConfig.name === 'id') {
+                fieldConfig.xtype = 'hiddenfield';
             }
 
-            return configs;
+            return fieldConfig;
         },
         /**
          * @private
@@ -1160,16 +1164,14 @@ Ext.define('Bancha.scaffold', {
          * Creates a Ext.form.Field config from an model field type
          * @param {Sring} type The model field type
          * @param {String} fieldName (optional) the name of the field, neccessary for applying validation rules
-         * @param {Object} defaults (optional) Defaults like textfieldDefaults as 
-         *                 property of this config. See {@link #buildConfig}'s config property
+         * @param {Object} config A config object with all fields, see {@link #buildConfig}'s config property
          * @param {Array} validations (optional) An array of Ext.data.validations of the model
          * @param {Object} isEditorfield (optional) True to don't add field label (usefull e.g. in an editor grid)
          * @param {Object} nonEditorFieldModelField (optional) Dirty hack to set the fieldname on form panel creations, should be refactored!
          * @return {Object} Returns a field config
          */
-        buildFieldConfig: function (type, fieldName, defaults, validations, isEditorfield, nonEditorFieldModelField) {
-            defaults = Ext.applyIf({}, defaults, Ext.clone(this));
-            var field = this.buildDefaultFieldFromModelType(type, defaults);
+        buildFieldConfig: function (type, fieldName, config, validations, isEditorfield, nonEditorFieldModelField) {
+            var field = this.buildDefaultFieldFromModelType(type, config);
 
             // infer name
             field.name = fieldName;
@@ -1184,13 +1186,13 @@ Ext.define('Bancha.scaffold', {
 
             // add some additional validation rules from model validation rules
             if (Ext.isDefined(validations) && validations.length) {
-                field = this.addValidationRuleConfigs(field, validations, defaults);
+                field = this.addValidationRuleConfigs(field, validations, config);
             }
 
-            // now transform config
-            defaults.internalTransformColumnConfig(field,type);
-            if (typeof defaults.transformFieldConfig === 'function') {
-                field = defaults.transformFieldConfig(field, type);
+            // now make custom transforms
+            field = config.internalTransformFieldConfig(field,type);
+            if (typeof config.transformFieldConfig === 'function') {
+                field = config.transformFieldConfig(field, type);
             }
 
             // fileuploads are currently not supported in editor fields (ext doesn't render them usable)
