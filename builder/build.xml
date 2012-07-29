@@ -428,16 +428,36 @@
 		<!-- ============================================  -->
 		<target name="buildReleasePackage">
 			
+				<!-- make a zip-build-dir -->
+				<copy todir="${builddir}/zip">
+						<fileset refid="files.tmp.sourcecode"/>
+				</copy>
+
 				<!-- remove the reports -->
-				<delete file="${tmpdir}/report-jsbuilder.txt" failonerror="true" verbose="false" includeemptydirs="true"/>
+				<delete file="${builddir}/zip/report-jsbuilder.txt" failonerror="true" verbose="false" includeemptydirs="true"/>
+
+				<!-- remove docs -->
+				<delete dir="${builddir}/zip/docs" failonerror="true" verbose="false" includeemptydirs="true"/>
+
+				<!-- remove the github latest-build dir -->
+				<delete dir="${builddir}/zip/latest-build" failonerror="true" verbose="false" includeemptydirs="true"/>
+
+				<!-- remove the extjs library -->
+				<delete file="${builddir}/zip/tests/lib/ext-all-debug-w-comments.js" failonerror="true" verbose="false" />
 			
+				<!-- remove the possible old zip build -->
+				<delete file="${builddir}/zip/bancha-scaffold-${release_version}.zip" failonerror="true" verbose="false" />
+
 				<!-- zip package -->
 				<zip destfile="bancha-scaffold-${release_version}.zip">
-						<fileset dir="${tmpdir}">
+						<fileset dir="${builddir}/zip">
 						   <include name="**/**" />
 						   <exclude name="**/empty" />
 						</fileset>
 				</zip>
+
+				<!-- remove the zip build folder -->
+				<delete dir="${builddir}/zip" failonerror="true" verbose="false" includeemptydirs="true" />
 		</target>
 
 </project>
