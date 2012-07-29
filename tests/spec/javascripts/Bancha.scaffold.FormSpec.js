@@ -148,7 +148,7 @@ describe("Bancha.scaffold.Form tests",function() {
         // prepare
         model('MyTest.model.FormConfigTest');
 
-        expect(formScaf.buildConfig('MyTest.model.FormConfigTest',false,false,{
+        expect(formScaf.buildConfig('MyTest.model.FormConfigTest', false, {
             id: 'MyTest.model.FormConfigTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTest'));
     });
@@ -159,12 +159,12 @@ describe("Bancha.scaffold.Form tests",function() {
         model('MyTest.model.FormConfigTwoTimesTest');
         
         // first
-        expect(formScaf.buildConfig('MyTest.model.FormConfigTwoTimesTest',false,false,{
+        expect(formScaf.buildConfig('MyTest.model.FormConfigTwoTimesTest', false, {
             id: 'MyTest.model.FormConfigTwoTimesTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTwoTimesTest'));
         
         // second
-        expect(formScaf.buildConfig('MyTest.model.FormConfigTwoTimesTest',false,false,{
+        expect(formScaf.buildConfig('MyTest.model.FormConfigTwoTimesTest', false, {
             id: 'MyTest.model.FormConfigTwoTimesTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTwoTimesTest'));
     });
@@ -259,7 +259,7 @@ describe("Bancha.scaffold.Form tests",function() {
             buttons: getButtonConfig('MyTest.model.FormConfigWithValidationTest-id')
         }; // eo expected
         
-        expect(formScaf.buildConfig('MyTest.model.FormConfigWithValidationTest',false,{
+        expect(formScaf.buildConfig('MyTest.model.FormConfigWithValidationTest', {
             fileuploadfieldDefaults: {
                 emptyText: 'Select an image',
                 buttonText: '',
@@ -272,7 +272,7 @@ describe("Bancha.scaffold.Form tests",function() {
         })).toEqualConfig(expected);
         
         
-        expect(formScaf.buildConfig('MyTest.model.FormConfigWithValidationTest',false,false,{
+        expect(formScaf.buildConfig('MyTest.model.FormConfigWithValidationTest', false, {
             id: 'MyTest.model.FormConfigWithValidationTest-id'
         }).buttons[0].handler).toEqualConfig(expected.buttons[0].handler);
     });
@@ -315,7 +315,7 @@ describe("Bancha.scaffold.Form tests",function() {
         // prepare
         model('MyTest.model.FormConfigWithConfigInterceptorsTest');
         
-        var result = formScaf.buildConfig('MyTest.model.FormConfigWithConfigInterceptorsTest',false,{
+        var result = formScaf.buildConfig('MyTest.model.FormConfigWithConfigInterceptorsTest', {
             beforeBuild: function() {
                 return {
                     interceptors: ['before'] // make sure that afterBuild only augemts

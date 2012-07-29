@@ -892,14 +892,14 @@ Ext.define('Bancha.scaffold', {
      * 
      * A more complex usage example:
      *     Ext.create("Ext.form.Panel", {
-     *
-     *         // (depracted) you can also define which record should be loaded for editing
-     *         scaffoldLoadRecord: 3,
      *     
      *         scaffold: {
      *             // define the model name here
      *             target: 'MyApp.model.User',
      * 
+     *             // you can tell the form to automatically load a record for edting, by id
+     *             loadRecord: 3,
+     *
      *             // define which buttons should be displayed
      *             buttons: ['reset','save'],
      *
@@ -1413,6 +1413,14 @@ Ext.define('Bancha.scaffold', {
             };
         }()),
         /**
+         * @property {String|Number|False}
+         * Define a record id here to autolaod this record for editing in this form, or choose
+         * false to create a new record onSave. You can also overwrite onSave to define your
+         * own behavior
+         * (Default: false)
+         */
+        loadRecord: false,
+        /**
          * You can replace this function! The function will be executed before each 
          * {@link #buildConfig} as interceptor. 
          * @param {Ext.data.Model} model the model used for scaffolding
@@ -1439,7 +1447,6 @@ Ext.define('Bancha.scaffold', {
          *  
          * Guesses are made by model field configs and validation rules. 
          * @param {Ext.data.Model|String} model the model class or model name
-         * @param {Number|String|False} recordId (optional) Record id of an row to load 
          * data from server, false to don't load anything (for creating new rows)
          * @param {Object|False} config (optional) Any property of 
          * {@link Bancha.scaffold.Form} can be overrided for this call by declaring it 
@@ -1459,7 +1466,7 @@ Ext.define('Bancha.scaffold', {
          * configs which are applied to the config
          * @return {Object} object with Ext.form.Panel configs
          */
-        buildConfig: function (/* deprecated, should be read from config */model, /* deprecated, should be read from config */recordId, config, initialPanelConfig) {
+        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
             var fields = [],
                 formConfig, id, validations, loadFn;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
@@ -1467,7 +1474,6 @@ Ext.define('Bancha.scaffold', {
 
             // TODO - Refactor this API to always directly pull the model from the config
             config.target = Ext.isString(model) ? model : Ext.ClassManager.getName(model);
-            config.recordId = Ext.isDefined(recordId) ? recordId : config.recordId;
 
             // IFDEBUG
             if (!Ext.isDefined(model)) {
@@ -1540,25 +1546,22 @@ Ext.define('Bancha.scaffold', {
             // the scaffold config of the grid is saved as well
             formConfig.scaffold = config;
 
-            // always force that the basic scaffold configs are set on the grid config
-            formConfig.scaffoldLoadRecord = config.recordId; // TODO rename
-
-
             // autoload the record
-            if (Ext.isDefined(recordId) && recordId !== false) {
-                formConfig.listeners = formConfig.listeners || {};
-                // if there's already a function, batch them
+            if (Ext.isDefined(config.loadRecord) && config.loadRecord !== false) {
+                // load the record on component load
                 loadFn = function (component, options) {
                     component.load({
                         params: {
                             data: {
                                 data: {
-                                    id: recordId
+                                    id: config.loadRecord
                                 }
                             } // bancha expects it this way
                         }
                     });
                 };
+                // if there's already a function, batch them
+                formConfig.listeners = formConfig.listeners || {};
                 if (formConfig.listeners.afterrender) {
                     formConfig.listeners.afterrender = Ext.Function.createSequence(formConfig.listeners.afterrender, loadFn);
                 } else {

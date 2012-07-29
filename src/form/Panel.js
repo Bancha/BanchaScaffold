@@ -45,15 +45,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
          * @property {Object|False} scaffold
          * If this panel was scaffolded, all initial configs are stored here, otherwise False.
          */
-        scaffold: false,
-        /**
-         * @depracted
-         * @cfg {String|Number|False} scaffoldLoadRecord
-         * Define a record id here to autolaod this record for editing in this form, or choose
-         * false to create a new record onSave (if default onSave is used).
-         * (Default: false)
-         */
-        scaffoldLoadRecord: false
+        scaffold: false
     });
 
     // add scaffolding support
@@ -86,7 +78,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
                 // ENDIF
 
                 // scaffold
-                var config = Bancha.scaffold.Form.buildConfig(this.scaffold.target, this.scaffoldLoadRecord, this.scaffold, this.initialConfig);
+                var config = Bancha.scaffold.Form.buildConfig(this.scaffold.target, this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
