@@ -764,23 +764,24 @@ Ext.define('Bancha.scaffold', {
          * You can replace this function! The function will be executed before each 
          * {@link #buildConfig} as interceptor. 
          * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} {Object} config see {@link #buildConfig}
-         * @param {Object} additionalGridConfig see {@link #buildConfig}
+         * @param {Object} the scaffold full config for this call
+         * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
          * @return {Object|undefined} object with initial Ext.form.Panel configs
          */
-        beforeBuild: function (model, config, additionalGridConfig) {},
+        beforeBuild: function (model, config, initialPanelConfig) {},
         /**
          * @method
          * You can replace this fucntion! This function will be executed after each 
          * {@link #buildConfig} as interceptor.
-         * @param {Object} gridConfig just build grid panel config
+         * @param {Object} gridConfig the just build grid panel config
          * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} {Object} config (optional) see {@link #buildConfig}
-         * @param {Object} additionalGridConfig (optional) see {@link #buildConfig}
-         * @return {Object|undefined} object with final Ext.grid.Panel configs
+         * @param {Object} the scaffold full config for this call
+         * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
+         * @return {Object|Undefined} object with final Ext.grid.Panel configs or undefined to use the passed config
          */
-        afterBuild: function (gridConfig, model, config, additionalGridConfig) {},
+        afterBuild: function (gridConfig, model, config, initialPanelConfig) {},
         /**
+         * @deprecated Always use the scaffold property on Ext.grid.Panel, this function will undergo some mayor refactoring
          * Builds a grid config from a model definition, for scaffolding purposes.  
          * Guesses are made by model field configs and validation rules.
          *
@@ -804,10 +805,10 @@ Ext.define('Bancha.scaffold', {
          *  
          * You can add editorfield configs to the property formConfig, which will then used as standard
          * {@link Bancha.scaffold.Form} properties for this call.
-         * @param {Object} additionalGridConfig (optional) Some additional grid configs which are applied to the config.
+         * @param {Object} initialPanelConfig (optional) Some additional grid configs which are applied to the config.
          * @return {Object} Returns an Ext.grid.Panel configuration object
          */
-        buildConfig: function (model, config, additionalGridConfig) {
+        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
             var gridConfig, modelName, buttons, button, cellEditing, store, scope;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
 
@@ -821,7 +822,7 @@ Ext.define('Bancha.scaffold', {
             config.target = modelName;
 
             // call beforeBuild callback
-            gridConfig = config.beforeBuild(model, config, additionalGridConfig) || {};
+            gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
             // basic config
             store = config.getStore(model, config);
@@ -863,15 +864,15 @@ Ext.define('Bancha.scaffold', {
             }
 
             // apply user configs
-            if (Ext.isObject(additionalGridConfig)) {
-                gridConfig = Ext.apply(gridConfig, additionalGridConfig);
+            if (Ext.isObject(initialPanelConfig)) {
+                gridConfig = Ext.apply(gridConfig, initialPanelConfig);
             }
 
             // the scaffold config of the grid is saved as well
             gridConfig.scaffold = config;
 
             // return after interceptor
-            return config.afterBuild(gridConfig, model, config, additionalGridConfig) || gridConfig;
+            return config.afterBuild(gridConfig, model, config, initialPanelConfig) || gridConfig;
         }
     },
     //eo Grid 
@@ -1385,27 +1386,6 @@ Ext.define('Bancha.scaffold', {
             };
         },
         /**
-         * You can replace this function! The function will be executed before each 
-         * {@link #buildConfig} as interceptor. 
-         * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} {Number|String} recordId see {@link #buildConfig}
-         * @param {Object} {Object} config see {@link #buildConfig}
-         * @param {Object} additionalFormConfig see {@link #buildConfig}
-         * @return {Object|undefined} object with initial Ext.form.Panel configs
-         */
-        beforeBuild: function (model, recordId, config, additionalFormConfig) {},
-        /**
-         * You can replace this function! This function will be executed after each 
-         * {@link #buildConfig} as interceptor
-         * @param {Object} formConfig just build form panel config
-         * @param {Object} {Ext.data.Model|String} model see {@link #buildConfig}
-         * @param {Object} {Number|String} recordId (optional) see {@link #buildConfig}
-         * @param {Object} {Object} config (optional) see {@link #buildConfig}
-         * @param {Object} additionalFormConfig (optional) see {@link #buildConfig}
-         * @return {Object|undefined} object with final Ext.form.Panel configs
-         */
-        afterBuild: function (formConfig, model, recordId, config, additionalFormConfig) {},
-        /**
          * You only need this is you're adding additional buttoms to the form inside the
          * afterBuild function.  
          * Since the form panel doesn't give us an useful scope to get the form panel,
@@ -1433,6 +1413,26 @@ Ext.define('Bancha.scaffold', {
             };
         }()),
         /**
+         * You can replace this function! The function will be executed before each 
+         * {@link #buildConfig} as interceptor. 
+         * @param {Ext.data.Model} model the model used for scaffolding
+         * @param {Object} config the scaffold full config for this call
+         * @param {Object} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
+         * @return {Object|undefined} object with initial Ext.form.Panel configs
+         */
+        beforeBuild: function (model, config, initialPanelConfig) {},
+        /**
+         * You can replace this function! This function will be executed after each 
+         * {@link #buildConfig} as interceptor
+         * @param {Object} formConfig the just build form panel config
+         * @param {Ext.data.Model} model the model used for scaffolding
+         * @param {Object} config the scaffold full config for this call
+         * @param {Object} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
+         * @return {Object|Undefined} object with final Ext.form.Panel configs or undefined to use the passed config
+         */
+        afterBuild: function (formConfig, model, config, initialPanelConfig) {},
+        /**
+         * @deprecated Always use the scaffold property on Ext.form.Panel, this function will undergo some mayor refactoring
          * Builds form configs from the metadata, for scaffolding purposes.  
          * By default data is loaded from the server if an id is supplied and 
          * onSave it pushed the data to the server.  
@@ -1455,17 +1455,17 @@ Ext.define('Bancha.scaffold', {
          *
          * If you don't define an id here it will be created and can not be changed anymore afterwards.
          *
-         * @param {Object} additionalFormConfig (optional) Some additional Ext.form.Panel 
+         * @param {Object} initialPanelConfig (optional) Some additional Ext.form.Panel
          * configs which are applied to the config
          * @return {Object} object with Ext.form.Panel configs
          */
-        buildConfig: function (model, recordId, config, additionalFormConfig) {
+        buildConfig: function (/* deprecated, should be read from config */model, /* deprecated, should be read from config */recordId, config, initialPanelConfig) {
             var fields = [],
                 formConfig, id, validations, loadFn;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
-            additionalFormConfig = additionalFormConfig || {};
+            initialPanelConfig = initialPanelConfig || {};
 
-            // add model and recordId to config
+            // TODO - Refactor this API to always directly pull the model from the config
             config.target = Ext.isString(model) ? model : Ext.ClassManager.getName(model);
             config.recordId = Ext.isDefined(recordId) ? recordId : config.recordId;
 
@@ -1500,7 +1500,7 @@ Ext.define('Bancha.scaffold', {
             // ENDIF
 
             // build initial config
-            formConfig = config.beforeBuild(model, recordId, config, additionalFormConfig) || {};
+            formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
             // create all fields
             validations = model.prototype.validations;
@@ -1521,7 +1521,7 @@ Ext.define('Bancha.scaffold', {
             });
 
             // for scoping reason we have to force an id here
-            id = additionalFormConfig.id || Ext.id(null, 'formpanel-');
+            id = initialPanelConfig.id || Ext.id(null, 'formpanel-');
             formConfig.id = id;
 
             // build buttons
@@ -1529,9 +1529,9 @@ Ext.define('Bancha.scaffold', {
                                                         config, this.buildButtonScope(id));
 
             // extend formConfig
-            Ext.apply(formConfig, additionalFormConfig, {
+            Ext.apply(formConfig, initialPanelConfig, {
                 id: id,
-                api: this.buildApiConfig(model,additionalFormConfig.api),
+                api: this.buildApiConfig(model,initialPanelConfig.api),
                 paramOrder: ['data'],
                 items: fields,
                 buttons: config.buttons
@@ -1541,7 +1541,7 @@ Ext.define('Bancha.scaffold', {
             formConfig.scaffold = config;
 
             // always force that the basic scaffold configs are set on the grid config
-            formConfig.scaffoldLoadRecord = config.recordId;
+            formConfig.scaffoldLoadRecord = config.recordId; // TODO rename
 
 
             // autoload the record
@@ -1567,7 +1567,7 @@ Ext.define('Bancha.scaffold', {
             }
 
             // return after interceptor
-            return config.afterBuild(formConfig, model, recordId, config, additionalFormConfig) || formConfig;
+            return config.afterBuild(formConfig, model, config, initialPanelConfig) || formConfig;
         }
     } //eo Form
 }); //eo scaffold
