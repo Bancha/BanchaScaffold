@@ -17,13 +17,19 @@ Features
 * and a lot of configurations!
 
 
+Usage
+-----
+
+To use the latest stable code just include build/bancha-scaffold-debug.js into your project. 
+For more information got to [http://scaffold.banchaproject.org](http://scaffold.banchaproject.org)
+
 License
 -------
 
 For everything except the builder-folder:
 
 __This library is open source and freely available both under the GPL and the MIT license.__
-Please keep the original file headers and if you further develop it, provide a reference to the original project.
+Please keep the original file headers and if you further develop or include it into another project, please provide a reference to the original project.
 
 We are also happy for any additions, bug reports and feedback!
 
@@ -43,6 +49,7 @@ Building an release
 
     cd builder
     phing
+    (run "phing gitDeploy" for the github stable release folder)
 
 
 ------------------------------

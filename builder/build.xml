@@ -64,7 +64,7 @@
 		</fileset>
 
 
-
+			
 		<!-- ============================================  -->
 		<!-- ============================================  -->
 		<!--											   -->
@@ -79,6 +79,76 @@
 				<!-- load properties -->
 				<property file="builder/config/production.properties"/>
 				<property file="${sourcedir}/VERSION.properties"/>
+
+				<!-- setting up environment -->
+				<phingcall target="setupTimeZone"/>
+
+				<!-- test the code -->
+				<phingcall target="test"/>
+				
+				<!-- build js -->
+				<phingcall target="build"/>
+
+				<!-- build samples for deployment -->
+				<phingcall target="buildSamples"/>
+				
+				<!-- build api docs -->
+				<phingcall target="docs"/>
+
+				<!-- build the downloadable Bancha release for the website -->
+				<phingcall target="buildReleasePackage"/>
+				
+				<!-- deploy files -->
+				<phingcall target="deployToServer"/>
+				
+				<echo msg="Files copied and compressed in ${builddir} directory OK!"/>
+		</target>
+
+			
+		<!-- ============================================  -->
+		<!-- ============================================  -->
+		<!--											   -->
+		<!-- Target: gitDeploy							   -->
+		<!--											   -->
+		<!-- ============================================  -->
+		<!-- ============================================  -->
+
+		<target name="gitDeploy">
+				<echo msg="Building github push:"/>
+				
+				<!-- load properties -->
+				<property file="builder/config/production.properties"/>
+				<property file="${sourcedir}/VERSION.properties"/>
+
+				<!-- setting up environment -->
+				<phingcall target="setupTimeZone"/>
+
+				<!-- test the code -->
+				<phingcall target="test"/>		
+
+				<!-- build js -->
+				<phingcall target="build"/>
+
+				<!-- only keep the build js files -->
+				<move file="${tmpdir}/bancha-scaffold-debug.js" todir="latest-build" overwrite="true"/>
+				<move file="${tmpdir}/bancha-scaffold-production.js" todir="latest-build" overwrite="true" />
+				<move file="${tmpdir}/bancha-scaffold.js" todir="latest-build" overwrite="true" />
+				<delete dir="${tmpdir}" failonerror="true" verbose="false" />
+
+				<echo msg="Build new ${builddir} directory, ready for github push!"/>
+		</target>
+		
+		
+
+		<!-- ============================================  -->
+		<!-- ============================================  -->
+		<!--											   -->
+		<!-- Target: setupTimeZone						   -->
+		<!--											   -->
+		<!-- ============================================  -->
+		<!-- ============================================  -->
+
+		<target name="setupTimeZone">
 				
 				<!-- set local time zone -->
 				<adhoc-task name="timezone"><![CDATA[
@@ -101,28 +171,9 @@
 						<format property="build_time" pattern="%Y-%m-%d %H:%m:%s"/>
 		   		</tstamp>
 
-				<!-- test the code -->
-				<phingcall target="test"/>
-				
-				<!-- build js -->
-				<phingcall target="build"/>
+	   	</target>
 
-				<!-- build samples for deployment -->
-				<phingcall target="buildSamples"/>
-				
-				<!-- build api docs -->
-				<phingcall target="docs"/>
 
-				<!-- build the downloadable Bancha release for the website -->
-				<phingcall target="buildReleasePackage"/>
-				
-				<!-- deploy files -->
-				<phingcall target="deployToServer"/>
-				
-				<echo msg="Files copied and compressed in ${builddir} directory OK!"/>
-		</target>
-		
-		
 		
 		<!-- ============================================  -->
 		<!-- ============================================  -->

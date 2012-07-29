@@ -1,4 +1,4 @@
-/*!
+/*
  *
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
@@ -6,14 +6,92 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * *******************************************************************************
- * *******************************************************************************
- * ***                                                                         ***
- * ***           This is a generated file for easier inclusion                 ***
- * ***            always program in the original source files                  ***
- * ***                                                                         ***
- * *******************************************************************************
- * *******************************************************************************
+ * @package       Bancha.scaffold
+ * @copyright     Copyright 2011-2012 Roland Schuetz
+ * @link          http://scaffold.banchaproject.org
+ * @since         Bancha.scaffold 0.3.0
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @author        Roland Schuetz <mail@rolandschuetz.at>
+ * @version       Bancha.scaffold v 0.5.1
+ *
+ * For more information go to http://scaffold.banchaproject.org
+ */
+/*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
+/*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
+/*global Ext:false, Bancha:false, window:false */
+
+
+Ext.require(['Ext.data.validations'], function() {
+
+    var filenameHasExtension = function(filename,validExtensions) {
+        if(!filename) {
+            return true; // no file defined (emtpy string or undefined)
+        }
+        if(!Ext.isDefined(validExtensions)) {
+            return true;
+        }
+        var ext = filename.split('.').pop();
+        return Ext.Array.contains(validExtensions,ext);
+    };
+    
+    /**
+     * @class Ext.data.validations
+     * Custom validations mapped from CakePHP.
+     * @author Roland Schuetz <mail@rolandschuetz.at>
+     * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+     */
+    Ext.apply(Ext.data.validations,{
+        /**
+         * @property
+         * The default error message used when a numberformat validation fails.
+         */
+        numberformatMessage: "is not a number or not in the allowed range",
+        /**
+         * @property
+         * The default error message used when a file validation fails.
+         */
+        fileMessage: "is not a valid file",
+        /**
+         * @method
+         * Validates that the number is in the range of min and max.
+         * Precision is not validated, but it is used for differenting int from float,
+         * also it's metadata for scaffolding.
+         * For example:
+         *     {type: 'numberformat', field: 'euro', precision:2, min:0, max: 1000}
+         */
+        numberformat: function(config, value) {
+            if(typeof value !== 'number') {
+                value = (config.precision===0) ? parseInt(value,10) : parseFloat(value);
+                if(typeof value !== 'number') {
+                    return false; // could not be converted to a number
+                }
+            }
+            if((Ext.isDefined(config.min) && config.min > value) || (Ext.isDefined(config.max) && value > config.max)) {
+                return false; // not in the range
+            }
+            return true;
+        },
+        /**
+         * @method
+         * Validates that the given filename is of the configured extension. Also validates
+         * if no extension are defined and empty values.
+         * For example:
+         *     {type: 'file', field: 'avatar', extension:['jpg','jpeg','gif','png']}
+         */
+        file: function(config, value) {
+            return filenameHasExtension(value,config.extension);
+        }
+    });
+});
+
+//eof
+/*!
+ *
+ * Bancha Scaffolding Library
+ * Copyright 2011-2012 Roland Schuetz
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  *
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2012 Roland Schuetz
@@ -77,10 +155,14 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
  *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://scaffold.banchaproject.org
  * @since         Bancha.scaffold 0.0.1
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha.scaffold v 0.5.1
  *
@@ -89,7 +171,6 @@ Ext.require(['Ext.form.field.VTypes'], function () {
 /*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
 /*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
 /*global Ext:false, Bancha:false, window:false */
-
 
 
 // This file should be separated in three clean singleton classes
@@ -102,10 +183,29 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * The Bancha ExtJS 4 Scaffold library helps you easily prototype Ext.grid.Panels and Ext.form.Panels, 
  * helping you creating beautiful prototypes in minutes. And it it completly free and open source!
  * 
- * Example usage:
+ * Simple grid example:
  *
  *     Ext.create('Ext.grid.Panel',{
- *         scaffold: 'User',
+ *         scaffold: 'MyApp.model.User',
+ *         title: 'User Grid',
+ *         renderTo: 'gridpanel'
+ *     });
+ *
+ * Simple form example:
+ *
+ *     Ext.create('Ext.form.Panel',{
+ *         scaffold: 'MyApp.model.User',
+ *         title: 'User Grid',
+ *         renderTo: 'gridpanel'
+ *     });
+ *
+ * Custom button structure example:
+ *
+ *     Ext.create('Ext.grid.Panel',{
+ *         scaffold: {
+ *              target: 'MyApp.model.User',
+ *              buttons: ['->','save']
+ *         },
  *         title: 'User Grid',
  *         renderTo: 'gridpanel'
  *     });
@@ -146,8 +246,8 @@ Ext.define('Bancha.scaffold', {
             return str[0].toUpperCase() + str.substr(1);
         },
         /**
-         * Capitalizes the first word and turns underscores into spaces and strips a trailing ‚Äú_id‚Äù, if any.  
-         * Also it converts camel case by finding upper case letters right after lower case and repalceing the upper case with an space and lower case.  
+         * Capitalizes the first word, turns underscores into spaces and strips trailing "_id".  
+         * Also it converts camel case by finding upper case letters right after lower case and replaceing the upper case with an space and lower case.  
          * examples:  
          * "user_name"  -> "User name"  
          * "userName"   -> "User name"  
@@ -164,6 +264,18 @@ Ext.define('Bancha.scaffold', {
                 return first + " " + second.toLowerCase();
             }); // convert camel case (only)
             return this.toFirstUpper(str);
+        },
+        /**
+         * Takes a full class name like 'Bancha.model.AwesomeArticles' and 
+         * a name you can show to users, in this case 'Awesome article'
+         * For details on how the naming is changed see {@link #humanize}
+         */
+        humanizeClassName: function(classname) {
+            // get the class name without any namespacing
+            if(classname.indexOf('.')) {
+                classname = classname.substr(classname.lastIndexOf('.')+1);
+            }
+            return this.humanize(classname);
         },
         /**
          * DEPRECATED - CURRENTLY NOT USED  
@@ -190,6 +302,53 @@ Ext.define('Bancha.scaffold', {
             return scope[method].apply(scope,arguments);
             };
             ENDIF */
+        },
+        /**
+         * This function will search for 'create', 'reset' and 'save' and will 
+         * properly replace them with the values from the config object
+         *    
+         * It will also inject the scope into all elements where the scope 
+         * equals 'scaffold-scope-me'
+         *
+         * @param buttons the  button config, e.g. ['->','create','reset','save']
+         * @param config the config which holds all necessary replacements 
+         *               (config.onCreate, config.createButtonConfig, config.onReset, ...)
+         * @param buttonScope the scope, that's applied to all replaced buttons
+         * @return the build buttons array
+         */
+        replaceButtonPlaceHolders: function(buttons, config, buttonScope) {
+            if(typeof buttons === 'undefined' || buttons.length===0) {
+                return buttons;
+            }
+
+            for(var i=0, len=buttons.length; i<len; i++) {
+                switch(buttons[i]) {
+                    case 'create': 
+                        buttons[i] = Ext.apply(config.createButtonConfig, {
+                            scope: buttonScope,
+                            handler: config.onCreate
+                        });
+                        break;
+                    case 'reset': 
+                        buttons[i] = Ext.apply(config.resetButtonConfig, {
+                            scope: buttonScope,
+                            handler: config.onReset
+                        });
+                        break;
+                    case 'save': 
+                        buttons[i] = Ext.apply(config.saveButtonConfig, {
+                            scope: buttonScope,
+                            handler: config.onSave
+                        });
+                        break;
+                    default: 
+                        // check if we should inject a scope
+                        if(buttons[i].scope === 'scaffold-scope-me') {
+                            buttons[i].scope = buttonScope;
+                        }
+                }
+            }
+            return buttons;
         }
     },
     /**
@@ -202,23 +361,24 @@ Ext.define('Bancha.scaffold', {
      * In most cases you will use our configurations on {@link Ext.grid.Panel}. The
      * simplest usage is:
      *     Ext.create("Ext.grid.Panel", {
-     *         scaffold: 'User', // the model name
+     *         scaffold: 'MyApp.model.User', // the model name
      *     });
      *
      * A more complex usage example is:
      *     Ext.create("Ext.grid.Panel", {
      *
-     *         // basic scaffold configs can be set directly
-     *         enableCreate : true,
-     *         enableUpdate : true,
-     *         enableReset  : true,
-     *         enableDestroy: true,
-     *     
+     *         // for more configurations
      *         scaffold: {
+     *
      *             // define the model name here
      *             target: 'MyApp.model.User',
      *
-     *             // advanced configs can be set here:
+     *             // enable full CRUD on the grid (default)
+     *             deletable: true,
+     *             buttons: ['->','create','reset','save'],
+     *             
+     *             
+     *             // and some more advanced configs
      *             columnDefaults: {
      *                 width: 200
      *             },
@@ -230,6 +390,11 @@ Ext.define('Bancha.scaffold', {
      *             // custom onSave function
      *             onSave: function() {
      *                 Ext.MessageBox.alert("Tada","You've pressed the save button");
+     *             },
+     *             formConfig: {
+     *                 textfieldDefaults: {
+     *                     minLength: 3
+     *                 }
      *             }
      *         },
      *     
@@ -241,13 +406,13 @@ Ext.define('Bancha.scaffold', {
      *         renderTo : 'gridpanel'
      *     });
      *    
-     * If enableCreate or enableUpdate is true, this class will use 
-     * {@link Bancha.scaffold.Form} to create the editor fields.
+     * If the editable property is true, 
+     * {@link Bancha.scaffold.Form} is used to create the editor fields.
      *
      * You have three possible interceptors:  
-     *  - beforeBuild      : executed before {@link #buildConfig}  
-     *  - guessFieldConfigs: executed after a column config is created, see {@link #guessFieldConfigs}  
-     *  - afterBuild       : executed after {@link #buildConfig} created the config
+     *  - beforeBuild         : executed before {@link #buildConfig}  
+     *  - transformFieldConfig: executed after a field config is created, see {@link #transformFieldConfigs}  
+     *  - afterBuild          : executed after {@link #buildConfig} created the config
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -316,6 +481,13 @@ Ext.define('Bancha.scaffold', {
          */
         datecolumnDefaults: {},
         /**
+         * @property {Object}
+         * If the editable property is true, these configurations will be applied
+         * for building the editor fields. See {@link #Bancha.scaffold.Form} for 
+         * all configuration options
+         */
+        formConfig: {},
+        /**
          * @property
          * The defaults class to create an store for grid scaffolding. (Default: "Ext.data.Store")
          */
@@ -342,8 +514,7 @@ Ext.define('Bancha.scaffold', {
          * for separation of concerns, gets/create a store for the grid
          */
         getStore: (function (model, config) {
-            this.stores = {};
-            var stores = this.stores;
+            var stores = {};
 
             return function (model, config) {
                 var modelName = Ext.ClassManager.getName(model),
@@ -364,20 +535,31 @@ Ext.define('Bancha.scaffold', {
             };
         }()),
         /**
-         * @property {Function|False} guessColumnConfigs Writable function used to guess some default behaviour.
-         * Can be set to false to don't guess at all.
-         * Default function just hides id columns and makes it uneditable.
-         * @param {Object} configs A column config
-         * @param {String} modelType A standard model field type like 'string' (also supports 'file' from compability with http://banchaproject.org)
+         * @property {Function} transformColumnConfig Writable function used to add some custom behaviour.
+         *
+         * This function can be overwritten by any custom function.
+         * @param {Object} columnConfig the column config to transform
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        guessColumnConfigs: function (configs, modelType) { // TODO CHANGE TO guessColumnConfig witout s
-            if (configs.dataIndex === 'id') {
-                configs.hidden = true;
-                configs.field = undefined;
+        transformColumnConfig: function (columnConfig, modelType) {
+            return columnConfig;
+        },
+        /**
+         * @private
+         * @property {Function} internalTransformColumnConfig 
+         * This function just hides id columns and makes it uneditable.
+         * @param {Object} columnConfig the column config to transform
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+         * @return {Object} Returns an Ext.grid.column.* configuration object
+         */
+        internalTransformColumnConfig: function (columnConfig, modelType) {
+            if (columnConfig.dataIndex === 'id') {
+                columnConfig.hidden = true;
+                columnConfig.field = undefined;
             }
 
-            return configs;
+            return columnConfig;
         },
         /**
          * @private
@@ -400,15 +582,14 @@ Ext.define('Bancha.scaffold', {
          * Creates a Ext.grid.Column config from an model field type
          * @param {Sring} type The model field type
          * @param {String} columnName (optional) The name of the column
-         * @param {Object} defaults (optional) Defaults like numbercolumnDefaults as property of this config.
+         * @param {Object} config the grid config object
          * See {@link #buildConfig}'s config property
          * @param {Array} (optional) validations An array of Ext.data.validations of the model
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        buildColumnConfig: function (type, columnName, defaults, validations) {
-            defaults = defaults || {};
-            var column = this.buildDefaultColumnFromModelType(type, defaults),
-                enableCreate, enableUpdate;
+        buildColumnConfig: function (type, columnName, config, validations) {
+            var column = this.buildDefaultColumnFromModelType(type, config),
+                formConfig;
 
             // infer name
             if (columnName) {
@@ -417,15 +598,22 @@ Ext.define('Bancha.scaffold', {
             }
 
             // add an editor
-            enableCreate = (typeof defaults.enableCreate !== 'undefined') ? defaults.enableCreate : this.enableCreate;
-            enableUpdate = (typeof defaults.enableUpdate !== 'undefined') ? defaults.enableUpdate : this.enableUpdate;
-            if (enableCreate || enableUpdate) {
-                column.field = Bancha.scaffold.Form.buildFieldConfig(type, columnName, defaults.formConfig, validations, true);
+            if(config.editable) {
+                formConfig = config.formConfig || {};
+                formConfig = Ext.apply({}, formConfig, Ext.clone(Bancha.scaffold.Form));
+                column.field = Bancha.scaffold.Form.buildFieldConfig(type, columnName, formConfig, validations, true);
+
+                // now make custom field transforms
+                column.field = formConfig.internalTransformFieldConfig(column.field, type);
+                if (typeof formConfig.transformFieldConfig === 'function') {
+                    column.field = formConfig.transformFieldConfig(column.field, type);
+                }
             }
 
-            // now make some crazy guesses ;)
-            if (typeof defaults.guessColumnConfigs === 'function') {
-                column = defaults.guessColumnConfigs(column, type);
+            // now make custom transforms
+            column = config.internalTransformColumnConfig(column, type);
+            if (typeof config.transformColumnConfig === 'function') {
+                column = config.transformColumnConfig(column, type);
             }
 
             return column;
@@ -435,16 +623,14 @@ Ext.define('Bancha.scaffold', {
          * Editable function to be called when the create button is pressed.  
          * To change the default scaffolding behaviour just replace this function.  
          *   
-         * Default scope is following object:
-         *     {  
-         *      store:       the grids store  
-         *      cellEditing: the grids cell editing plugin  
-         *     }
+         * The scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
          */
-        onCreate: function () { // scope is a config object
-            var edit = this.cellEditing,
+        onCreate: function () {
+            var edit = this.getCellEditing(),
                 grid = edit.grid,
-                store = this.store,
+                store = this.getStore(),
                 model = store.getProxy().getModel(),
                 rec, visibleColumn = false;
 
@@ -478,12 +664,15 @@ Ext.define('Bancha.scaffold', {
          * Editable function to be called when the save button is pressed.  
          * To change the default scaffolding behaviour just replace this function.  
          *   
-         * Default scope is the store.
+         * The scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
          */
-        onSave: function () { // scope is the store
+        onSave: function () {
             var valid = true,
-                msg = "",
-                name, store = this;
+                msg = '',
+                name,
+                store = this.getStore();
 
             // check if all changes are valid
             store.each(function (el) {
@@ -514,16 +703,32 @@ Ext.define('Bancha.scaffold', {
          * Editable function to be called when the reset button is pressed.  
          * To change the default scaffolding behaviour just replace this function.  
          *   
-         * Default scope is the store.
+         * The scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
          */
-        onReset: function () { // scope is the store
+        onReset: function () {
             // reject all changes
-            var store = this;
+            var store = this.getStore();
             store.each(function (rec) {
-                if (rec.modified) {
+                if (rec && rec.modified) {
                     rec.reject();
                 }
-                if (rec.phantom) {
+                if (rec && rec.phantom) {
+                    store.remove(rec);
+                }
+            });
+
+            // TODO fix this really ugly thing
+            // there is a strange bug going on, when you change all records, 
+            // and then create a new one and then hit reset, the original first
+            // record becomes undefined and is not reset
+            // That's why we iterate here two times and check for rec beeing truthy
+            store.each(function (rec) {
+                if (rec && rec.modified) {
+                    rec.reject();
+                }
+                if (rec && rec.phantom) {
                     store.remove(rec);
                 }
             });
@@ -539,7 +744,8 @@ Ext.define('Bancha.scaffold', {
         onDelete: function (grid, rowIndex, colIndex) {
             var store = grid.getStore(),
                 rec = store.getAt(rowIndex),
-                name = Ext.getClassName(rec);
+                name = Ext.getClassName(rec),
+                displayName = Bancha.scaffold.Util.humanizeClassName(name);
 
             // instantly remove vom ui
             store.remove(rec);
@@ -549,10 +755,9 @@ Ext.define('Bancha.scaffold', {
             // since they were added in 4.1
             store.sync({
                 success: function (record, operation) {
-
                     Ext.MessageBox.show({
-                        title: name + ' record deleted',
-                        msg: name + ' record was successfully deleted.',
+                        title: displayName + ' record deleted',
+                        msg: displayName + ' record was successfully deleted.',
                         icon: Ext.MessageBox.INFO,
                         buttons: Ext.Msg.OK
                     });
@@ -564,8 +769,8 @@ Ext.define('Bancha.scaffold', {
 
                     // inform user
                     Ext.MessageBox.show({
-                        title: name + ' record could not be deleted',
-                        msg: operation.getError() || (name + ' record could not be deleted.'),
+                        title: displayName + ' record could not be deleted',
+                        msg: operation.getError() || (displayName + ' record could not be deleted.'),
                         icon: Ext.MessageBox.ERROR,
                         buttons: Ext.Msg.OK
                     });
@@ -575,30 +780,34 @@ Ext.define('Bancha.scaffold', {
         },
         /**
          * @property
-         * If true a create button will be added to all scaffolded grids.  
-         * See class descrition on how the fields are created.
+         * If true all cells become editable by double-click. If false 
+         * Bancha doesn't create editor properties for columns.
+         * The buttons 'create' and 'save' expect this to be true
          */
-        enableCreate: true,
+        editable: true,
         /**
          * @property
-         * If true a editor field is added to all columns for scaffolded grids.  
-         * See class descrition on how the fields are created.
+         * If true a destroy button is rendered for each record. 
+         * See also {@link #destroyButtonConfig}
          */
-        enableUpdate: true,
+        deletable: true,
         /**
          * @property
-         * If true a delete button is added to all rows for scaffolded grids.
+         * If an array of elements, a footer toolbar is rendered.
+         * 'create','reset' and 'save' will be replaced by scaffolded
+         * buttons, other elements are treated like default ExtJS items.
+         *    
+         * Inside your own buttons you can set the scope property to
+         * 'scaffold-scope-me', this scope provides two functions:  
+         *  - this.getStore() to get the grids store  
+         *  - this.getCellEditing() to get the grids cell editing plugin  
+         *    
+         * Default: ['->','create','reset','save']
          */
-        enableDestroy: true,
+        buttons: ['->','create','reset','save'],
         /**
          * @property
-         * If true a reset button will be added to all scaffolded grids
-         * (only if enableCreate or enableUpdate is true).
-         */
-        enableReset: true,
-        /**
-         * @property
-         * Default create button config, used if enableCreate is true.  
+         * Default create button config, used in buttons config. 
          * If not defined scope and handler properties will be set by 
          * the build function.
          */
@@ -608,8 +817,7 @@ Ext.define('Bancha.scaffold', {
         },
         /**
          * @property
-         * Default save button config, used if enableCreate and/or 
-         * enableUpdate are true.  
+         * Default save button config, used in buttons config
          * If not defined scope and handler properties will be set by 
          * the build function.
          */
@@ -619,7 +827,7 @@ Ext.define('Bancha.scaffold', {
         },
         /**
          * @property
-         * Default reset button config, used if enableReset is true.  
+         * Default reset button config, used in buttons config
          * If not defined scope and handler properties will be set by 
          * the build function.
          */
@@ -629,7 +837,7 @@ Ext.define('Bancha.scaffold', {
         },
         /**
          * @property
-         * Default last column config, used if enableDestroy is true to render a destroy 
+         * Default last column config, used if deletable is true to render a destroy 
          * button at the end of the line.  
          * The button handler is expected at destroyButtonConfig.items[0].handler, if it is 
          * equal Ext.emptyFn it will be replace, otherwise the custom config is used.
@@ -653,7 +861,7 @@ Ext.define('Bancha.scaffold', {
          * Bancha.scaffold.Grid can be overrided for this call by declaring it
          * here. E.g.:
          *     {
-         *         enableDestroy: true
+         *         oneStorePerModel: true
          *     }
          * @return {Array} Returns an array of Ext.grid.column.* configs
          */
@@ -671,6 +879,7 @@ Ext.define('Bancha.scaffold', {
                 });
             }
             // ENDIF
+
             if (Ext.isString(model)) {
                 // IFDEBUG
                 if (!Ext.isDefined(Ext.ModelManager.getModel(model))) {
@@ -684,13 +893,15 @@ Ext.define('Bancha.scaffold', {
                 model = Ext.ModelManager.getModel(model);
             }
 
+            // build all columns
             validations = model.prototype.validations;
             model.prototype.fields.each(function (field) {
                 columns.push(
-                Bancha.scaffold.Grid.buildColumnConfig(field.type.type, field.name, config, validations));
+                    Bancha.scaffold.Grid.buildColumnConfig(field.type.type, field.name, config, validations));
             });
 
-            if (config.enableDestroy) {
+            // add a destroy button
+            if (config.deletable) {
                 button = Ext.clone(config.destroyButtonConfig);
                 if (button.items[0].handler === Ext.emptyFn) {
                     button.items[0].handler = config.onDelete;
@@ -705,23 +916,24 @@ Ext.define('Bancha.scaffold', {
          * You can replace this function! The function will be executed before each 
          * {@link #buildConfig} as interceptor. 
          * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} {Object} config see {@link #buildConfig}
-         * @param {Object} additionalGridConfig see {@link #buildConfig}
+         * @param {Object} the scaffold full config for this call
+         * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
          * @return {Object|undefined} object with initial Ext.form.Panel configs
          */
-        beforeBuild: function (model, config, additionalGridConfig) {},
+        beforeBuild: function (model, config, initialPanelConfig) {},
         /**
          * @method
          * You can replace this fucntion! This function will be executed after each 
          * {@link #buildConfig} as interceptor.
-         * @param {Object} columnConfig just build grid panel config
+         * @param {Object} gridConfig the just build grid panel config
          * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} {Object} config (optional) see {@link #buildConfig}
-         * @param {Object} additionalGridConfig (optional) see {@link #buildConfig}
-         * @return {Object|undefined} object with final Ext.grid.Panel configs
+         * @param {Object} the scaffold full config for this call
+         * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
+         * @return {Object|Undefined} object with final Ext.grid.Panel configs or undefined to use the passed config
          */
-        afterBuild: function (columnConfig, model, config, additionalGridConfig) {},
+        afterBuild: function (gridConfig, model, config, initialPanelConfig) {},
         /**
+         * @deprecated Always use the scaffold property on Ext.grid.Panel, this function will undergo some mayor refactoring
          * Builds a grid config from a model definition, for scaffolding purposes.  
          * Guesses are made by model field configs and validation rules.
          *
@@ -736,7 +948,6 @@ Ext.define('Bancha.scaffold', {
          *          onSave: function() {
          *              Ext.MessageBox.alert("Wohoo","You're pressed the save button :)");
          *          },
-         *          enableUpdate: true,
          *          formConfig: {
          *              textfieldDefaults: {
          *                  minLength: 3
@@ -746,11 +957,11 @@ Ext.define('Bancha.scaffold', {
          *  
          * You can add editorfield configs to the property formConfig, which will then used as standard
          * {@link Bancha.scaffold.Form} properties for this call.
-         * @param {Object} additionalGridConfig (optional) Some additional grid configs which are applied to the config.
+         * @param {Object} initialPanelConfig (optional) Some additional grid configs which are applied to the config.
          * @return {Object} Returns an Ext.grid.Panel configuration object
          */
-        buildConfig: function (model, config, additionalGridConfig) {
-            var gridConfig, modelName, buttons, button, cellEditing, store;
+        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
+            var gridConfig, modelName, buttons, button, cellEditing, store, scope;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
 
             // define model and modelName
@@ -763,7 +974,7 @@ Ext.define('Bancha.scaffold', {
             config.target = modelName;
 
             // call beforeBuild callback
-            gridConfig = config.beforeBuild(model, config, additionalGridConfig) || {};
+            gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
             // basic config
             store = config.getStore(model, config);
@@ -773,7 +984,7 @@ Ext.define('Bancha.scaffold', {
             });
 
             // add config for editable fields
-            if (config.enableCreate || config.enableUpdate) {
+            if (config.editable) {
                 cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 2
                 });
@@ -783,88 +994,67 @@ Ext.define('Bancha.scaffold', {
                 });
             }
 
-            // add buttons
-            if (config.enableCreate || config.enableUpdate) {
-                buttons = ['->'];
-
-                if (config.enableCreate) {
-                    button = Ext.apply(config.createButtonConfig, {
-                        scope: {
-                            cellEditing: cellEditing,
-                            store: store
-                        },
-                        handler: config.onCreate
-                    });
-                    buttons.push(button);
-                }
-
-                if (config.enableReset) {
-                    button = Ext.apply(config.resetButtonConfig, {
-                        scope: store,
-                        handler: config.onReset
-                    });
-                    buttons.push(button);
-                }
-
-                // save is used for create and update
-                button = Ext.apply(config.saveButtonConfig, {
-                    scope: store,
-                    handler: config.onSave
-                });
-                buttons.push(button);
+            // replace button place holders and build bar
+            if(config.buttons && config.buttons.length) {
+                
+                scope = {
+                    getCellEditing: function() {
+                        return cellEditing;
+                    },
+                    getStore: function() {
+                        return store;
+                    }
+                };
+                config.buttons = Bancha.scaffold.Util.replaceButtonPlaceHolders(config.buttons, config, scope);
 
                 gridConfig.dockedItems = [{
                     xtype: 'toolbar',
                     dock: 'bottom',
                     ui: 'footer',
-                    items: buttons
+                    items: config.buttons
                 }];
             }
 
             // apply user configs
-            if (Ext.isObject(additionalGridConfig)) {
-                gridConfig = Ext.apply(gridConfig, additionalGridConfig);
+            if (Ext.isObject(initialPanelConfig)) {
+                gridConfig = Ext.apply(gridConfig, initialPanelConfig);
             }
 
             // the scaffold config of the grid is saved as well
             gridConfig.scaffold = config;
 
-            // always force that the basic scaffold configs are set on the grid config
-            gridConfig.enableCreate = config.enableCreate;
-            gridConfig.enableUpdate = config.enableUpdate;
-            gridConfig.enableReset = config.enableReset;
-            gridConfig.enableDestroy = config.enableDestroy;
-
             // return after interceptor
-            return config.afterBuild(gridConfig, model, config, additionalGridConfig) || gridConfig;
+            return config.afterBuild(gridConfig, model, config, initialPanelConfig) || gridConfig;
         }
     },
     //eo Grid 
+
     /**
      * @class Bancha.scaffold.Form
      * @singleton
      * 
      * This class is a factory for creating Ext.form.Panel's. It uses many data from
      * the given model, including field configs and validation rules.  
-     * 
+     *    
      * In most cases you will use our configurations on {@link Ext.form.Panel}. The 
      * simplest usage is:
      *     Ext.create("Ext.form.Panel", {
-     *         scaffold: 'User', // the model name
+     *         scaffold: 'MyApp.model.User', // the model name
      *     });
      * 
      * A more complex usage example:
      *     Ext.create("Ext.form.Panel", {
-     *
-     *         // basic scaffold configs can be set directly
-     *         enableReset: true,
-     *         // you can also define which record should be loaded for editing
-     *         scaffoldLoadRecord: 3,
      *     
      *         scaffold: {
      *             // define the model name here
      *             target: 'MyApp.model.User',
      * 
+     *             // you can tell the form to automatically load a record for edting, by id
+     *             loadRecord: 3,
+     *
+     *             // define which buttons should be displayed
+     *             buttons: ['reset','save'],
+     *
      *             // advanced configs can be set here:
      *             textfieldDefaults: {
      *                 emptyText: 'Please fill this out'
@@ -909,9 +1099,9 @@ Ext.define('Bancha.scaffold', {
      *  - presence  
      *
      * You have three possible interceptors:  
-     *  - beforeBuild      : executed before {@link #buildConfig}  
-     *  - guessFieldConfigs: executed after a field config is created, see {@link #guessFieldConfigs}  
-     *  - afterBuild       : executed after {@link #buildConfig} created the config  
+     *  - beforeBuild         : executed before {@link #buildConfig}  
+     *  - transformFieldConfig: executed after a field config is created, see {@link #transformFieldConfig}  
+     *  - afterBuild          : executed after {@link #buildConfig} created the config  
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -980,19 +1170,30 @@ Ext.define('Bancha.scaffold', {
             uncheckedValue: false
         },
         /**
-         * @property {Function|False} guessFieldConfigs Writable function used to guess some default behaviour.
-         * Can be set to false to don't guess at all.  
-         * Default function just hides id fields.
-         * @param {Object} configs a form field config
-         * @param {String} modelType A standard model field type like 'string' (also supports 'file' from compability with http://banchaproject.org)
-         * @return {Object} Returns a field config
+         * @property {Function} transformFieldConfig Writable function used to add some custom behaviour.
+         *
+         * This function can be overwritten by any custom function.
+         * @param {Object} fieldConfig the field config to transform
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+         * @return {Object} Returns an Ext.form.field.* configuration object
          */
-        guessFieldConfigs: function (configs, modelType) {
-            if (configs.name === 'id') {
-                configs.xtype = 'hiddenfield';
+         transformFieldConfig: function (fieldConfig, modelType) {
+            return fieldConfig;
+         },
+        /**
+         * @private
+         * @property {Function} internalTransformFieldConfig 
+         * This function just hides id columns and makes it uneditable.
+         * @param {Object} fieldConfig the field config to transform
+         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+         * @return {Object} Returns an Ext.form.field.* configuration object
+         */
+        internalTransformFieldConfig: function (fieldConfig, modelType) {
+            if (fieldConfig.name === 'id') {
+                fieldConfig.xtype = 'hiddenfield';
             }
 
-            return configs;
+            return fieldConfig;
         },
         /**
          * @private
@@ -1015,8 +1216,7 @@ Ext.define('Bancha.scaffold', {
                 url = /(((^https?)|(^ftp)):\/\/([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)/i.toString();
 
             return function (field, validations, config) {
-                var name = field.name,
-                    // it's used so often, make a shortcut
+                var name = field.name, // it's used so often, make a shortcut
                     msgAddition;
 
                 Ext.Array.forEach(validations, function (rule) {
@@ -1149,15 +1349,14 @@ Ext.define('Bancha.scaffold', {
          * Creates a Ext.form.Field config from an model field type
          * @param {Sring} type The model field type
          * @param {String} fieldName (optional) the name of the field, neccessary for applying validation rules
-         * @param {Object} defaults (optional) Defaults like textfieldDefaults as 
-         *                 property of this config. See {@link #buildConfig}'s config property
+         * @param {Object} config A config object with all fields, see {@link #buildConfig}'s config property
          * @param {Array} validations (optional) An array of Ext.data.validations of the model
          * @param {Object} isEditorfield (optional) True to don't add field label (usefull e.g. in an editor grid)
+         * @param {Object} nonEditorFieldModelField (optional) Dirty hack to set the fieldname on form panel creations, should be refactored!
          * @return {Object} Returns a field config
          */
-        buildFieldConfig: function (type, fieldName, defaults, validations, isEditorfield) {
-            defaults = Ext.applyIf({}, defaults, Ext.clone(this));
-            var field = this.buildDefaultFieldFromModelType(type, defaults);
+        buildFieldConfig: function (type, fieldName, config, validations, isEditorfield, nonEditorFieldModelField) {
+            var field = this.buildDefaultFieldFromModelType(type, config);
 
             // infer name
             field.name = fieldName;
@@ -1165,19 +1364,25 @@ Ext.define('Bancha.scaffold', {
                 field.fieldLabel = Bancha.scaffold.Util.humanize(fieldName);
             }
 
+            // infer date format into editor (not needed for editor fields)
+            if(type==='date' && !isEditorfield && typeof nonEditorFieldModelField==='object') {
+                field.format = nonEditorFieldModelField.dateFormat;
+            }
+
             // add some additional validation rules from model validation rules
             if (Ext.isDefined(validations) && validations.length) {
-                field = this.addValidationRuleConfigs(field, validations, defaults);
+                field = this.addValidationRuleConfigs(field, validations, config);
             }
 
-            // now make some crazy guesses ;)
-            if (typeof defaults.guessFieldConfigs === 'function') {
-                field = defaults.guessFieldConfigs(field, type);
+            // now make custom transforms
+            field = config.internalTransformFieldConfig(field,type);
+            if (typeof config.transformFieldConfig === 'function') {
+                field = config.transformFieldConfig(field, type);
             }
 
-            // fileuploads are currently not siupported in editor fields (ext doesn't render them usable)
+            // fileuploads are currently not supported in editor fields (ext doesn't render them usable)
             if (isEditorfield && field.xtype === 'fileuploadfield') {
-                field = undefined;
+                field = undefined; // TODO Maybe on double click open a modal window for file uploads
             }
 
             return field;
@@ -1214,19 +1419,28 @@ Ext.define('Bancha.scaffold', {
          *   
          * The default scope provides two functions:  
          *  - this.getPanel() to get the form panel  
-         *  - this.getForm() to get the basic form
+         *  - this.getForm() to get the basic form  
          */
         onReset: function () {
             this.getForm().reset();
         },
         /**
          * @property
-         * If true a reset button will be added to all scaffolded form (Default: true)
+         * If an array of elements, a footer toolbar is rendered.
+         * reset' and 'save' will be replaced by scaffolded
+         * buttons, other elements are treated like default ExtJS items.
+         *    
+         * Inside your own buttons you can set the scope property to
+         * 'scaffold-scope-me', this scope provides two functions:  
+         *  - this.getPanel() to get the form panel  
+         *  - this.getForm() to get the basic form  
+         *
+         * Default: ['reset','save']
          */
-        enableReset: true,
+        buttons: ['reset','save'],
         /**
          * @property
-         * Default save button config.  
+         * Default save button config, used in buttons.
          * If not defined scope and handler properties will be set by 
          * the build function.
          */
@@ -1237,7 +1451,7 @@ Ext.define('Bancha.scaffold', {
         },
         /**
          * @property
-         * Default reset button config, used if enableReset is true.
+         * Default reset button config, used in buttons config.
          * If not defined scope and handler properties will be set by 
          * the build function.
          */
@@ -1248,21 +1462,28 @@ Ext.define('Bancha.scaffold', {
         /**
          * Build the form api config, used only by buildConfig()
          * just for separation of concern, since this is the only 
-         * part which deals with Proxy
+         * part which deals with proxies
          */
-        buildApiConfig: function (model) {
+        buildApiConfig: function (model,initialApi) {
 
             if(Bancha.getModel) {
                 // the user is using the full Bancha stack
-                return this.buildBanchaApiConfig(model);
+                return this.buildBanchaApiConfig(model,initialApi);
             } else{
+
+                if(initialApi) {
+                    // just use the configured api
+                    return initialApi;
+                }
+                
                 // IFDEBUG
                 // warn the user that we can just guess part of the api
                 if (window.console && Ext.isFunction(window.console.warn)) {
                     window.console.warn([
-                        'Bancha Scaffold: Please define Bancha.scaffold.Form.buildApiConfig ',
-                        'if you want Bancha Scaffold to define an Form API. Bancha Scaffold ',
-                        'can only try to get the load function, but not submit.'
+                        'Bancha Scaffold: You have not defined any form api. If you want ',
+                        'Bancha Scaffold to guess it, please define Bancha.scaffold.Form.',
+                        'buildApiConfig. Bancha Scaffold can only try to get the load ',
+                        'function from the model proxy, but not the submit function.'
                         ].join(''));
                 }
                 // ENDIF
@@ -1282,7 +1503,9 @@ Ext.define('Bancha.scaffold', {
          * the full Bancha library. It will automatically find all 
          * api configurations
          */
-         buildBanchaApiConfig: function(model) {
+         buildBanchaApiConfig: function(model, initialApi) {
+            initialApi = initialApi || {};
+
             // IFDEBUG
             if (!Bancha.initialized) {
                 // the user is using Bancha, but hasn't initialized yet
@@ -1305,35 +1528,15 @@ Ext.define('Bancha.scaffold', {
                 });
             }
             // ENDIF
+
             return {
                 // The server-side method to call for load() requests
-                load: stub.read,
+                load: initialApi.read || stub.read,
                 // as first and only param you must add data: {id: id} when loading
                 // The server-side must mark the submit handler as a 'formHandler'
-                submit: stub.submit
+                submit: initialApi.submit || stub.submit
             };
         },
-        /**
-         * You can replace this function! The function will be executed before each 
-         * {@link #buildConfig} as interceptor. 
-         * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} {Number|String} recordId see {@link #buildConfig}
-         * @param {Object} {Object} config see {@link #buildConfig}
-         * @param {Object} additionalFormConfig see {@link #buildConfig}
-         * @return {Object|undefined} object with initial Ext.form.Panel configs
-         */
-        beforeBuild: function (model, recordId, config, additionalFormConfig) {},
-        /**
-         * You can replace this function! This function will be executed after each 
-         * {@link #buildConfig} as interceptor
-         * @param {Object} formConfig just build form panel config
-         * @param {Object} {Ext.data.Model|String} model see {@link #buildConfig}
-         * @param {Object} {Number|String} recordId (optional) see {@link #buildConfig}
-         * @param {Object} {Object} config (optional) see {@link #buildConfig}
-         * @param {Object} additionalFormConfig (optional) see {@link #buildConfig}
-         * @return {Object|undefined} object with final Ext.form.Panel configs
-         */
-        afterBuild: function (formConfig, model, recordId, config, additionalFormConfig) {},
         /**
          * You only need this is you're adding additional buttoms to the form inside the
          * afterBuild function.  
@@ -1362,13 +1565,40 @@ Ext.define('Bancha.scaffold', {
             };
         }()),
         /**
+         * @property {String|Number|False}
+         * Define a record id here to autolaod this record for editing in this form, or choose
+         * false to create a new record onSave. You can also overwrite onSave to define your
+         * own behavior
+         * (Default: false)
+         */
+        loadRecord: false,
+        /**
+         * You can replace this function! The function will be executed before each 
+         * {@link #buildConfig} as interceptor. 
+         * @param {Ext.data.Model} model the model used for scaffolding
+         * @param {Object} config the scaffold full config for this call
+         * @param {Object} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
+         * @return {Object|undefined} object with initial Ext.form.Panel configs
+         */
+        beforeBuild: function (model, config, initialPanelConfig) {},
+        /**
+         * You can replace this function! This function will be executed after each 
+         * {@link #buildConfig} as interceptor
+         * @param {Object} formConfig the just build form panel config
+         * @param {Ext.data.Model} model the model used for scaffolding
+         * @param {Object} config the scaffold full config for this call
+         * @param {Object} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
+         * @return {Object|Undefined} object with final Ext.form.Panel configs or undefined to use the passed config
+         */
+        afterBuild: function (formConfig, model, config, initialPanelConfig) {},
+        /**
+         * @deprecated Always use the scaffold property on Ext.form.Panel, this function will undergo some mayor refactoring
          * Builds form configs from the metadata, for scaffolding purposes.  
          * By default data is loaded from the server if an id is supplied and 
-         * onSvae it pushed the data to the server.  
+         * onSave it pushed the data to the server.  
          *  
          * Guesses are made by model field configs and validation rules. 
          * @param {Ext.data.Model|String} model the model class or model name
-         * @param {Number|String|False} recordId (optional) Record id of an row to load 
          * data from server, false to don't load anything (for creating new rows)
          * @param {Object|False} config (optional) Any property of 
          * {@link Bancha.scaffold.Form} can be overrided for this call by declaring it 
@@ -1384,19 +1614,18 @@ Ext.define('Bancha.scaffold', {
          *
          * If you don't define an id here it will be created and can not be changed anymore afterwards.
          *
-         * @param {Object} additionalFormConfig (optional) Some additional Ext.form.Panel 
+         * @param {Object} initialPanelConfig (optional) Some additional Ext.form.Panel
          * configs which are applied to the config
          * @return {Object} object with Ext.form.Panel configs
          */
-        buildConfig: function (model, recordId, config, additionalFormConfig) {
+        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
             var fields = [],
-                formConfig, id, validations, buttonScope, button, buttons, loadFn;
+                formConfig, id, validations, loadFn;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
-            additionalFormConfig = additionalFormConfig || {};
+            initialPanelConfig = initialPanelConfig || {};
 
-            // add model and recordId to config
+            // TODO - Refactor this API to always directly pull the model from the config
             config.target = Ext.isString(model) ? model : Ext.ClassManager.getName(model);
-            config.recordId = Ext.isDefined(recordId) ? recordId : config.recordId;
 
             // IFDEBUG
             if (!Ext.isDefined(model)) {
@@ -1429,13 +1658,13 @@ Ext.define('Bancha.scaffold', {
             // ENDIF
 
             // build initial config
-            formConfig = config.beforeBuild(model, recordId, config, additionalFormConfig) || {};
+            formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
             // create all fields
             validations = model.prototype.validations;
             model.prototype.fields.each(function (field) {
                 fields.push(
-                Bancha.scaffold.Form.buildFieldConfig(field.type.type, field.name, config, validations));
+                    Bancha.scaffold.Form.buildFieldConfig(field.type.type, field.name, config, validations, false, field));
             });
 
             // probably not neccessary in extjs4!
@@ -1450,59 +1679,41 @@ Ext.define('Bancha.scaffold', {
             });
 
             // for scoping reason we have to force an id here
-            id = additionalFormConfig.id || Ext.id(null, 'formpanel-');
+            id = initialPanelConfig.id || Ext.id(null, 'formpanel-');
             formConfig.id = id;
 
             // build buttons
-            buttons = [];
-            buttonScope = this.buildButtonScope(id);
-            // reset button
-            if (config.enableReset) {
-                button = Ext.apply(config.resetButtonConfig, {
-                    scope: buttonScope,
-                    handler: config.onReset
-                });
-                buttons.push(button);
-            }
-            // save button
-            button = Ext.apply(config.saveButtonConfig, {
-                scope: buttonScope,
-                handler: config.onSave
-            });
-            buttons.push(button);
+            config.buttons = Bancha.scaffold.Util.replaceButtonPlaceHolders(config.buttons || [], 
+                                                        config, this.buildButtonScope(id));
 
             // extend formConfig
-            Ext.apply(formConfig, additionalFormConfig, {
+            Ext.apply(formConfig, initialPanelConfig, {
                 id: id,
-                api: this.buildApiConfig(model),
+                api: this.buildApiConfig(model,initialPanelConfig.api),
                 paramOrder: ['data'],
                 items: fields,
-                buttons: buttons
+                buttons: config.buttons
             });
 
             // the scaffold config of the grid is saved as well
             formConfig.scaffold = config;
 
-            // always force that the basic scaffold configs are set on the grid config
-            formConfig.enableReset = config.enableReset;
-            formConfig.scaffoldLoadRecord = config.recordId;
-
-
             // autoload the record
-            if (Ext.isDefined(recordId) && recordId !== false) {
-                formConfig.listeners = formConfig.listeners || {};
-                // if there's already a function, batch them
+            if (Ext.isDefined(config.loadRecord) && config.loadRecord !== false) {
+                // load the record on component load
                 loadFn = function (component, options) {
                     component.load({
                         params: {
                             data: {
                                 data: {
-                                    id: recordId
+                                    id: config.loadRecord
                                 }
                             } // bancha expects it this way
                         }
                     });
                 };
+                // if there's already a function, batch them
+                formConfig.listeners = formConfig.listeners || {};
                 if (formConfig.listeners.afterrender) {
                     formConfig.listeners.afterrender = Ext.Function.createSequence(formConfig.listeners.afterrender, loadFn);
                 } else {
@@ -1511,7 +1722,7 @@ Ext.define('Bancha.scaffold', {
             }
 
             // return after interceptor
-            return config.afterBuild(formConfig, model, recordId, config, additionalFormConfig) || formConfig;
+            return config.afterBuild(formConfig, model, config, initialPanelConfig) || formConfig;
         }
     } //eo Form
 }); //eo scaffold
@@ -1522,10 +1733,14 @@ Ext.define('Bancha.scaffold', {
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
  *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://scaffold.banchaproject.org
  * @since         Bancha.scaffold 0.3.0
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha.scaffold v 0.5.1
  *
@@ -1560,27 +1775,22 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
          * @property {Object|False} scaffold
          * If this panel was scaffolded, all initial configs are stored here, otherwise False.
          */
-        scaffold: false,
-        /**
-         * @cfg {Boolean} enableReset
-         * If true and scaffold is defined, a reset button will be added to all scaffolded grids
-         * (only if enableCreate or enableUpdate is true).  
-         * If undefined, the default from {@link Bancha.scaffold.Form} is used.
-         */
-        enableReset: undefined,
-        /**
-         * @cfg {String|Number|False} scaffoldLoadRecord
-         * Define a record id here to autolaod this record for editing in this form, or choose
-         * false to create a new record onSave (if default onSave is used).
-         * (Default: false)
-         */
-        scaffoldLoadRecord: false
+        scaffold: false
     });
 
     // add scaffolding support
     Ext.override(Ext.form.Panel, {
         initComponent: function () {
             if (Ext.isString(this.scaffold)) {
+                // IFDEBUG
+                if (!Ext.ModelManager.isRegistered(this.scaffold)) {
+                    Ext.Error.raise({
+                        plugin: 'Bancha.scaffold',
+                        msg: ['Bancha Scaffold: Expected form panels scaffold property to be a valid model name, ',
+                             'instead got ' + this.scaffold + ' (of type ' + (typeof this.scaffold) + ')'].join('')
+                    });
+                }
+                // ENDIF
                 this.scaffold = {
                     target: this.scaffold
                 };
@@ -1588,20 +1798,17 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
 
             if (Ext.isObject(this.scaffold)) {
                 // IFDEBUG
-                if (!Ext.isDefined(this.scaffold.target)) {
+                if (!Ext.ModelManager.isRegistered(this.scaffold.target)) {
                     Ext.Error.raise({
                         plugin: 'Bancha.scaffold',
-                        msg: 'Bancha Scaffold: When using the form scaffolding please provide an model name in config.target.'
+                        msg: ['Bancha Scaffold: Expected form panels scaffold.target property to be a valid model name, ',
+                             'instead got ' + this.scaffold.target + ' (of type ' + (typeof this.scaffold.target) + ')'].join('')
                     });
                 }
                 // ENDIF
 
-                // push all basic configs in the scaffold config
-                if (Ext.isDefined(this.enableReset)) {
-                    this.scaffold.enableReset = this.enableReset;
-                }
                 // scaffold
-                var config = Bancha.scaffold.Form.buildConfig(this.scaffold.target, this.scaffoldLoadRecord, this.scaffold, this.initialConfig);
+                var config = Bancha.scaffold.Form.buildConfig(this.scaffold.target, this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
@@ -1617,10 +1824,14 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
  * Bancha Scaffolding Library
  * Copyright 2011-2012 Roland Schuetz
  *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2012 Roland Schuetz
  * @link          http://scaffold.banchaproject.org
  * @since         Bancha.scaffold 0.3.0
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha.scaffold v 0.5.1
  *
@@ -1657,35 +1868,21 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
          * If this panel was scaffolded, all initial configs are stored here, otherwise False.
          */
         scaffold: false
-        /**
-         * @cfg {Boolean} enableCreate
-         * If true and scaffold is defined, a create button will be added to all scaffolded grids.  
-         * See class descrition on how the fields are created.  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
-        /**
-         * @cfg {Boolean} enableUpdate
-         * If true and scaffold is defined, a editor field is added to all columns for scaffolded grids.  
-         * See {@link Bancha.scaffold.Grid} on how the fields are created.  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
-        /**
-         * @cfg {Boolean} enableDestroy
-         * If true and scaffold is defined, a delete button is added to all rows for scaffolded grids.  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
-        /**
-         * @cfg {Boolean} enableReset
-         * If true and scaffold is defined, a reset button will be added to all scaffolded grids
-         * (only if enableCreate or enableUpdate is true).  
-         * If undefined, the default from {@link Bancha.scaffold.Grid} is used.
-         */
     });
 
     // add scaffolding support
     Ext.override(Ext.grid.Panel, {
         initComponent: function () {
             if (Ext.isString(this.scaffold)) {
+                // IFDEBUG
+                if (!Ext.ModelManager.isRegistered(this.scaffold)) {
+                    Ext.Error.raise({
+                        plugin: 'Bancha.scaffold',
+                        msg: ['Bancha Scaffold: Expected grid panels scaffold property to be a valid model name, ',
+                             'instead got ' + this.scaffold + ' (of type ' + (typeof this.scaffold) + ')'].join('')
+                    });
+                }
+                // ENDIF
                 this.scaffold = {
                     target: this.scaffold
                 };
@@ -1693,27 +1890,15 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
 
             if (Ext.isObject(this.scaffold)) {
                 // IFDEBUG
-                if (!Ext.isDefined(this.scaffold.target)) {
+                if (!Ext.ModelManager.isRegistered(this.scaffold.target)) {
                     Ext.Error.raise({
-                        plugin: 'Scaffold',
-                        msg: 'Scaffold: When using the grid scaffolding please provide an model name in config.target.'
+                        plugin: 'Bancha.scaffold',
+                        msg: ['Bancha Scaffold: Expected grid panels scaffold.target property to be a valid model name, ',
+                             'instead got ' + this.scaffold.target + ' (of type ' + (typeof this.scaffold.target) + ')'].join('')
                     });
                 }
                 // ENDIF
 
-                // push all basic configs in the scaffold config
-                if (Ext.isDefined(this.enableCreate)) {
-                    this.scaffold.enableCreate = this.enableCreate;
-                }
-                if (Ext.isDefined(this.enableUpdate)) {
-                    this.scaffold.enableUpdate = this.enableUpdate;
-                }
-                if (Ext.isDefined(this.enableDestroy)) {
-                    this.scaffold.enableDestroy = this.enableDestroy;
-                }
-                if (Ext.isDefined(this.enableReset)) {
-                    this.scaffold.enableReset = this.enableReset;
-                }
                 // scaffold
                 var config = Bancha.scaffold.Grid.buildConfig(this.scaffold.target, this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
