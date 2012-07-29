@@ -362,8 +362,7 @@ Ext.define('Bancha.scaffold', {
          * for separation of concerns, gets/create a store for the grid
          */
         getStore: (function (model, config) {
-            this.stores = {};
-            var stores = this.stores;
+            var stores = {};
 
             return function (model, config) {
                 var modelName = Ext.ClassManager.getName(model),
@@ -476,7 +475,7 @@ Ext.define('Bancha.scaffold', {
          *  - this.getStore() to get the grids store  
          *  - this.getCellEditing() to get the grids cell editing plugin  
          */
-        onCreate: function () { // scope is a config object
+        onCreate: function () {
             var edit = this.getCellEditing(),
                 grid = edit.grid,
                 store = this.getStore(),
@@ -517,7 +516,7 @@ Ext.define('Bancha.scaffold', {
          *  - this.getStore() to get the grids store  
          *  - this.getCellEditing() to get the grids cell editing plugin  
          */
-        onSave: function () { // scope is the store
+        onSave: function () {
             var valid = true,
                 msg = '',
                 name,
@@ -556,7 +555,7 @@ Ext.define('Bancha.scaffold', {
          *  - this.getStore() to get the grids store  
          *  - this.getCellEditing() to get the grids cell editing plugin  
          */
-        onReset: function () { // scope is the store
+        onReset: function () {
             // reject all changes
             var store = this.getStore();
             store.each(function (rec) {
