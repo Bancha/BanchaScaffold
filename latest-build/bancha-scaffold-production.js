@@ -840,6 +840,7 @@ Ext.define('Bancha.scaffold', {
             }]
         },
         /**
+         * @private
          * Builds grid columns from the model definition, for scaffolding purposes.  
          * Please use {@link #Ext.grid.Panel} or {@link #buildConfig} if you want 
          * support for create,update and/or destroy!
@@ -888,10 +889,10 @@ Ext.define('Bancha.scaffold', {
          * @method
          * You can replace this function! The function will be executed before each 
          * {@link #buildConfig} as interceptor. 
-         * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} the scaffold full config for this call
+         * @param {Ext.data.Model} model see {@link #buildConfig}
+         * @param {Object} config the scaffold full config for this call
          * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
-         * @return {Object|undefined} object with initial Ext.form.Panel configs
+         * @return {Object|Undefined} object with initial Ext.form.Panel configs
          */
         beforeBuild: function (model, config, initialPanelConfig) {},
         /**
@@ -899,14 +900,14 @@ Ext.define('Bancha.scaffold', {
          * You can replace this fucntion! This function will be executed after each 
          * {@link #buildConfig} as interceptor.
          * @param {Object} gridConfig the just build grid panel config
-         * @param {Object} {Ext.data.Model} model see {@link #buildConfig}
-         * @param {Object} the scaffold full config for this call
+         * @param {Ext.data.Model} model see {@link #buildConfig}
+         * @param {Object} config the scaffold full config for this call
          * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
          * @return {Object|Undefined} object with final Ext.grid.Panel configs or undefined to use the passed config
          */
         afterBuild: function (gridConfig, model, config, initialPanelConfig) {},
         /**
-         * @deprecated Always use the scaffold property on Ext.grid.Panel, this function will undergo some mayor refactoring
+         * @deprecated Always use the scaffold property on Ext.grid.Panel, this function will undergo some refactoring
          * Builds a grid config from a model definition, for scaffolding purposes.  
          * Guesses are made by model field configs and validation rules.
          *
@@ -1404,6 +1405,18 @@ Ext.define('Bancha.scaffold', {
          * Build the form api config, used only by buildConfig()
          * just for separation of concern, since this is the only 
          * part which deals with proxies
+         *
+         * For Bancha projects with an CakePHP backend this function will
+         * scaffold everything
+         *
+         * Otherwise it will use the initial config, if provided. If not, 
+         * it will use the model proxies load method. There is no generic
+         * way to guess the submit method, please either modify this function
+         * or provide a propery form api config.
+         *
+         * @param {Ext.data.Model} model the model used for scaffolding
+         * @param {Object} initialApi the initial Ext.form.Panel api config
+         * @return the final Ext.form.Panel api config
          */
         buildApiConfig: function (model,initialApi) {
 
@@ -1508,7 +1521,7 @@ Ext.define('Bancha.scaffold', {
          */
         afterBuild: function (formConfig, model, config, initialPanelConfig) {},
         /**
-         * @deprecated Always use the scaffold property on Ext.form.Panel, this function will undergo some mayor refactoring
+         * @deprecated Always use the scaffold property on Ext.form.Panel, this function will undergo some refactoring
          * Builds form configs from the metadata, for scaffolding purposes.  
          * By default data is loaded from the server if an id is supplied and 
          * onSave it pushed the data to the server.  
