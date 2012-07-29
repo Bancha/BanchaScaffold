@@ -43,19 +43,22 @@ describe("Bancha.scaffold.Grid tests",function() {
         // re-enforce defaults
         Ext.apply(gridScaf, testDefaults);
     });
-    
-    
-    it("should build column configs while considering the defined defaults", function() {
-        // define some defaults
-        gridScaf.columnDefaults = {
-            forAllFields: 'added'
-        };
-        gridScaf.gridcolumnDefaults = {
-            justForText: true
-        };
-        gridScaf.datecolumnDefaults = {};
 
-        expect(gridScaf.buildColumnConfig('string','someName')).toEqual({
+
+    it("should build column configs while considering the defined config", function() {
+        // build a config
+        var config = Ext.clone(testDefaults);
+        Ext.apply(config, {
+            columnDefaults: {
+                forAllFields: 'added'
+            },
+            gridcolumnDefaults: {
+                justForText: true
+            },
+            datecolumnDefaults: {}
+        });
+
+        expect(gridScaf.buildColumnConfig('string','someName', config)).toEqual({
             forAllFields: 'added',
             justForText: true,
             xtype : 'gridcolumn',
@@ -64,37 +67,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         });
 
         // now there should be just added the first one
-        expect(gridScaf.buildColumnConfig('date','someName')).toEqual({
-            forAllFields: 'added',
-            xtype : 'datecolumn',
-            text: 'Some name',
-            dataIndex: 'someName'
-        });
-    });
-
-    it("should build column configs while considering special defaults per call", function() {
-        gridScaf.columnDefaults = {
-            forAllFields: 'added'
-        };
-        gridScaf.gridcolumnDefaults = {
-            justForText: true
-        };
-        var defaults = {
-            gridcolumnDefaults: {
-                justForThisTextBuild: true
-            }
-        };
-        
-        expect(gridScaf.buildColumnConfig('string','someName',defaults)).toEqual({
-            forAllFields: 'added',
-            justForThisTextBuild: true, // <-- old defaults got overrided
-            xtype : 'gridcolumn',
-            text: 'Some name',
-            dataIndex: 'someName'
-        });
-
-        // now there should be just added the first one
-        expect(gridScaf.buildColumnConfig('date','someName',defaults)).toEqual({
+        expect(gridScaf.buildColumnConfig('date','someName', config)).toEqual({
             forAllFields: 'added',
             xtype : 'datecolumn',
             text: 'Some name',
@@ -147,6 +120,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         text     : 'Height',
         dataIndex: 'height'
     }];
+
     
     it("should build a grid column config with #buildColumns (component test)", function() {
         // prepare
@@ -252,6 +226,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         expect(result.columns).toEqual(expectedColumns);
     });
     
+
     it("should clone all configs, so that you can create multiple grids from the same defaults "+
         "(component test)", function() {
         // prepare
@@ -350,7 +325,7 @@ describe("Bancha.scaffold.Grid tests",function() {
     });
     
     
-    it("should use class interceptors when building a config (component test)", function() {
+    it("should use singleton class interceptors when building a config (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigWithClassInterceptorsTest');
         
@@ -365,7 +340,7 @@ describe("Bancha.scaffold.Grid tests",function() {
                 config.interceptors.push('after');
                 return config;
             },
-            guessColumnConfigs: function(config) {
+            transformColumnConfig: function(config) {
                 config.isAugmented = true;
                 return config;
             }
@@ -375,18 +350,19 @@ describe("Bancha.scaffold.Grid tests",function() {
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqual(['before','after']);
         
-        // guessFieldConfg
+        // transformColumnConfig
         expect(result.columns).toBeAnObject();
         Ext.each(result.columns, function(column) {
             expect(column.isAugmented).toEqual(true);
         });
     });
     
-    
+
     it("should use config interceptors when building a config (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigWithConfigInterceptorsTest');
         
+        // use a config specific only for this call
         var result = gridScaf.buildConfig('MyTest.model.GridConfigWithConfigInterceptorsTest',{
             beforeBuild: function() {
                 return {
@@ -397,7 +373,7 @@ describe("Bancha.scaffold.Grid tests",function() {
                 config.interceptors.push('after');
                 return config;
             },
-            guessColumnConfigs: function(config) {
+            transformColumnConfig: function(config) {
                 config.isAugmented = true;
                 return config;
             }
@@ -413,10 +389,38 @@ describe("Bancha.scaffold.Grid tests",function() {
         });
     });
 	
+
+    it("should use form class transformation interceptor for building editor fields (component test)", function() {
+        // prepare
+        model('MyTest.model.GridConfigWithFormInterceptorTest');
+        
+        // the same when defining them on the class
+        Ext.apply(gridScaf, {
+            editable: true,
+            formConfig: {
+                transformFieldConfig: function(config) {
+                    config = config || {}; // for the id column, where there is no editor field
+                    config.isAugmented = true;
+                    return config;
+                }
+            }
+        });
+        var result = gridScaf.buildConfig('MyTest.model.GridConfigWithFormInterceptorTest');
+        
+        // transformFieldConfig
+        expect(result.columns).toBeAnObject();
+        Ext.each(result.columns, function(column) {
+            if(column.dataIndex!=='id') { // since the id column doesn't have an editor, ignore it
+                expect(column).property('field.isAugmented').toEqual(true);
+            }
+        });
+    });
+    
+
     it('This just reset configs, since jasmin doesn\' provide a after suite function', function() {
         Ext.apply(gridScaf, originalGridScaf);
     });
-    
+
 }); //eo scaffold grid functions
 
 // eof

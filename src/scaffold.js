@@ -238,6 +238,11 @@ Ext.define('Bancha.scaffold', {
      *             // custom onSave function
      *             onSave: function() {
      *                 Ext.MessageBox.alert("Tada","You've pressed the save button");
+     *             },
+     *             formConfig: {
+     *                 textfieldDefaults: {
+     *                     minLength: 3
+     *                 }
      *             }
      *         },
      *     
@@ -323,6 +328,13 @@ Ext.define('Bancha.scaffold', {
          * This config is applied to each scaffolded Ext.grid.column.Column
          */
         datecolumnDefaults: {},
+        /**
+         * @property {Object}
+         * If the editable property is true, these configurations will be applied
+         * for building the editor fields. See {@link #Bancha.scaffold.Form} for 
+         * all configuration options
+         */
+        formConfig: {},
         /**
          * @property
          * The defaults class to create an store for grid scaffolding. (Default: "Ext.data.Store")
@@ -424,10 +436,9 @@ Ext.define('Bancha.scaffold', {
          * @param {Array} (optional) validations An array of Ext.data.validations of the model
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        buildColumnConfig: function (type, columnName, defaults, validations) {
-            defaults = defaults || {};
-            var column = this.buildDefaultColumnFromModelType(type, defaults),
-                enableCreate, enableUpdate;
+        buildColumnConfig: function (type, columnName, config, validations) {
+            var column = this.buildDefaultColumnFromModelType(type, config),
+                formConfig;
 
             // infer name
             if (columnName) {
@@ -436,8 +447,16 @@ Ext.define('Bancha.scaffold', {
             }
 
             // add an editor
-            if(defaults.editable) {
-                column.field = Bancha.scaffold.Form.buildFieldConfig(type, columnName, defaults.formConfig, validations, true);
+            if(config.editable) {
+                formConfig = config.formConfig || {};
+                formConfig = Ext.apply({}, formConfig, Ext.clone(Bancha.scaffold.Form));
+                column.field = Bancha.scaffold.Form.buildFieldConfig(type, columnName, formConfig, validations, true);
+
+                // now make custom field transforms
+                column.field = formConfig.internalTransformFieldConfig(column.field, type);
+                if (typeof formConfig.transformFieldConfig === 'function') {
+                    column.field = formConfig.transformFieldConfig(column.field, type);
+                }
             }
 
             // now make custom transforms

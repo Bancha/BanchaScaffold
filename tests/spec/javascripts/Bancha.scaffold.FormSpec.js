@@ -36,18 +36,21 @@ describe("Bancha.scaffold.Form tests",function() {
         Ext.apply(formScaf, testDefaults);
     });
     
-    it("should build field configs while considering the defined defaults", function() {
-        // define some defaults
-        formScaf.fieldDefaults = {
-            forAllFields: 'added'
-        };
-        formScaf.textfieldDefaults = {
-            justForText: true
-        };
-        formScaf.datefieldDefaults = {};
-        
+    it("should build field configs while considering the defined config", function() {
+        // build a config
+        var config = Ext.clone(testDefaults);
+        Ext.apply(config, {
+            fieldDefaults: {
+                forAllFields: 'added'
+            },
+            textfieldDefaults: {
+                justForText: true
+            },
+            datefieldDefaults: {}
+        });
+
         // check that all default vallues are added, as well as name and label
-        expect(formScaf.buildFieldConfig('string','someName')).toEqual({
+        expect(formScaf.buildFieldConfig('string','someName', config)).toEqual({
             forAllFields: 'added',
             justForText: true,
             xtype : 'textfield',
@@ -56,37 +59,7 @@ describe("Bancha.scaffold.Form tests",function() {
         });
         
         // same for date field
-        expect(formScaf.buildFieldConfig('date','someName')).toEqual({
-            forAllFields: 'added',
-            xtype : 'datefield',
-            fieldLabel: 'Some name',
-            name: 'someName'
-        });
-    });
-    
-    it("should build field configs while considering special defaults per call", function() {
-        formScaf.fieldDefaults = {
-            forAllFields: 'added'
-        };
-        formScaf.textfieldDefaults = {
-            justForText: true
-        };
-        var defaults = {
-            textfieldDefaults: {
-                justForThisTextBuild: true
-            }
-        };
-        
-        expect(formScaf.buildFieldConfig('string','someName',defaults)).toEqual({
-            forAllFields: 'added',
-            justForThisTextBuild: true, // <-- old defaults got overrided
-            xtype : 'textfield',
-            fieldLabel: 'Some name',
-            name: 'someName'
-        });
-
-        // now there should be just added the first one
-        expect(formScaf.buildFieldConfig('date','someName'),defaults).toEqual({
+        expect(formScaf.buildFieldConfig('date','someName', config)).toEqual({
             forAllFields: 'added',
             xtype : 'datefield',
             fieldLabel: 'Some name',
@@ -97,7 +70,7 @@ describe("Bancha.scaffold.Form tests",function() {
     it("should add an format property to all datefield configs, which are created for an form panel", function() {
         var field = new Ext.data.Field({name:'someName', type:'date', dateFormat: 'Y-m-d H:i:s'});
 
-        expect(formScaf.buildFieldConfig('date','someName', {}, {}, false, field)).toEqual({
+        expect(formScaf.buildFieldConfig('date','someName', Ext.clone(testDefaults), {}, false, field)).toEqual({
             xtype : 'datefield',
             fieldLabel: 'Some name',
             name: 'someName',
@@ -320,7 +293,7 @@ describe("Bancha.scaffold.Form tests",function() {
                 config.interceptors.push('after');
                 return config;
             },
-            guessFieldConfigs: function(config) {
+            transformFieldConfig: function(config) {
                 config.isAugmented = true;
                 return config;
             }
@@ -330,7 +303,7 @@ describe("Bancha.scaffold.Form tests",function() {
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqualConfig(['before','after']);
         
-        // guessFieldConfg
+        // transformFieldConfig
         expect(result.items).toBeAnObject();
         Ext.each(result.items, function(item) {
             expect(item.isAugmented).toEqual(true);
@@ -352,7 +325,7 @@ describe("Bancha.scaffold.Form tests",function() {
                 config.interceptors.push('after');
                 return config;
             },
-            guessFieldConfigs: function(config) {
+            transformFieldConfig: function(config) {
                 config.isAugmented = true;
                 return config;
             }
@@ -361,7 +334,7 @@ describe("Bancha.scaffold.Form tests",function() {
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqual(['before','after']);
         
-        // guessFieldConfg
+        // transformFieldConfig
         expect(result.items).toBeAnObject();
         Ext.each(result.items, function(item) {
             expect(item.isAugmented).toEqual(true);
