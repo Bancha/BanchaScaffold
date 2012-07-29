@@ -69,17 +69,16 @@ Ext.define('Bancha.scaffold', {
     requires: ['Ext.form.field.VTypes','Ext.data.validations'],
     
     /**
-     * @private
      * @singleton
      * @class Bancha.scaffold.Util
-     * Some scaffolding util function
+     * Some scaffolding util functions
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
     Util: {
         /**
-         * make the first letter of an String upper case
+         * Makes the first letter of an string upper case
          * @param {String} str
          * @return {String} str with first letter upper case
          * @member Bancha.scaffold.Util
@@ -114,9 +113,11 @@ Ext.define('Bancha.scaffold', {
             return this.toFirstUpper(str);
         },
         /**
-         * Takes a full class name like 'Bancha.model.AwesomeArticles' and 
-         * a name you can show to users, in this case 'Awesome article'
-         * For details on how the naming is changed see {@link #humanize}
+         * Transforms a namespacd class name like 'Bancha.model.AwesomeArticle' 
+         * and transforms it into a name you can show to users, in this case 
+         * 'Awesome article'
+         *
+         * For details on how the transformation, see also {@link #humanize}
          */
         humanizeClassName: function(classname) {
             // get the class name without any namespacing
@@ -126,6 +127,7 @@ Ext.define('Bancha.scaffold', {
             return this.humanize(classname);
         },
         /**
+         * @private
          * DEPRECATED - CURRENTLY NOT USED  
          * This enables the developer to change the default scaffolding functions at any time
          * and the Scaffold Library will always use the current functions, since there are no references
@@ -152,6 +154,7 @@ Ext.define('Bancha.scaffold', {
             ENDIF */
         },
         /**
+         * @private
          * This function will search for 'create', 'reset' and 'save' and will 
          * properly replace them with the values from the config object
          *    
