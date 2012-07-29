@@ -560,10 +560,24 @@ Ext.define('Bancha.scaffold', {
             // reject all changes
             var store = this.getStore();
             store.each(function (rec) {
-                if (rec.modified) {
+                if (rec && rec.modified) {
                     rec.reject();
                 }
-                if (rec.phantom) {
+                if (rec && rec.phantom) {
+                    store.remove(rec);
+                }
+            });
+
+            // TODO fix this really ugly thing
+            // there is a strange bug going on, when you change all records, 
+            // and then create a new one and then hit reset, the original first
+            // record becomes undefined and is not reset
+            // That's why we iterate here two times and check for rec beeing truthy
+            store.each(function (rec) {
+                if (rec && rec.modified) {
+                    rec.reject();
+                }
+                if (rec && rec.phantom) {
                     store.remove(rec);
                 }
             });
