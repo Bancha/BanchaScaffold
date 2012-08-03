@@ -101,7 +101,7 @@ Ext.define('Bancha.scaffold', {
          * "John Smith" -> "John Smith"  
          *
          * @param {String} str
-         * @return {String} str transformed string
+         * @return {String} transformed string
          * @member Bancha.scaffold.Util
          */
         humanize: function (str) {
@@ -118,6 +118,10 @@ Ext.define('Bancha.scaffold', {
          * 'Awesome article'
          *
          * For details on how the transformation, see also {@link #humanize}
+         *
+         * @param {String} classname
+         * @return {String} transformed string
+         * @member Bancha.scaffold.Util
          */
         humanizeClassName: function(classname) {
             // get the class name without any namespacing
@@ -127,7 +131,11 @@ Ext.define('Bancha.scaffold', {
             return this.humanize(classname);
         },
         /*
-         * Makes every words first letter upper case
+         * Makes every words first letter upper case.
+         *
+         * @param {String} str of words, separated by space
+         * @return {String} transformed string
+         * @member Bancha.scaffold.Util
          */
         toTitle: function(str) {
             return str.replace(/ ([a-z])/g, function (all, letter) {
