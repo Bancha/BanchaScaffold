@@ -12,7 +12,7 @@
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.2
+ * @version       Bancha.scaffold v 0.5.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -99,7 +99,7 @@ Ext.require(['Ext.data.validations'], function() {
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.2
+ * @version       Bancha.scaffold v 0.5.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -164,7 +164,7 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * @since         Bancha.scaffold 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.2
+ * @version       Bancha.scaffold v 0.5.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -221,17 +221,16 @@ Ext.define('Bancha.scaffold', {
     requires: ['Ext.form.field.VTypes','Ext.data.validations'],
     
     /**
-     * @private
      * @singleton
      * @class Bancha.scaffold.Util
-     * Some scaffolding util function
+     * Some scaffolding util functions
      * 
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
     Util: {
         /**
-         * make the first letter of an String upper case
+         * Makes the first letter of an string upper case
          * @param {String} str
          * @return {String} str with first letter upper case
          * @member Bancha.scaffold.Util
@@ -254,7 +253,7 @@ Ext.define('Bancha.scaffold', {
          * "John Smith" -> "John Smith"  
          *
          * @param {String} str
-         * @return {String} str transformed string
+         * @return {String} transformed string
          * @member Bancha.scaffold.Util
          */
         humanize: function (str) {
@@ -266,9 +265,15 @@ Ext.define('Bancha.scaffold', {
             return this.toFirstUpper(str);
         },
         /**
-         * Takes a full class name like 'Bancha.model.AwesomeArticles' and 
-         * a name you can show to users, in this case 'Awesome article'
-         * For details on how the naming is changed see {@link #humanize}
+         * Transforms a namespacd class name like 'Bancha.model.AwesomeArticle' 
+         * and transforms it into a name you can show to users, in this case 
+         * 'Awesome article'
+         *
+         * For details on how the transformation, see also {@link #humanize}
+         *
+         * @param {String} classname
+         * @return {String} transformed string
+         * @member Bancha.scaffold.Util
          */
         humanizeClassName: function(classname) {
             // get the class name without any namespacing
@@ -277,7 +282,20 @@ Ext.define('Bancha.scaffold', {
             }
             return this.humanize(classname);
         },
+        /*
+         * Makes every words first letter upper case.
+         *
+         * @param {String} str of words, separated by space
+         * @return {String} transformed string
+         * @member Bancha.scaffold.Util
+         */
+        toTitle: function(str) {
+            return str.replace(/ ([a-z])/g, function (all, letter) {
+                return ' ' + letter.toUpperCase();
+            });
+        },
         /**
+         * @private
          * DEPRECATED - CURRENTLY NOT USED  
          * This enables the developer to change the default scaffolding functions at any time
          * and the Scaffold Library will always use the current functions, since there are no references
@@ -292,6 +310,7 @@ Ext.define('Bancha.scaffold', {
             
         },
         /**
+         * @private
          * This function will search for 'create', 'reset' and 'save' and will 
          * properly replace them with the values from the config object
          *    
@@ -1648,7 +1667,7 @@ Ext.define('Bancha.scaffold', {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.2
+ * @version       Bancha.scaffold v 0.5.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1723,7 +1742,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.2
+ * @version       Bancha.scaffold v 0.5.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1780,6 +1799,114 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
             }
             // continue with standard behaviour
             this.callOverridden();
+        }
+    });
+
+}); //eo require
+
+//eof
+/*
+ *
+ * Bancha Scaffolding Library
+ * Copyright 2011-2012 Roland Schuetz
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @package       Bancha.scaffold
+ * @copyright     Copyright 2011-2012 Roland Schuetz
+ * @link          http://scaffold.banchaproject.org
+ * @since         Bancha.scaffold 0.5.3
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @author        Roland Schuetz <mail@rolandschuetz.at>
+ * @version       Bancha.scaffold v 0.5.4
+ *
+ * For more information go to http://scaffold.banchaproject.org
+ */
+/*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
+/*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
+/*global Ext:false, Bancha:false, window:false */
+
+
+Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
+
+
+    /**
+     * @class Bancha.grid.ManagementPanel
+     * This will create a TabPanel with one tab per model.
+     * It will autodetect the models capabilities from the proxy.
+     *
+     * Example: 
+     *
+     *     Ext.create('Bancha.grid.ManagementPanel', {
+     *         models: [
+     *             'MyApp.model.User',
+     *             'MyApp.model.Post'
+     *         ]
+     *     });
+     *
+     * @author Roland Schuetz <mail@rolandschuetz.at>
+     * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+     */
+    Ext.define('Bancha.grid.ManagementPanel', {
+        extend: 'Ext.tab.Panel',
+        alias: 'widget.managementpanel',
+
+        /**
+         * @cfg {[String|Ext.data.Model]} models
+         * Define the models which should be added to the panel.
+         */
+        models: [],
+        initComponent: function () {
+            
+            this.models = this.models || [];
+            this.items = this.items || [];
+
+            // build up all screens
+            var items = this.items;
+            Ext.each(this.models, function(model) {
+                var modelName = Ext.isString(model) ? model : model.getName();
+                model = Ext.ModelManager.getModel(modelName);
+
+                var tabitem = {
+                    xtype: 'gridpanel',
+                    title: Bancha.scaffold.Util.toTitle(
+                                Bancha.scaffold.Util.humanizeClassName(modelName)),
+                    scaffold: {
+                        storeDefaults: {},
+                        target: modelName,
+                        buttons: false,
+                        deletable: true
+                    }
+                };
+
+                var proxy = model.getProxy();
+                if(proxy.api) {
+                    // it's an ext direct proxy
+                    var buttons = ['->'];
+                    if(proxy.api.create) {
+                        buttons.push('create');
+                    }
+                    if(proxy.api.create || proxy.api.update) {
+                        buttons.push('reset');
+                        buttons.push('save');
+                    }
+                    if(buttons.length > 1) {
+                        // the model supports create and/or save
+                        tabitem.scaffold.buttons = buttons;
+                    }
+                    if(!proxy.api.destroy) {
+                        tabitem.scaffold.deletable = false;
+                    }
+                } else if(proxy.writer) {
+                    // we can see that there is a writer, so provide all buttons
+                    delete tabitem.scaffold.buttons;
+                }
+
+                items.push(tabitem);
+            }); //eo each
+
+            this.callParent();
         }
     });
 
