@@ -130,10 +130,10 @@ Ext.define('Bancha.scaffold', {
             }
             return this.humanize(classname);
         },
-        /*
+        /**
          * Makes every words first letter upper case.
          *
-         * @param {String} str of words, separated by space
+         * @param {String} str string of words, separated by space
          * @return {String} transformed string
          * @member Bancha.scaffold.Util
          */
@@ -299,6 +299,9 @@ Ext.define('Bancha.scaffold', {
          * Maps model types with column types and additional configs for prototyping
          */
         fieldToColumnConfigs: {
+            'auto': {
+                xtype: 'gridcolumn'
+            },
             'string': {
                 xtype: 'gridcolumn'
             },
@@ -981,6 +984,9 @@ Ext.define('Bancha.scaffold', {
          * Maps model field configs with field types and additional configs
          */
         fieldToFieldConfigs: {
+            'auto': {
+                xtype: 'textfield'
+            },
             'string': {
                 xtype: 'textfield'
             },
