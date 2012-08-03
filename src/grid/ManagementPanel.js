@@ -69,6 +69,23 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                 var modelName = Ext.isString(model) ? model : model.getName();
                 model = Ext.ModelManager.getModel(modelName);
 
+                // probably some newbies confuse the namespaced and unnamespaced model names
+                // so for Bancha user also support not namespaced version
+                if(!model && Bancha.modelNamespace) {
+                    model = Ext.ModelManager.getModel(Bancha.modelNamespace + '.' + modelName);
+                }
+
+                // IFDEBUG
+                if(!model) {
+                    Ext.Error.raise({
+                        plugin: 'Bancha.scaffold',
+                        msg: ['Bancha.grid.ManagementPanel\'s models config had a model input "',
+                                modelName + '" (of type ' + (typeof modelName) + '), ',
+                                'which is not a valid model name'].join('')
+                    });
+                }
+                // ENDIF
+
                 var tabitem = {
                     xtype: 'gridpanel',
                     title: Bancha.scaffold.Util.toTitle(
