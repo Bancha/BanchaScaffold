@@ -205,4 +205,52 @@ Ext.define('Bancha.model.User', {
 });
 
 
+// define book model (for management panel)
+Ext.define('Bancha.model.Book', {
+    extend: 'Ext.data.Model',
+    proxy: {
+        type: 'direct',
+        batchActions: false,
+        api: {
+            read    : Bancha.RemoteStubs.Book.read
+        },
+        reader: {
+            type: 'json',
+            root: 'data',
+            messageProperty: 'message'
+        }
+    },
+    idProperty: 'id',
+    fields: [
+        {
+            name:'id',
+            type:'int'
+        },{
+            name:'title',
+            type:'string'
+        },{
+            name:'published',
+            type:'boolean'
+        },{
+            name:'user_id',
+            type:'int'
+        }],
+        validations:[{
+            type:'presence',
+            field:'title'
+        },{
+            type:'numberformat',
+            field:'user_id'
+        }
+    ],
+    associations:[
+        {
+          type:'belongsTo',
+           model:'Bancha.model.User',
+           name:'users'
+        }
+    ]
+});
+
+
 // eof

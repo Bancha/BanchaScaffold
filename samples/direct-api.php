@@ -74,6 +74,12 @@ if(empty($HTTP_RAW_POST_DATA) && empty($_POST)) {
 		        "len":1,
 		        "formHandler":true
 		      }
+		    ],
+		    "Book":[
+		      {
+		        "name":"read",
+		        "len":1
+		      }
 		    ]
 		  }
 		};');
@@ -133,6 +139,15 @@ for($i=0;$i<35;$i++) {
 		'user_id'   => $i%4
 	);
 };
+$sample_book_data = array();
+for($i=0;$i<35;$i++) {
+	$sample_book_data[$i] = array(
+		'id'    	=> $i,
+		'title' 	=> 'Book '.($i+1),
+		'published' => $i%3==0,
+		'user_id'   => $i%4
+	);
+};
 
 // handle form posts with uploads
 if(isset($_POST['extMethod'])) {
@@ -182,7 +197,8 @@ foreach ($request as $key => $data) {
 			break;
 		case 'read':
 			// get the corresponding elemennts
-			$entries = $data->action=='User' ? $sample_user_data : $sample_article_data;
+			$entries = $data->action=='User' ? $sample_user_data : 
+						($data->action=='Article' ? $sample_article_data : $sample_book_data);
 			// if there is an id just send one record, otherwise send a paged result
 			$selected_entries = isset($data->data[0]->data->id) ? $entries[0] :
 					array_slice($entries, $data->data[0]->start, $data->data[0]->limit);

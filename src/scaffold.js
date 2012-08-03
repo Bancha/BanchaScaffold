@@ -126,6 +126,14 @@ Ext.define('Bancha.scaffold', {
             }
             return this.humanize(classname);
         },
+        /*
+         * Makes every words first letter upper case
+         */
+        toTitle: function(str) {
+            return str.replace(/ ([a-z])/g, function (all, letter) {
+                return ' ' + letter.toUpperCase();
+            });
+        },
         /**
          * @private
          * DEPRECATED - CURRENTLY NOT USED  

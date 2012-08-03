@@ -25,6 +25,10 @@
         {
             text: 'Panel.js',
             path: '../../src/grid/'
+        },
+        {
+            text: 'ManagementPanel.js',
+            path: '../../src/grid/'
         }]
     }],
     resources: []

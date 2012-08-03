@@ -57,6 +57,9 @@ Ext.onReady(function() {
             deletable: false, // records won't be deletable
             buttons: false, // there will be toolbar
 
+            // use a different store in every example
+            oneStorePerModel: false,
+
             // configure paging
             storeDefaults: {
                 autoLoad: true,
@@ -137,7 +140,27 @@ Ext.onReady(function() {
         defaults: {
             anchor: '100%'
         }
-    }); // eo create
+    }); // eo form create
+
+
+    // add a management panel
+    Ext.create('Bancha.grid.ManagementPanel', {
+        title: 'Bancha.grid.ManagementPanel autodetects all possible model capabilities',
+
+        // define the models to scaffold
+        models: [
+            'Bancha.model.User',
+            'Bancha.model.Book',
+            'Bancha.model.Article'
+            ],
+        
+        // some additional styles
+        frame: true,
+        bodyBorder: true,
+        height: 350,
+        width: 650,
+        renderTo: 'managementpanel'
+    });
 
 });
 
