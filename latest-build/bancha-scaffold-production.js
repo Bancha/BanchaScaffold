@@ -12,7 +12,7 @@
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.4
+ * @version       Bancha.scaffold v 0.5.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -99,7 +99,7 @@ Ext.require(['Ext.data.validations'], function() {
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.4
+ * @version       Bancha.scaffold v 0.5.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -164,7 +164,7 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * @since         Bancha.scaffold 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.4
+ * @version       Bancha.scaffold v 0.5.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -282,10 +282,10 @@ Ext.define('Bancha.scaffold', {
             }
             return this.humanize(classname);
         },
-        /*
+        /**
          * Makes every words first letter upper case.
          *
-         * @param {String} str of words, separated by space
+         * @param {String} str string of words, separated by space
          * @return {String} transformed string
          * @member Bancha.scaffold.Util
          */
@@ -439,6 +439,9 @@ Ext.define('Bancha.scaffold', {
          * Maps model types with column types and additional configs for prototyping
          */
         fieldToColumnConfigs: {
+            'auto': {
+                xtype: 'gridcolumn'
+            },
             'string': {
                 xtype: 'gridcolumn'
             },
@@ -1106,6 +1109,9 @@ Ext.define('Bancha.scaffold', {
          * Maps model field configs with field types and additional configs
          */
         fieldToFieldConfigs: {
+            'auto': {
+                xtype: 'textfield'
+            },
             'string': {
                 xtype: 'textfield'
             },
@@ -1667,7 +1673,7 @@ Ext.define('Bancha.scaffold', {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.4
+ * @version       Bancha.scaffold v 0.5.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1742,7 +1748,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.4
+ * @version       Bancha.scaffold v 0.5.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1819,7 +1825,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.4
+ * @version       Bancha.scaffold v 0.5.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1867,6 +1873,14 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
             Ext.each(this.models, function(model) {
                 var modelName = Ext.isString(model) ? model : model.getName();
                 model = Ext.ModelManager.getModel(modelName);
+
+                // probably some newbies confuse the namespaced and unnamespaced model names
+                // so for Bancha user also support not namespaced version
+                if(!model && Bancha.modelNamespace) {
+                    model = Ext.ModelManager.getModel(Bancha.modelNamespace + '.' + modelName);
+                }
+
+                
 
                 var tabitem = {
                     xtype: 'gridpanel',
