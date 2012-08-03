@@ -50,6 +50,18 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
          * Define the models which should be added to the panel.
          */
         models: [],
+        /**
+         * @cfg {Object} panelDefaults
+         * This config will be applied to each model grid and will overwrite
+         * scaffolded code
+         */
+        panelDefaults: {},
+        /**
+         * @cfg {Object} panelScaffoldDefaults
+         * This config will be applied to each model grid's scaffold property
+         * and will overwrite scaffolded code
+         */
+        panelScaffoldDefaults: {},
         initComponent: function () {
             // IFDEBUG
             if(!Ext.isArray(this.models)) {
@@ -64,7 +76,8 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
             this.items = this.items || [];
 
             // build up all screens
-            var items = this.items;
+            var items = this.items,
+                me = this;
             Ext.each(this.models, function(model) {
                 var modelName = Ext.isString(model) ? model : model.getName();
                 model = Ext.ModelManager.getModel(modelName);
@@ -91,13 +104,13 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                     title: Bancha.scaffold.Util.toTitle(
                                 Bancha.scaffold.Util.humanizeClassName(modelName)),
                     scaffold: {
-                        storeDefaults: {},
                         target: modelName,
                         buttons: false,
                         deletable: true
                     }
                 };
 
+                // create a new object
                 var proxy = model.getProxy();
                 if(proxy.api) {
                     // it's an ext direct proxy
@@ -121,6 +134,11 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                     delete tabitem.scaffold.buttons;
                 }
 
+                // add panel configs and possibly overwrite scaffolded code
+                tabitem = Ext.apply(tabitem, me.panelDefaults);
+                tabitem.scaffold = Ext.apply(tabitem.scaffold, me.panelScaffoldDefaults);
+
+                // add tab to items
                 items.push(tabitem);
             }); //eo each
 

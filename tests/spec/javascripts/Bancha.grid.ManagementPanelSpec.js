@@ -64,7 +64,8 @@ describe("Bancha.grid.ManagementPanel tests",function() {
             models: [
                 'Bancha.model.ManagementPanelUser',
                 Ext.ModelManager.getModel('Bancha.model.ManagementPanelArticle')
-            ]
+            ],
+            panelScaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
 
         // expect two tabs
@@ -81,7 +82,8 @@ describe("Bancha.grid.ManagementPanel tests",function() {
 
     it('should recognize the models capabilities and provides only those functionality', function() {
         var panel = Ext.create('Bancha.grid.ManagementPanel', {
-            models: ['Bancha.model.ManagementPanelUser']
+            models: ['Bancha.model.ManagementPanelUser'],
+            panelScaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
 
         // expect a bottom toolbar
@@ -99,7 +101,8 @@ describe("Bancha.grid.ManagementPanel tests",function() {
 
         // test with a model with fewer capabilities
         panel = Ext.create('Bancha.grid.ManagementPanel', {
-            models: ['Bancha.model.ManagementPanelArticle']
+            models: ['Bancha.model.ManagementPanelArticle'],
+            panelScaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
 
         // expect no toolbar at all
@@ -109,6 +112,43 @@ describe("Bancha.grid.ManagementPanel tests",function() {
         expect(panel).property('items.items.0.columns.length').toEqual(1);
     });
 
+    it('should use the panelDefaults and inject them into every panel', function() {
+        var panel = Ext.create('Bancha.grid.ManagementPanel', {
+            models: [
+                'Bancha.model.ManagementPanelUser',
+                'Bancha.model.ManagementPanelArticle'],
+            panelScaffoldDefaults: { storeDefaults: {}}, // prevent autoloading
+            panelDefaults: {
+                title: 'Overwritten',
+                extended: true
+            }
+        });
+
+        // expect title to be overwritten on both tabs
+        expect(panel).property('items.items.0.title').toEqual('Overwritten');
+        expect(panel).property('items.items.1.title').toEqual('Overwritten');
+
+
+        // expect extended config to be set on every panel
+        expect(panel).property('items.items.0.extended').toEqual(true);
+        expect(panel).property('items.items.1.extended').toEqual(true);
+    });
+
+    it('should use the panelScaffoldDefaults and inject them into every panel', function() {
+        var panel = Ext.create('Bancha.grid.ManagementPanel', {
+            models: [
+                'Bancha.model.ManagementPanelUser',
+                'Bancha.model.ManagementPanelArticle'],
+            panelScaffoldDefaults: {
+                storeDefaults: {}, // prevent autoloading
+                buttons: false
+            }
+        });
+
+        // expect no toolbar at all
+        expect(panel).property('items.items.0.dockedItems.items.length').toEqual(1);
+        expect(panel).property('items.items.1.dockedItems.items.length').toEqual(1);
+    });
 }); //eo management panel functions
 
 // eof
