@@ -65,7 +65,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
                 'Bancha.model.ManagementPanelUser',
                 Ext.ModelManager.getModel('Bancha.model.ManagementPanelArticle')
             ],
-            panelScaffoldDefaults: { storeDefaults: {}} // prevent autoloading
+            scaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
 
         // expect two tabs
@@ -83,7 +83,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
     it('should recognize the models capabilities and provides only those functionality', function() {
         var panel = Ext.create('Bancha.grid.ManagementPanel', {
             models: ['Bancha.model.ManagementPanelUser'],
-            panelScaffoldDefaults: { storeDefaults: {}} // prevent autoloading
+            scaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
 
         // expect a bottom toolbar
@@ -102,7 +102,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
         // test with a model with fewer capabilities
         panel = Ext.create('Bancha.grid.ManagementPanel', {
             models: ['Bancha.model.ManagementPanelArticle'],
-            panelScaffoldDefaults: { storeDefaults: {}} // prevent autoloading
+            scaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
 
         // expect no toolbar at all
@@ -117,7 +117,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
             models: [
                 'Bancha.model.ManagementPanelUser',
                 'Bancha.model.ManagementPanelArticle'],
-            panelScaffoldDefaults: { storeDefaults: {}}, // prevent autoloading
+            scaffoldDefaults: { storeDefaults: {}}, // prevent autoloading
             panelDefaults: {
                 title: 'Overwritten',
                 extended: true
@@ -134,12 +134,12 @@ describe("Bancha.grid.ManagementPanel tests",function() {
         expect(panel).property('items.items.1.extended').toEqual(true);
     });
 
-    it('should use the panelScaffoldDefaults and inject them into every panel', function() {
+    it('should use the scaffoldDefaults and inject them into every panel', function() {
         var panel = Ext.create('Bancha.grid.ManagementPanel', {
             models: [
                 'Bancha.model.ManagementPanelUser',
                 'Bancha.model.ManagementPanelArticle'],
-            panelScaffoldDefaults: {
+            scaffoldDefaults: {
                 storeDefaults: {}, // prevent autoloading
                 buttons: false
             }

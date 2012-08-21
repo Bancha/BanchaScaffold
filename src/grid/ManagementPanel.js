@@ -57,11 +57,11 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
          */
         panelDefaults: {},
         /**
-         * @cfg {Object} panelScaffoldDefaults
+         * @cfg {Object} scaffoldDefaults
          * This config will be applied to each model grid's scaffold property
          * and will overwrite scaffolded code
          */
-        panelScaffoldDefaults: {},
+        scaffoldDefaults: {},
         initComponent: function () {
             // IFDEBUG
             if(!Ext.isArray(this.models)) {
@@ -83,7 +83,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                 model = Ext.ModelManager.getModel(modelName);
 
                 // probably some newbies confuse the namespaced and unnamespaced model names
-                // so for Bancha user also support not namespaced version
+                // so for Bancha users also support not namespaced version
                 if(!model && Bancha.modelNamespace) {
                     model = Ext.ModelManager.getModel(Bancha.modelNamespace + '.' + modelName);
                 }
@@ -136,7 +136,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
 
                 // add panel configs and possibly overwrite scaffolded code
                 tabitem = Ext.apply(tabitem, me.panelDefaults);
-                tabitem.scaffold = Ext.apply(tabitem.scaffold, me.panelScaffoldDefaults);
+                tabitem.scaffold = Ext.apply(tabitem.scaffold, me.scaffoldDefaults);
 
                 // add tab to items
                 items.push(tabitem);
