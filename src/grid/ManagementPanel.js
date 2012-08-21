@@ -125,6 +125,8 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                     if(buttons.length > 1) {
                         // the model supports create and/or save
                         tabitem.scaffold.buttons = buttons;
+                    } else {
+                        tabitem.scaffold.editable = false;
                     }
                     if(!proxy.api.destroy) {
                         tabitem.scaffold.deletable = false;
