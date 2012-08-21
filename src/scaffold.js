@@ -287,6 +287,8 @@ Ext.define('Bancha.scaffold', {
          *
          * The default uses cake php naming conventions, e.g.
          * fieldname 'book_author_id' -> association name 'bookAuthors'
+         * @param {String} the fields name of an model, e.g. 'title'
+         * @return the guessed association name
          */
         fieldNameToModelAssociationName: function(modelFieldName) {
             if(!Ext.isString(modelFieldName)) {
