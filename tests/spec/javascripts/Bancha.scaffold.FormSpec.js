@@ -50,7 +50,12 @@ describe("Bancha.scaffold.Form tests",function() {
         });
 
         // check that all default vallues are added, as well as name and label
-        expect(formScaf.buildFieldConfig('string','someName', config)).toEqual({
+        var field = Ext.create('Ext.data.Field', {
+            type: 'string',
+            name: 'someName'
+        });
+        var model =  {}; // model is only used for associations
+        expect(formScaf.buildFieldConfig(field, model, config)).toEqual({
             forAllFields: 'added',
             justForText: true,
             xtype : 'textfield',
@@ -59,7 +64,11 @@ describe("Bancha.scaffold.Form tests",function() {
         });
         
         // same for date field
-        expect(formScaf.buildFieldConfig('date','someName', config)).toEqual({
+        field = Ext.create('Ext.data.Field', {
+            type: 'date',
+            name: 'someName'
+        });
+        expect(formScaf.buildFieldConfig(field, model, config)).toEqual({
             forAllFields: 'added',
             xtype : 'datefield',
             fieldLabel: 'Some name',
@@ -68,9 +77,14 @@ describe("Bancha.scaffold.Form tests",function() {
     });
     
     it("should add an format property to all datefield configs, which are created for an form panel", function() {
-        var field = new Ext.data.Field({name:'someName', type:'date', dateFormat: 'Y-m-d H:i:s'});
-
-        expect(formScaf.buildFieldConfig('date','someName', Ext.clone(testDefaults), {}, false, field)).toEqual({
+        // check that all default vallues are added, as well as name and label
+        var field = Ext.create('Ext.data.Field', {
+            type: 'date',
+            name: 'someName',
+            dateFormat: 'Y-m-d H:i:s'
+        });
+        var model =  {}; // model is only used for associations
+        expect(formScaf.buildFieldConfig(field, model, Ext.clone(testDefaults))).toEqual({
             xtype : 'datefield',
             fieldLabel: 'Some name',
             name: 'someName',
@@ -143,6 +157,7 @@ describe("Bancha.scaffold.Form tests",function() {
         },config);
     }; // eo getSimpleFormExpected
     
+
     it("should build a form config, where it recognizes the type from the field type, when no "+
        "validation rules are set in the model (component test)", function() {
         // prepare
@@ -152,6 +167,19 @@ describe("Bancha.scaffold.Form tests",function() {
             id: 'MyTest.model.FormConfigTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTest'));
     });
+
+
+    it("should consider the exclude property to exclude specific fields from the scaffolding", function() {
+        // prepare
+        model('MyTest.model.FormConfigExcludeTest');
+
+        expect(formScaf.buildConfig('MyTest.model.FormConfigExcludeTest', {
+            exclude: ['created','avatar']
+        }, {
+            id: 'MyTest.model.FormConfigTest-id'
+        })).property('items.length').toEqual(6);
+    });
+
 
     it("should clone all configs, so that you can create multiple forms from the same defaults "+
         "(component test)", function() {

@@ -136,7 +136,7 @@ for($i=0;$i<35;$i++) {
 		'body'		=> 'This is the body '.($i+1),
 		'date'  	=> '2012-11-'.str_pad($i%30+1,2,'0',STR_PAD_LEFT).' 11:50:34',
 		'published' => $i%3==0,
-		'user_id'   => $i%4
+		'user_id'   => $i%4+1
 	);
 };
 $sample_book_data = array();
@@ -145,7 +145,7 @@ for($i=0;$i<35;$i++) {
 		'id'    	=> $i,
 		'title' 	=> 'Book '.($i+1),
 		'published' => $i%3==0,
-		'user_id'   => $i%4
+		'user_id'   => $i%4+1
 	);
 };
 

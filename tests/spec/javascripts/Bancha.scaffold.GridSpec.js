@@ -58,7 +58,13 @@ describe("Bancha.scaffold.Grid tests",function() {
             datecolumnDefaults: {}
         });
 
-        expect(gridScaf.buildColumnConfig('string','someName', config)).toEqual({
+        var field = Ext.create('Ext.data.Field', {
+            type: 'string',
+            name: 'someName'
+        });
+        var model =  {}; // model is only used for associations
+
+        expect(gridScaf.buildColumnConfig(field, model, config)).toEqual({
             forAllFields: 'added',
             justForText: true,
             xtype : 'gridcolumn',
@@ -67,7 +73,11 @@ describe("Bancha.scaffold.Grid tests",function() {
         });
 
         // now there should be just added the first one
-        expect(gridScaf.buildColumnConfig('date','someName', config)).toEqual({
+        field = Ext.create('Ext.data.Field', {
+            type: 'date',
+            name: 'someName'
+        });
+        expect(gridScaf.buildColumnConfig(field, model, config)).toEqual({
             forAllFields: 'added',
             xtype : 'datecolumn',
             text: 'Some name',
@@ -131,6 +141,20 @@ describe("Bancha.scaffold.Grid tests",function() {
 
         // compare
         expect(result).toEqual(expectedColumns);
+    });
+    
+
+    it("should exclude fields defined in the exclude property (component test)", function() {
+        // prepare
+        model('MyTest.model.GridColumnsConfigExcludeTest');
+
+        // test
+        var result = gridScaf.buildColumns('MyTest.model.GridColumnsConfigExcludeTest', {
+            exclude: ['created','avatar']
+        });
+
+        // compare
+        expect(result.length).toEqual(6);
     });
     
     
