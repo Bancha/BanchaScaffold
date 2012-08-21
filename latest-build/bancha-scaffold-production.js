@@ -1627,7 +1627,7 @@ Ext.define('Bancha.scaffold', {
          * api configurations
          */
          buildBanchaApiConfig: function(model, initialApi) {
-            initialApi = initialApi || {};
+            initialApi = initialApi || {};
 
             
 
