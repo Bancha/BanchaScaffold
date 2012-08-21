@@ -537,11 +537,13 @@ Ext.define('Bancha.scaffold', {
          * @param {Sring} The model field
          * @param {Sring} The field's model
          * @param {Object} config the grid config object
-         * See {@link #buildConfig}'s config property
+         *                 See {@link #buildConfig}'s config property
+         * @param {Object} gridListeners the grid listeners array, can be 
+         *                 augmented by this function
          * @param {Array} (optional) validations An array of Ext.data.validations of the model
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        buildColumnConfig: function (field, model, config, validations) {
+        buildColumnConfig: function (field, model, config, validations, gridListeners) {
             var fieldType = field.type.type,
                 column = this.buildDefaultColumnFromModelType(fieldType, config),
                 formConfig,
@@ -571,15 +573,12 @@ Ext.define('Bancha.scaffold', {
                 };
 
                 // if necessary re-render when the data is available
-                column.listeners = column.listeners || {};
-                column.listeners.afterrender = Ext.Function.createSequence(column.listeners.afterrender || Ext.emptyFn, function(column) {
+                gridListeners.render = Ext.Function.createSequence(gridListeners.render || Ext.emptyFn, function(gridpanel) {
                     if(store.getCount() === 0) {
-                        console.info('defer loading');
                         store.on('load', function(store, records, successful, eOpts) {
-                            console.info(['store laoded',arguments]);
                             if(successful) {
                                 // re-render
-                                column.doLayout();
+                                gridpanel.getView().refresh();
                             }
                         });
                     }
@@ -857,9 +856,11 @@ Ext.define('Bancha.scaffold', {
          *     {
          *         oneStorePerModel: true
          *     }
+         * @param {Object} gridListeners the grid listeners array, can be 
+         *                 augmented by this function
          * @return {Array} Returns an array of Ext.grid.column.* configs
          */
-        buildColumns: function (model, config) {
+        buildColumns: function (model, config, gridListeners) {
             var columns = [],
                 validations, button;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
@@ -903,7 +904,7 @@ Ext.define('Bancha.scaffold', {
             model.prototype.fields.each(function (field) {
                 if(config.exclude.indexOf(field.name) === -1) {
                     columns.push(
-                        Bancha.scaffold.Grid.buildColumnConfig(field, model, config, validations));
+                        Bancha.scaffold.Grid.buildColumnConfig(field, model, config, validations, gridListeners));
                 }
             });
 
@@ -968,7 +969,7 @@ Ext.define('Bancha.scaffold', {
          * @return {Object} Returns an Ext.grid.Panel configuration object
          */
         buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
-            var gridConfig, modelName, buttons, button, cellEditing, store, scope;
+            var gridConfig, modelName, buttons, button, cellEditing, store, scope, listeners;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
 
             // define model and modelName
@@ -985,9 +986,11 @@ Ext.define('Bancha.scaffold', {
 
             // basic config
             store = Bancha.scaffold.Util.getStore(model, config);
+            listeners = {};
             Ext.apply(gridConfig, {
                 store: store,
-                columns: this.buildColumns(model, config)
+                columns: this.buildColumns(model, config, listeners),
+                listeners: listeners // this is necessary for refreshing after associated stores are loaded
             });
 
             // add config for editable fields
