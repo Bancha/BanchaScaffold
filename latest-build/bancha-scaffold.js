@@ -13,7 +13,7 @@ Ext.require(["Ext.data.validations"],function(){var a=function(b,d){if(!b){retur
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.7
+ * @version       Bancha.scaffold v 0.5.8
  *
  * For more information go to http://scaffold.banchaproject.org
  */
