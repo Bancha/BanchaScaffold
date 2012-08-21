@@ -223,7 +223,7 @@
 
 				<!-- Combine all to one bancha-scaffold-debug.js -->
 				<echo msg="Combining files..." />
-				<exec command="java -jar &quot;${builderdir}/lib/JSBuilder/JSBuilder2.jar&quot; --projectFile &quot;${builderdir}/config/deploy.jsb2&quot; --homeDir &quot;${tmpdir}/&quot; &gt; &quot;${tmpdir}/report-jsbuilder.txt&quot;" escape="false" />
+				<exec checkreturn="true" command="java -jar &quot;${builderdir}/lib/JSBuilder/JSBuilder2.jar&quot; --projectFile &quot;${builderdir}/config/deploy.jsb2&quot; --homeDir &quot;${tmpdir}/&quot; &gt; &quot;${tmpdir}/report-jsbuilder.txt&quot;" escape="false" />
 
 				<!-- create a production version without debugging statements -->
 				<copy file="${tmpdir}/bancha-scaffold-debug.js" tofile="${tmpdir}/bancha-scaffold-production.js"/>
@@ -244,7 +244,7 @@
 				</delete>
 
 				<!-- minify production version -->
-				<exec command="java -jar ${yuicompressor.file} -o ${tmpdir}/bancha-scaffold.js ${tmpdir}/bancha-scaffold-production.js" checkreturn="true" />
+				<exec checkreturn="true" command="java -jar ${yuicompressor.file} -o ${tmpdir}/bancha-scaffold.js ${tmpdir}/bancha-scaffold-production.js" />
 		</target>
 		
 	   
@@ -296,7 +296,7 @@
 				<!-- api docs -->
 				<mkdir dir="${tmpdir}/docs"/>
 				<echo msg="${jsduck.file} &quot;${sourcedir}/src/*.js&quot; --output &quot;${tmpdir}/docs&quot; --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" />
-				<exec command="${jsduck.file} &quot;${sourcedir}/src&quot; --output &quot;${tmpdir}/docs&quot; --verbose --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" escape="false" />
+				<exec checkreturn="true" command="${jsduck.file} &quot;${sourcedir}/src&quot; --output &quot;${tmpdir}/docs&quot; --verbose --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" escape="false" />
 				<!-- add Bancha styling -->
 				<copy todir="${tmpdir}/docs/resources" overwrite="true">
 						<fileset refid="files.source.jsDocRessources"/>
