@@ -12,7 +12,7 @@
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.6
+ * @version       Bancha.scaffold v 0.5.7
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -99,7 +99,7 @@ Ext.require(['Ext.data.validations'], function() {
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.6
+ * @version       Bancha.scaffold v 0.5.7
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -164,7 +164,7 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * @since         Bancha.scaffold 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.6
+ * @version       Bancha.scaffold v 0.5.7
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -368,6 +368,110 @@ Ext.define('Bancha.scaffold', {
                 }
             }
             return buttons;
+        },
+        /**
+         * for separation of concerns, gets/creates a store.
+         * Used to build the grid store and to build associated stores.
+         *
+         * @param model {Ext.data.Model} A model
+         * @param config {Object} A config object with the properties
+         *                        oneStorePerModel and storeDefaultClass
+         * @return {Ext.data.Store} A store
+         */
+        getStore: (function (model, config) {
+            var stores = {};
+
+            return function (model, config) {
+                var modelName = Ext.ClassManager.getName(model),
+                    store;
+                if (config.oneStorePerModel && stores[modelName]) {
+                    return stores[modelName];
+                }
+
+                store = Ext.create(config.storeDefaultClass || "Ext.data.Store", Ext.apply({
+                    model: modelName
+                }, Ext.clone(config.storeDefaults)));
+
+                if (config.oneStorePerModel) {
+                    stores[modelName] = store;
+                }
+
+                return store;
+            };
+        }()),
+        /**
+         * Tries to find the most usefull model field for dispaying. This is
+         * used in the Grid scaffolding renderer for associatiosn and can be
+         * overwritten at any time.
+         *
+         * By default it used the models "displayField" config, which just exists
+         * in Bancha.Scaffold
+         *
+         * @param model {Ext.data.Model} the model to look through
+         * @return {String} the most accurate field name
+         */
+        getDisplayFieldName: function(model) {
+            // if defined use the display field config
+            if(Ext.isString(model.displayField)) {
+                return model.displayField;
+            }
+
+            // get the field names
+            var fieldNames = Ext.Array.pluck(model.getFields(), 'name');
+
+            // try to find name, title or code
+            if(fieldNames.indexOf('name') !== -1) {
+                return 'name';
+            }
+            if(fieldNames.indexOf('title') !== -1) {
+                return 'title';
+            }
+            if(fieldNames.indexOf('code') !== -1) {
+                return 'code';
+            }
+
+            // nothing usefull found
+            return model.idProperty || fieldNames[0];
+        }, 
+        /**
+         * This function may need to be customized, it generates the expected model associations "name" value,
+         * to check if this field has a association (this is used for repalcing id values with actual data).
+         *
+         * The default uses cake php naming conventions, e.g.
+         * fieldname 'book_author_id' -> association name 'bookAuthors'
+         */
+        fieldNameToModelAssociationName: function(modelFieldName) {
+            if(!Ext.isString(modelFieldName)) {
+                return;
+            }
+
+            var parts = modelFieldName.split('_');
+            if(parts.length<2 || parts[parts.length-1] !== 'id') {
+                return;
+            }
+            parts.pop(); // remove 'id'
+
+            var name = parts.shift(); // the first stays lower case
+            Ext.each(parts, function(part) {
+                name += part.substr(0,1).toUpperCase() + part.substr(1);
+            });
+
+            return name+'s';
+        },
+        /**
+         * Returns the corresponding association for a given field, or false
+         *
+         * @param field the model field to look for an association (belongsTo)
+         * @param model the fields model
+         * @return {Ext.data.association.belongsTo||False} the found association
+         */
+        getBelongsToAssociation: function(field, model) {
+            var associationName = this.fieldNameToModelAssociationName(field.name),
+                associations = Ext.isFunction(model.getAssociations) ? model.getAssociations():
+                                (model.prototype ? model.prototype.associations : false),
+                association = (associationName && associations) ? associations.get(associationName) : false;
+
+            return association;
         }
     },
     /**
@@ -476,6 +580,11 @@ Ext.define('Bancha.scaffold', {
             }
         },
         /**
+         * @property {String[]}
+         * Exclude some model fields from scaffolding
+         */
+        exclude: [],
+        /**
          * @property
          * This config is applied to each scaffolded column config
          */
@@ -532,31 +641,6 @@ Ext.define('Bancha.scaffold', {
          */
         oneStorePerModel: true,
         /**
-         * @private
-         * for separation of concerns, gets/create a store for the grid
-         */
-        getStore: (function (model, config) {
-            var stores = {};
-
-            return function (model, config) {
-                var modelName = Ext.ClassManager.getName(model),
-                    store;
-                if (config.oneStorePerModel && stores[modelName]) {
-                    return stores[modelName];
-                }
-
-                store = Ext.create(config.storeDefaultClass, Ext.apply({
-                    model: modelName
-                }, Ext.clone(config.storeDefaults)));
-
-                if (config.oneStorePerModel) {
-                    stores[modelName] = store;
-                }
-
-                return store;
-            };
-        }()),
-        /**
          * @property {Function} transformColumnConfig Writable function used to add some custom behaviour.
          *
          * This function can be overwritten by any custom function.
@@ -602,40 +686,78 @@ Ext.define('Bancha.scaffold', {
         /**
          * @private
          * Creates a Ext.grid.Column config from an model field type
-         * @param {Sring} type The model field type
-         * @param {String} columnName (optional) The name of the column
+         * @param {Sring} The model field
+         * @param {Sring} The field's model
          * @param {Object} config the grid config object
-         * See {@link #buildConfig}'s config property
+         *                 See {@link #buildConfig}'s config property
+         * @param {Object} gridListeners the grid listeners array, can be 
+         *                 augmented by this function
          * @param {Array} (optional) validations An array of Ext.data.validations of the model
          * @return {Object} Returns an Ext.grid.column.* configuration object
          */
-        buildColumnConfig: function (type, columnName, config, validations) {
-            var column = this.buildDefaultColumnFromModelType(type, config),
-                formConfig;
+        buildColumnConfig: function (field, model, config, validations, gridListeners) {
+            var fieldType = field.type.type,
+                column = this.buildDefaultColumnFromModelType(fieldType, config),
+                formConfig,
+                association,
+                store,
+                fieldName;
 
             // infer name
-            if (columnName) {
-                column.text = Bancha.scaffold.Util.humanize(columnName);
-                column.dataIndex = columnName;
+            if (field.name) {
+                column.text = Bancha.scaffold.Util.humanize(field.name);
+                column.dataIndex = field.name;
             }
+
+            // check for associations
+            association = Bancha.scaffold.Util.getBelongsToAssociation(field, model);
+            if(association) {
+                // load the store
+                store = Bancha.scaffold.Util.getStore(association.associatedModel, config);
+                fieldName = Bancha.scaffold.Util.getDisplayFieldName(association.associatedModel); // calculate this only once per column
+
+                // build a renderer
+                column.renderer = function(id) {
+                    var rec = store.getById(id);
+
+                    // display either the found record name or Unknown
+                    return rec ? rec.get(fieldName) : (Bancha.t ? Bancha.t('Unknown') : 'Unknown');
+                };
+
+                // if necessary re-render when the data is available
+                gridListeners.render = Ext.Function.createSequence(gridListeners.render || Ext.emptyFn, function(gridpanel) {
+                    if(store.getCount() === 0) {
+                        store.on('load', function(store, records, successful, eOpts) {
+                            if(successful) {
+                                // re-render
+                                gridpanel.getView().refresh();
+                            }
+                        });
+                    }
+                });
+            } //eo if association
 
             // add an editor
             if(config.editable) {
                 formConfig = config.formConfig || {};
                 formConfig = Ext.apply({}, formConfig, Ext.clone(Bancha.scaffold.Form));
-                column.field = Bancha.scaffold.Form.buildFieldConfig(type, columnName, formConfig, validations, true);
+                // take the store config from the grid config
+                formConfig.storeDefaults = config.storeDefaults;
+                formConfig.oneStorePerModel = config.oneStorePerModel;
+                // build the editor field
+                column.field = Bancha.scaffold.Form.buildFieldConfig(field, model, formConfig, validations, true);
 
                 // now make custom field transforms
-                column.field = formConfig.internalTransformFieldConfig(column.field, type);
+                column.field = formConfig.internalTransformFieldConfig(column.field, fieldType);
                 if (typeof formConfig.transformFieldConfig === 'function') {
-                    column.field = formConfig.transformFieldConfig(column.field, type);
+                    column.field = formConfig.transformFieldConfig(column.field, fieldType);
                 }
             }
 
             // now make custom transforms
-            column = config.internalTransformColumnConfig(column, type);
+            column = config.internalTransformColumnConfig(column, fieldType);
             if (typeof config.transformColumnConfig === 'function') {
-                column = config.transformColumnConfig(column, type);
+                column = config.transformColumnConfig(column, fieldType);
             }
 
             return column;
@@ -886,9 +1008,11 @@ Ext.define('Bancha.scaffold', {
          *     {
          *         oneStorePerModel: true
          *     }
+         * @param {Object} gridListeners the grid listeners array, can be 
+         *                 augmented by this function
          * @return {Array} Returns an array of Ext.grid.column.* configs
          */
-        buildColumns: function (model, config) {
+        buildColumns: function (model, config, gridListeners) {
             var columns = [],
                 validations, button;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
@@ -916,11 +1040,24 @@ Ext.define('Bancha.scaffold', {
                 model = Ext.ModelManager.getModel(model);
             }
 
+            if(!Ext.isArray(config.exclude)) {
+                // IFDEBUG
+                Ext.Error.raise({
+                    plugin: 'Bancha.scaffold',
+                    model: model,
+                    msg: 'Bancha Scaffold: When scaffolding a grid panel the exclude property should be an array of field names to exclude.'
+                });
+                // ENDIF
+                config.exclude = [];
+            }
+
             // build all columns
             validations = model.prototype.validations;
             model.prototype.fields.each(function (field) {
-                columns.push(
-                    Bancha.scaffold.Grid.buildColumnConfig(field.type.type, field.name, config, validations));
+                if(config.exclude.indexOf(field.name) === -1) {
+                    columns.push(
+                        Bancha.scaffold.Grid.buildColumnConfig(field, model, config, validations, gridListeners));
+                }
             });
 
             // add a destroy button
@@ -984,7 +1121,7 @@ Ext.define('Bancha.scaffold', {
          * @return {Object} Returns an Ext.grid.Panel configuration object
          */
         buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
-            var gridConfig, modelName, buttons, button, cellEditing, store, scope;
+            var gridConfig, modelName, buttons, button, cellEditing, store, scope, listeners;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
 
             // define model and modelName
@@ -1000,10 +1137,12 @@ Ext.define('Bancha.scaffold', {
             gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
             // basic config
-            store = config.getStore(model, config);
+            store = Bancha.scaffold.Util.getStore(model, config);
+            listeners = {};
             Ext.apply(gridConfig, {
                 store: store,
-                columns: this.buildColumns(model, config)
+                columns: this.buildColumns(model, config, listeners),
+                listeners: listeners // this is necessary for refreshing after associated stores are loaded
             });
 
             // add config for editable fields
@@ -1161,6 +1300,11 @@ Ext.define('Bancha.scaffold', {
             }
             // TODO OPTIMIZE Add combobox support
         },
+        /**
+         * @property {String[]}
+         * Exclude some model fields from scaffolding
+         */
+        exclude: [],
         /**
          * @property
          * This config is applied to each scaffolded form field
@@ -1373,31 +1517,47 @@ Ext.define('Bancha.scaffold', {
         /**
          * @private
          * Creates a Ext.form.Field config from an model field type
-         * @param {Sring} type The model field type
-         * @param {String} fieldName (optional) the name of the field, neccessary for applying validation rules
+         * @param {Sring} type The model's current field
+         * @param {String} model the model
          * @param {Object} config A config object with all fields, see {@link #buildConfig}'s config property
          * @param {Array} validations (optional) An array of Ext.data.validations of the model
          * @param {Object} isEditorfield (optional) True to don't add field label (usefull e.g. in an editor grid)
          * @param {Object} nonEditorFieldModelField (optional) Dirty hack to set the fieldname on form panel creations, should be refactored!
          * @return {Object} Returns a field config
          */
-        buildFieldConfig: function (type, fieldName, config, validations, isEditorfield, nonEditorFieldModelField) {
-            var field = this.buildDefaultFieldFromModelType(type, config);
+        buildFieldConfig: function (modelField, model, config, validations, isEditorfield) {
+            var type = modelField.type.type,
+                field = this.buildDefaultFieldFromModelType(type, config),
+                association,
+                store,
+                fieldName;
 
             // infer name
-            field.name = fieldName;
+            field.name = modelField.name;
             if (!isEditorfield) {
-                field.fieldLabel = Bancha.scaffold.Util.humanize(fieldName);
+                field.fieldLabel = Bancha.scaffold.Util.humanize(modelField.name);
             }
 
             // infer date format into editor (not needed for editor fields)
-            if(type==='date' && !isEditorfield && typeof nonEditorFieldModelField==='object') {
-                field.format = nonEditorFieldModelField.dateFormat;
+            if(type==='date' && !isEditorfield && modelField.dateFormat) {
+                field.format = modelField.dateFormat;
             }
 
             // add some additional validation rules from model validation rules
             if (Ext.isDefined(validations) && validations.length) {
                 field = this.addValidationRuleConfigs(field, validations, config);
+            }
+
+            // check for associations
+            association = Bancha.scaffold.Util.getBelongsToAssociation(field, model);
+            if(association) {
+                Ext.apply(field, {
+                    xtype: 'combobox',
+                    store: Bancha.scaffold.Util.getStore(association.associatedModel, config),
+                    displayField: Bancha.scaffold.Util.getDisplayFieldName(association.associatedModel),
+                    valueField: association.associatedModel.prototype.idProperty || 'id',
+                    queryMode: 'local'
+                });
             }
 
             // now make custom transforms
@@ -1695,14 +1855,27 @@ Ext.define('Bancha.scaffold', {
             }
             // ENDIF
 
+            if(!Ext.isArray(config.exclude)) {
+                // IFDEBUG
+                Ext.Error.raise({
+                    plugin: 'Bancha.scaffold',
+                    model: model,
+                    msg: 'Bancha Scaffold: When scaffolding a form panel the exclude property should be an array of field names to exclude.'
+                });
+                // ENDIF
+                config.exclude = [];
+            }
+
             // build initial config
             formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
             // create all fields
             validations = model.prototype.validations;
             model.prototype.fields.each(function (field) {
-                fields.push(
-                    Bancha.scaffold.Form.buildFieldConfig(field.type.type, field.name, config, validations, false, field));
+                if(config.exclude.indexOf(field.name) === -1) {
+                    fields.push(
+                        Bancha.scaffold.Form.buildFieldConfig(field, model, config, validations));
+                }
             });
 
             // probably not neccessary in extjs4!
@@ -1780,7 +1953,7 @@ Ext.define('Bancha.scaffold', {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.6
+ * @version       Bancha.scaffold v 0.5.7
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1871,7 +2044,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.6
+ * @version       Bancha.scaffold v 0.5.7
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1964,7 +2137,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.6
+ * @version       Bancha.scaffold v 0.5.7
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -2009,11 +2182,11 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
          */
         panelDefaults: {},
         /**
-         * @cfg {Object} panelScaffoldDefaults
+         * @cfg {Object} scaffoldDefaults
          * This config will be applied to each model grid's scaffold property
          * and will overwrite scaffolded code
          */
-        panelScaffoldDefaults: {},
+        scaffoldDefaults: {},
         initComponent: function () {
             // IFDEBUG
             if(!Ext.isArray(this.models)) {
@@ -2035,7 +2208,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                 model = Ext.ModelManager.getModel(modelName);
 
                 // probably some newbies confuse the namespaced and unnamespaced model names
-                // so for Bancha user also support not namespaced version
+                // so for Bancha users also support not namespaced version
                 if(!model && Bancha.modelNamespace) {
                     model = Ext.ModelManager.getModel(Bancha.modelNamespace + '.' + modelName);
                 }
@@ -2077,6 +2250,8 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                     if(buttons.length > 1) {
                         // the model supports create and/or save
                         tabitem.scaffold.buttons = buttons;
+                    } else {
+                        tabitem.scaffold.editable = false;
                     }
                     if(!proxy.api.destroy) {
                         tabitem.scaffold.deletable = false;
@@ -2088,7 +2263,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
 
                 // add panel configs and possibly overwrite scaffolded code
                 tabitem = Ext.apply(tabitem, me.panelDefaults);
-                tabitem.scaffold = Ext.apply(tabitem.scaffold, me.panelScaffoldDefaults);
+                tabitem.scaffold = Ext.apply(tabitem.scaffold, me.scaffoldDefaults);
 
                 // add tab to items
                 items.push(tabitem);
