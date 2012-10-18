@@ -12,7 +12,7 @@
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.9
+ * @version       Bancha.scaffold v 0.6.0
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -99,7 +99,7 @@ Ext.require(['Ext.data.validations'], function() {
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.9
+ * @version       Bancha.scaffold v 0.6.0
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -164,7 +164,7 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * @since         Bancha.scaffold 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.9
+ * @version       Bancha.scaffold v 0.6.0
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -389,7 +389,7 @@ Ext.define('Bancha.scaffold', {
         }()),
         /**
          * Tries to find the most usefull model field for dispaying. This is
-         * used in the Grid scaffolding renderer for associatiosn and can be
+         * used in the Grid scaffolding renderer for associations and can be
          * overwritten at any time.
          *
          * By default it used the models "displayField" config, which just exists
@@ -423,14 +423,15 @@ Ext.define('Bancha.scaffold', {
         }, 
         /**
          * This function may need to be customized, it generates the expected model associations "name" value,
-         * to check if this field has a association (this is used for repalcing id values with actual data).
+         * to check if this field has a association (this is used for replacing id values with actual data).
          *
          * The default uses cake php naming conventions, e.g.
          * fieldname 'book_author_id' -> association name 'bookAuthors'
          * @param {String} the fields name of an model, e.g. 'title'
+         * @param {String} the association type, e.g. belongsTo
          * @return the guessed association name
          */
-        fieldNameToModelAssociationName: function(modelFieldName) {
+        fieldNameToModelAssociationName: function(modelFieldName, associationType) {
             if(!Ext.isString(modelFieldName)) {
                 return;
             }
@@ -446,7 +447,7 @@ Ext.define('Bancha.scaffold', {
                 name += part.substr(0,1).toUpperCase() + part.substr(1);
             });
 
-            return name+'s';
+            return associationType==='belongsTo' ? name : name+'s';
         },
         /**
          * Returns the corresponding association for a given field, or false
@@ -456,7 +457,7 @@ Ext.define('Bancha.scaffold', {
          * @return {Ext.data.association.belongsTo||False} the found association
          */
         getBelongsToAssociation: function(field, model) {
-            var associationName = this.fieldNameToModelAssociationName(field.name),
+            var associationName = this.fieldNameToModelAssociationName(field.name, 'belongsTo'),
                 associations = Ext.isFunction(model.getAssociations) ? model.getAssociations():
                                 (model.prototype ? model.prototype.associations : false),
                 association = (associationName && associations) ? associations.get(associationName) : false;
@@ -1825,7 +1826,7 @@ Ext.define('Bancha.scaffold', {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.9
+ * @version       Bancha.scaffold v 0.6.0
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1904,7 +1905,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.9
+ * @version       Bancha.scaffold v 0.6.0
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1986,7 +1987,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.9
+ * @version       Bancha.scaffold v 0.6.0
  *
  * For more information go to http://scaffold.banchaproject.org
  */

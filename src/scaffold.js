@@ -249,7 +249,7 @@ Ext.define('Bancha.scaffold', {
         }()),
         /**
          * Tries to find the most usefull model field for dispaying. This is
-         * used in the Grid scaffolding renderer for associatiosn and can be
+         * used in the Grid scaffolding renderer for associations and can be
          * overwritten at any time.
          *
          * By default it used the models "displayField" config, which just exists
@@ -283,14 +283,15 @@ Ext.define('Bancha.scaffold', {
         }, 
         /**
          * This function may need to be customized, it generates the expected model associations "name" value,
-         * to check if this field has a association (this is used for repalcing id values with actual data).
+         * to check if this field has a association (this is used for replacing id values with actual data).
          *
          * The default uses cake php naming conventions, e.g.
          * fieldname 'book_author_id' -> association name 'bookAuthors'
          * @param {String} the fields name of an model, e.g. 'title'
+         * @param {String} the association type, e.g. belongsTo
          * @return the guessed association name
          */
-        fieldNameToModelAssociationName: function(modelFieldName) {
+        fieldNameToModelAssociationName: function(modelFieldName, associationType) {
             if(!Ext.isString(modelFieldName)) {
                 return;
             }
@@ -306,7 +307,7 @@ Ext.define('Bancha.scaffold', {
                 name += part.substr(0,1).toUpperCase() + part.substr(1);
             });
 
-            return name+'s';
+            return associationType==='belongsTo' ? name : name+'s';
         },
         /**
          * Returns the corresponding association for a given field, or false
@@ -316,7 +317,7 @@ Ext.define('Bancha.scaffold', {
          * @return {Ext.data.association.belongsTo||False} the found association
          */
         getBelongsToAssociation: function(field, model) {
-            var associationName = this.fieldNameToModelAssociationName(field.name),
+            var associationName = this.fieldNameToModelAssociationName(field.name, 'belongsTo'),
                 associations = Ext.isFunction(model.getAssociations) ? model.getAssociations():
                                 (model.prototype ? model.prototype.associations : false),
                 association = (associationName && associations) ? associations.get(associationName) : false;
