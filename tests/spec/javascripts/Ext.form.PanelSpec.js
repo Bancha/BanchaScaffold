@@ -27,10 +27,23 @@ describe("Ext.form.Panel scaffold extension tests",function() {
         formScaf = Bancha.scaffold.Form; //shortcut
     
     it("should augment the class Ext.form.Panel and use simple scaffold:modelname", function() {
-        model('MyTest.model.FormPanelExtensionTestModel');
+        model('MyTest.model.FormPanelExtensionModelNameTestModel');
 
         var panel = Ext.create("Ext.form.Panel", {
-            scaffold: 'MyTest.model.FormPanelExtensionTestModel'
+            scaffold: 'MyTest.model.FormPanelExtensionModelNameTestModel'
+        });
+        
+        // since this function is using #buildConfig,
+        // just test that it is applied
+
+        expect(panel).property('items.items.length').toEqual(8);
+    });
+
+    it("should augment the class Ext.form.Panel and use simple scaffold:modelClass", function() {
+        model('MyTest.model.FormPanelExtensionModelClassTestModel');
+
+        var panel = Ext.create("Ext.form.Panel", {
+            scaffold: Ext.ModelManager.getModel('MyTest.model.FormPanelExtensionModelClassTestModel')
         });
         
         // since this function is using #buildConfig,

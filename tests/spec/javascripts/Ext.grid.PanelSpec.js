@@ -32,10 +32,24 @@ describe("Ext.grid.Panel scaffold extension tests",function() {
 
 	it("should augment the class Ext.grid.Panel and use simple scaffold:modelname", function() {
         // prepare
-        model('MyTest.model.GridPanelExtensionTestModel');
+        model('MyTest.model.GridPanelExtensionModelNameTestModel');
         
 		var panel = Ext.create("Ext.grid.Panel", {
-			scaffold: 'MyTest.model.GridPanelExtensionTestModel'
+			scaffold: 'MyTest.model.GridPanelExtensionModelNameTestModel'
+		});
+		
+        // since this function is using #buildConfig,
+        // just test that it is applied
+        
+		expect(panel).property('columns.length').toEqual(9); // 8 columns + destroy column
+	});
+
+	it("should augment the class Ext.grid.Panel and use simple scaffold:modelClass", function() {
+        // prepare
+        model('MyTest.model.GridPanelExtensionModelClassTestModel');
+        
+		var panel = Ext.create("Ext.grid.Panel", {
+			scaffold: Ext.ModelManager.getModel('MyTest.model.GridPanelExtensionModelClassTestModel')
 		});
 		
         // since this function is using #buildConfig,

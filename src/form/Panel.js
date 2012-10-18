@@ -33,11 +33,11 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
     Ext.apply(Ext.form.Panel, {
         /**
          * @cfg {Object|String|False} scaffold
-         * Define a config object or model name to build the config from.  
-         * Guesses are made by model field configs and validation rules.
-         *
-         * The config object must have the model name defined in config.target. Any property
+         * This can be eigther a model class name, a model class or a config object.
+         * A config object must have the model name defined in config.target. Any property
          * from {@link Bancha.scaffold.Form} can be defined here.
+         *
+         * The scaffolding guesses are made from model field configs and validation rules.
          *
          * See {@link Bancha.scaffold.Form} for an example.
          */
@@ -51,12 +51,16 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
     // add scaffolding support
     Ext.override(Ext.form.Panel, {
         initComponent: function () {
-            if (Ext.isString(this.scaffold)) {
+            var modelName;
+
+            // if it is just a model or model name transform to a config object
+            if (Ext.isString(this.scaffold) || (Ext.isDefined(this.scaffold) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold)))) {
                 // IFDEBUG
-                if (!Ext.ModelManager.isRegistered(this.scaffold)) {
+                modelName = Ext.isString(this.scaffold) ? this.scaffold : Ext.ClassManager.getName(this.scaffold);
+                if (!Ext.ModelManager.isRegistered(modelName)) {
                     Ext.Error.raise({
                         plugin: 'Bancha.scaffold',
-                        msg: ['Bancha Scaffold: Expected form panels scaffold property to be a valid model name, ',
+                        msg: ['Bancha Scaffold: Expected form panels scaffold property to be a valid model or model name, ',
                              'instead got ' + this.scaffold + ' (of type ' + (typeof this.scaffold) + ')'].join('')
                     });
                 }
@@ -66,12 +70,14 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
                 };
             }
 
+            // if there is a config object apply scaffolding
             if (Ext.isObject(this.scaffold)) {
                 // IFDEBUG
-                if (!Ext.ModelManager.isRegistered(this.scaffold.target)) {
+                modelName = Ext.isString(this.scaffold.target) ? this.scaffold.target : Ext.ClassManager.getName(this.scaffold.target);
+                if (!Ext.ModelManager.isRegistered(modelName)) {
                     Ext.Error.raise({
                         plugin: 'Bancha.scaffold',
-                        msg: ['Bancha Scaffold: Expected form panels scaffold.target property to be a valid model name, ',
+                        msg: ['Bancha Scaffold: Expected grid panels scaffold.target property to be a valid model or model name, ',
                              'instead got ' + this.scaffold.target + ' (of type ' + (typeof this.scaffold.target) + ')'].join('')
                     });
                 }

@@ -970,18 +970,13 @@ Ext.define('Bancha.scaffold', {
          * @param {Object} initialPanelConfig (optional) Some additional grid configs which are applied to the config.
          * @return {Object} Returns an Ext.grid.Panel configuration object
          */
-        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
+        buildConfig: function (/* deprecated, is read from config.target */ignoredModel, config, initialPanelConfig) {
             var gridConfig, modelName, buttons, button, cellEditing, store, scope, listeners;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
 
-            // define model and modelName
-            if (Ext.isString(model)) {
-                modelName = model;
-                model = Ext.ClassManager.get(modelName);
-            } else {
-                modelName = Ext.getClassName(model);
-            }
-            config.target = modelName;
+            // get the model name and model class
+            config.target = Ext.isString(config.target) ? config.target : Ext.ClassManager.getName(config.target);            
+            var model = Ext.ModelManager.getModel(config.target);
 
             // call beforeBuild callback
             gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
@@ -1666,44 +1661,15 @@ Ext.define('Bancha.scaffold', {
          * configs which are applied to the config
          * @return {Object} object with Ext.form.Panel configs
          */
-        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
+        buildConfig: function (/* deprecated, is read from config.target */ignoredModel, config, initialPanelConfig) {
             var fields = [],
                 formConfig, id, validations, loadFn;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
             initialPanelConfig = initialPanelConfig || {};
 
-            // TODO - Refactor this API to always directly pull the model from the config
-            config.target = Ext.isString(model) ? model : Ext.ClassManager.getName(model);
-
-            // IFDEBUG
-            if (!Ext.isDefined(model)) {
-                Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
-                    msg: 'Bancha Scaffold: Bancha.scaffold.Form.buildConfig() expected the model or model name as first argument, instead got undefined'
-                });
-            }
-            // ENDIF
-            if (Ext.isString(model)) {
-                // IFDEBUG
-                if (!Ext.isDefined(Ext.ModelManager.getModel(model))) {
-                    Ext.Error.raise({
-                        plugin: 'Bancha.scaffold',
-                        model: model,
-                        msg: 'Bancha Scaffold: First argument for Bancha.scaffold.Form.buildConfig() is the string "' + model + '", which  is not a valid model class name. Please define a model first (for Bancha users: see Bancha.getModel() and Bancha.createModel())'
-                    });
-                }
-                // ENDIF
-                model = Ext.ModelManager.getModel(model);
-            }
-            // IFDEBUG
-            if (!model.prototype || !model.prototype.isModel) {
-                Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
-                    model: model,
-                    msg: 'Bancha Scaffold: First argument for Bancha.scaffold.Form.buildConfig() is the string "' + model + '", which  is not a valid model class name. Please define a model first (for Bancha users: see Bancha.getModel() and Bancha.createModel())'
-                });
-            }
-            // ENDIF
+            // get the model name and model class
+            config.target = Ext.isString(config.target) ? config.target : Ext.ClassManager.getName(config.target);            
+            var model = Ext.ModelManager.getModel(config.target);
 
             if(!Ext.isArray(config.exclude)) {
                 // IFDEBUG

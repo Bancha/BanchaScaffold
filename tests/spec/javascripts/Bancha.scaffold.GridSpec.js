@@ -241,7 +241,9 @@ describe("Bancha.scaffold.Grid tests",function() {
         model('MyTest.model.GridConfigTest');
 
         // test
-        var result = gridScaf.buildConfig('MyTest.model.GridConfigTest');
+        var result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigTest'
+        });
 
         // should have a store
         expect(result.store.getProxy().getModel()).toBeModelClass('MyTest.model.GridConfigTest');
@@ -257,7 +259,9 @@ describe("Bancha.scaffold.Grid tests",function() {
         model('MyTest.model.GridConfigTwoTimesTest');
 
         // first
-        var result = gridScaf.buildConfig('MyTest.model.GridConfigTwoTimesTest');
+        var result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigTwoTimesTest'
+        });
         // should have a store
         expect(result.store.getProxy().getModel()).toBeModelClass(
                 'MyTest.model.GridConfigTwoTimesTest');
@@ -265,7 +269,9 @@ describe("Bancha.scaffold.Grid tests",function() {
         expect(result.columns).toEqual(expectedColumns);
         
         // second
-        result = gridScaf.buildConfig('MyTest.model.GridConfigTwoTimesTest');
+        result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigTwoTimesTest'
+        });
         // should have a store
         expect(result.store.getProxy().getModel()).toBeModelClass(
                 'MyTest.model.GridConfigTwoTimesTest');
@@ -280,7 +286,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         model('MyTest.model.GridConfigWithUpdateDeleteTest');
 
         // test
-        var result = gridScaf.buildConfig('MyTest.model.GridConfigWithUpdateDeleteTest', {
+        var result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigWithUpdateDeleteTest',
             editable  : true,
             deletable : true,
             buttons: ['save']
@@ -315,7 +322,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         model('MyTest.model.GridConfigWithCRUDTest');
 
         // test
-        var result = gridScaf.buildConfig('MyTest.model.GridConfigWithCRUDTest', {
+        var result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigWithCRUDTest',
             editable  : true,
             deletable : true,
             buttons: ['->','create','reset','save']
@@ -369,7 +377,9 @@ describe("Bancha.scaffold.Grid tests",function() {
                 return config;
             }
         });
-        var result = gridScaf.buildConfig('MyTest.model.GridConfigWithClassInterceptorsTest');
+        var result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigWithClassInterceptorsTest'
+        });
         
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqual(['before','after']);
@@ -387,7 +397,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         model('MyTest.model.GridConfigWithConfigInterceptorsTest');
         
         // use a config specific only for this call
-        var result = gridScaf.buildConfig('MyTest.model.GridConfigWithConfigInterceptorsTest',{
+        var result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigWithConfigInterceptorsTest',
             beforeBuild: function() {
                 return {
                     interceptors: ['before'] // make sure that afterBuild only augemts
@@ -429,7 +440,9 @@ describe("Bancha.scaffold.Grid tests",function() {
                 }
             }
         });
-        var result = gridScaf.buildConfig('MyTest.model.GridConfigWithFormInterceptorTest');
+        var result = gridScaf.buildConfig('x', {
+            target: 'MyTest.model.GridConfigWithFormInterceptorTest'
+        });
         
         // transformFieldConfig
         expect(result.columns).toBeAnObject();

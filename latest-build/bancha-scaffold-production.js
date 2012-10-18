@@ -12,7 +12,7 @@
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.8
+ * @version       Bancha.scaffold v 0.5.9
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -99,7 +99,7 @@ Ext.require(['Ext.data.validations'], function() {
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.8
+ * @version       Bancha.scaffold v 0.5.9
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -164,7 +164,7 @@ Ext.require(['Ext.form.field.VTypes'], function () {
  * @since         Bancha.scaffold 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.8
+ * @version       Bancha.scaffold v 0.5.9
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -427,6 +427,8 @@ Ext.define('Bancha.scaffold', {
          *
          * The default uses cake php naming conventions, e.g.
          * fieldname 'book_author_id' -> association name 'bookAuthors'
+         * @param {String} the fields name of an model, e.g. 'title'
+         * @return the guessed association name
          */
         fieldNameToModelAssociationName: function(modelFieldName) {
             if(!Ext.isString(modelFieldName)) {
@@ -1087,18 +1089,13 @@ Ext.define('Bancha.scaffold', {
          * @param {Object} initialPanelConfig (optional) Some additional grid configs which are applied to the config.
          * @return {Object} Returns an Ext.grid.Panel configuration object
          */
-        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
+        buildConfig: function (/* deprecated, is read from config.target */ignoredModel, config, initialPanelConfig) {
             var gridConfig, modelName, buttons, button, cellEditing, store, scope, listeners;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
 
-            // define model and modelName
-            if (Ext.isString(model)) {
-                modelName = model;
-                model = Ext.ClassManager.get(modelName);
-            } else {
-                modelName = Ext.getClassName(model);
-            }
-            config.target = modelName;
+            // get the model name and model class
+            config.target = Ext.isString(config.target) ? config.target : Ext.ClassManager.getName(config.target);            
+            var model = Ext.ModelManager.getModel(config.target);
 
             // call beforeBuild callback
             gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
@@ -1726,21 +1723,15 @@ Ext.define('Bancha.scaffold', {
          * configs which are applied to the config
          * @return {Object} object with Ext.form.Panel configs
          */
-        buildConfig: function (/* deprecated, should be read from config */model, config, initialPanelConfig) {
+        buildConfig: function (/* deprecated, is read from config.target */ignoredModel, config, initialPanelConfig) {
             var fields = [],
                 formConfig, id, validations, loadFn;
             config = Ext.apply({}, config, Ext.clone(this)); // get all defaults for this call
             initialPanelConfig = initialPanelConfig || {};
 
-            // TODO - Refactor this API to always directly pull the model from the config
-            config.target = Ext.isString(model) ? model : Ext.ClassManager.getName(model);
-
-            
-            if (Ext.isString(model)) {
-                
-                model = Ext.ModelManager.getModel(model);
-            }
-            
+            // get the model name and model class
+            config.target = Ext.isString(config.target) ? config.target : Ext.ClassManager.getName(config.target);            
+            var model = Ext.ModelManager.getModel(config.target);
 
             if(!Ext.isArray(config.exclude)) {
                 
@@ -1834,7 +1825,7 @@ Ext.define('Bancha.scaffold', {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.8
+ * @version       Bancha.scaffold v 0.5.9
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1855,11 +1846,11 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
     Ext.apply(Ext.form.Panel, {
         /**
          * @cfg {Object|String|False} scaffold
-         * Define a config object or model name to build the config from.  
-         * Guesses are made by model field configs and validation rules.
-         *
-         * The config object must have the model name defined in config.target. Any property
+         * This can be eigther a model class name, a model class or a config object.
+         * A config object must have the model name defined in config.target. Any property
          * from {@link Bancha.scaffold.Form} can be defined here.
+         *
+         * The scaffolding guesses are made from model field configs and validation rules.
          *
          * See {@link Bancha.scaffold.Form} for an example.
          */
@@ -1873,13 +1864,17 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
     // add scaffolding support
     Ext.override(Ext.form.Panel, {
         initComponent: function () {
-            if (Ext.isString(this.scaffold)) {
+            var modelName;
+
+            // if it is just a model or model name transform to a config object
+            if (Ext.isString(this.scaffold) || (Ext.isDefined(this.scaffold) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold)))) {
                 
                 this.scaffold = {
                     target: this.scaffold
                 };
             }
 
+            // if there is a config object apply scaffolding
             if (Ext.isObject(this.scaffold)) {
                 
 
@@ -1909,7 +1904,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.8
+ * @version       Bancha.scaffold v 0.5.9
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1931,11 +1926,11 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
     Ext.apply(Ext.grid.Panel, {
         /**
          * @cfg {Object|String|False} scaffold
-         * Define a config object or model name to build the config from.
-         * Guesses are made by model field configs and validation rules.
-         *
-         * The config object must have the model name defined in config.target. Any property
+         * This can be eigther a model class name, a model class or a config object.
+         * A config object must have the model name defined in config.target. Any property
          * from {@link Bancha.scaffold.Grid} can be defined here.
+         *
+         * The scaffolding guesses are made from model field configs and validation rules.
          *
          * See {@link Bancha.scaffold.Grid} for an example.
          */
@@ -1949,13 +1944,17 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
     // add scaffolding support
     Ext.override(Ext.grid.Panel, {
         initComponent: function () {
-            if (Ext.isString(this.scaffold)) {
+            var modelName;
+
+            // if it is just a model or model name transform to a config object
+            if (Ext.isString(this.scaffold) || (Ext.isDefined(this.scaffold) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold)))) {
                 
                 this.scaffold = {
                     target: this.scaffold
                 };
             }
 
+            // if there is a config object apply scaffolding
             if (Ext.isObject(this.scaffold)) {
                 
 
@@ -1964,6 +1963,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
+
             // continue with standard behaviour
             this.callOverridden();
         }
@@ -1986,7 +1986,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
  * @since         Bancha.scaffold 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v 0.5.8
+ * @version       Bancha.scaffold v 0.5.9
  *
  * For more information go to http://scaffold.banchaproject.org
  */
