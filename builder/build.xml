@@ -302,6 +302,7 @@
 						<fileset refid="files.source.jsDocRessources"/>
 				</copy>
 				<copy file="${sourcedir}/builder/docs_content/index.html" tofile="${tmpdir}/docs/index.html" overwrite="true" />
+				<copy file="${sourcedir}/builder/docs_content/favicon.ico" tofile="${tmpdir}/docs/favicon.ico" overwrite="true" />
 				
 				<echo msg="All API Docs created!"/>
 		</target>
