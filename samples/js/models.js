@@ -16,11 +16,6 @@
  *
  * For more information go to http://scaffold.banchaproject.org
  */
-/*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
-/*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
-/*global Ext, Bancha */
-
-
 
 // init Ext.Direct Provider
 Ext.direct.Manager.addProvider(Bancha.REMOTE_API);
