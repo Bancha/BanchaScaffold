@@ -20,15 +20,13 @@
 // wait for DOM to be ready
 Ext.onReady(function() {
 
-
-
     // ... create a full featured users grid
     Ext.create('Ext.grid.Panel', {
         title: 'Easily scaffold full CRUD support, based on the models proxy',
 
         // define the model
         scaffold: 'Bancha.model.User',
-        
+
         // some additional styles
         height: 350,
         width: 650,
@@ -41,7 +39,7 @@ Ext.onReady(function() {
     // ... a simple example how you can extend it with regular code
     Ext.create('Ext.grid.Panel', {
         title: 'Starting from the scaffolded code you can easily add your own code',
-        
+
         // use scaffolding
         scaffold: {
 
@@ -75,7 +73,7 @@ Ext.onReady(function() {
                 return config;
             } //eo afterBuild
         },
-        
+
         // add some styling
         height: 300,
         width: 650,
@@ -88,13 +86,13 @@ Ext.onReady(function() {
     // and a form panel
     Ext.create('Ext.form.Panel', {
         title: 'Demonstration of a scaffolded Form',
-        
+
         // use scaffolding
         scaffold: {
 
             // define the model
             target: 'Bancha.model.User',
-            
+
             // simply add you own buttons
             buttons: ['->',{
                     text: 'Load Sample Record',
@@ -102,26 +100,26 @@ Ext.onReady(function() {
                     handler: function() {
                         var panel = this.getPanel(), // scopeButtonHandler enables this
                             form = this.getForm(); // scopeButtonHandler enables this
-                        
+
                         // load the form
                         panel.load({
                             params: {
                                 data: { data: { id:1 } }
                             }
                         });
-                        
+
                         // change the header title
                         panel.setTitle('Demonstration of a scaffolded Form - Change Record 1');
                     },
                     scope: 'scaffold-scope-me'
                 },'reset','save']
         }, // eo scaffoldConfig
-        
+
         api: {
             load    : Bancha.RemoteStubs.User.read,
             submit  : Bancha.RemoteStubs.User.submit
         },
-        
+
         // some additional styles
         width: 650,
         frame:true,
@@ -149,7 +147,7 @@ Ext.onReady(function() {
             'Bancha.model.Book',
             'Bancha.model.Article'
             ],
-        
+
         // some additional styles
         frame: true,
         bodyBorder: true,

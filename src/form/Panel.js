@@ -22,7 +22,7 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
 
     /**
      * @class Ext.form.Panel
-     * The Ext.form.Panel is extended for scaffolding. For an usage example see 
+     * The Ext.form.Panel is extended for scaffolding. For an usage example see
      * {@link Bancha.scaffold.Form}
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>

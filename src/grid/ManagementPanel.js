@@ -26,7 +26,7 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
      * This will create a TabPanel with one tab per model.
      * It will autodetect the models capabilities from the proxy.
      *
-     * Example: 
+     * Example:
      *
      *     Ext.create('Bancha.grid.ManagementPanel', {
      *         models: [

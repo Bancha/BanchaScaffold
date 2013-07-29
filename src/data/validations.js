@@ -30,7 +30,7 @@ Ext.require(['Ext.data.validations'], function() {
         var ext = filename.split('.').pop();
         return Ext.Array.contains(validExtensions,ext);
     };
-    
+
     /**
      * @class Ext.data.validations
      * Custom validations mapped from CakePHP.
