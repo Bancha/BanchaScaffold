@@ -17,8 +17,20 @@
  * For more information go to http://scaffold.banchaproject.org
  */
 
-Ext.require(['Ext.form.field.VTypes'], function () {
+/**
+ * @private
+ * @class Bancha.form.field.override.VTypes
+ *
+ * Add custom VTypes for scaffolding support.
+ *
+ * @author Roland Schuetz <mail@rolandschuetz.at>
+ * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+ */
+Ext.define('Bancha.form.field.override.VTypes', {
+    requires: ['Ext.form.field.VTypes']
+}, function() {
 
+    // helper function from Bancha.data.override.validations
     var filenameHasExtension = function (filename, validExtensions) {
         if (!filename) {
             return true; // no file defined
@@ -32,7 +44,9 @@ Ext.require(['Ext.form.field.VTypes'], function () {
 
     /**
      * @class Ext.form.field.VTypes
-     * Custom VTypes for scaffolding support
+     *
+     * Custom VTypes for file exensions.
+     *
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
@@ -56,6 +70,4 @@ Ext.require(['Ext.form.field.VTypes'], function () {
          */
         fileExtensionMask: /[\^\r\n]/ // alow everything except new lines
     });
-}); //eo require
-
-//eof
+});
