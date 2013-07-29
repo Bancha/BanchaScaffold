@@ -1,13 +1,13 @@
 /*!
  *
  * Bancha Scaffolding Library
- * Copyright 2011-2012 Roland Schuetz
+ * Copyright 2011-2013 codeQ e.U.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @package       Bancha.scaffold
- * @copyright     Copyright 2011-2012 Roland Schuetz
+ * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
  * @since         Bancha.scaffold 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
