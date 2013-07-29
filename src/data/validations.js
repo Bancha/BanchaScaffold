@@ -17,9 +17,25 @@
  * For more information go to http://scaffold.banchaproject.org
  */
 
+// This code below is a copy from the Bancha package!
 
-Ext.require(['Ext.data.validations'], function() {
+/**
+ * @private
+ * @class Bancha.data.override.Validations
+ *
+ * Add custom validators to Ext.data.validations.
+ *
+ * @author Roland Schuetz <mail@rolandschuetz.at>
+ * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+ */
+Ext.define('Bancha.data.override.Validations', {
+    requires: ['Ext.data.validations'],
+    alternateClassName: [
+        'Bancha.scaffold.data.override.Validations' // Bancha.Scaffold uses the same class
+    ]
+}, function() {
 
+    // helper function for Bancha.data.override.validations
     var filenameHasExtension = function(filename,validExtensions) {
         if(!filename) {
             return true; // no file defined (emtpy string or undefined)
@@ -33,21 +49,26 @@ Ext.require(['Ext.data.validations'], function() {
 
     /**
      * @class Ext.data.validations
-     * Custom validations mapped from CakePHP.
+     *
+     * Bancha extends Ext.data.validations with two new validation rules:
+     * numberformat and file.
+     *
+     * These custom validations are mapped from CakePHP.
+     *
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
-    Ext.apply(Ext.data.validations,{
+    Ext.apply(Ext.data.validations, { // this is differently called in ExtJS and Sencha Touch, but work by alias just fine
         /**
          * @property
          * The default error message used when a numberformat validation fails.
          */
-        numberformatMessage: "is not a number or not in the allowed range",
+        numberformatMessage: 'is not a number or not in the allowed range',
         /**
          * @property
          * The default error message used when a file validation fails.
          */
-        fileMessage: "is not a valid file",
+        fileMessage: 'is not a valid file',
         /**
          * @method
          * Validates that the number is in the range of min and max.
@@ -78,7 +99,5 @@ Ext.require(['Ext.data.validations'], function() {
         file: function(config, value) {
             return filenameHasExtension(value,config.extension);
         }
-    });
+    }); //eo apply
 });
-
-//eof
