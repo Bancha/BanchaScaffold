@@ -24,16 +24,16 @@
 
 
 beforeEach(function() {
-    
+
     // ext errors should be catched and result in an error
     if(Ext.Error) { // ext.error only exists in the debug version
         Ext.Error.handle = function(e) {
             throw 'Unexpected Ext.Error thrown: '+e.msg;
         };
     }
-    
-    
-    
+
+
+
     /**
      * used for matcher isModelClass
      * Safely finds an object, used internally for getStubsNamespace and getRemoteApi
@@ -73,7 +73,7 @@ beforeEach(function() {
             }
         }, lookIn);
     };
-    
+
     this.addMatchers({
         // now add a custom matcher to test methods where ext errors get thrown
         toThrowExtErrorMsg: function(msg) {
@@ -87,29 +87,29 @@ beforeEach(function() {
                     throw e.msg;
                 };
             }
-        
+
             // now test the function, jasmine style
             expect(this.actual).toThrow(msg);
-            
+
             // reset error handling
             if(Ext.Error) {
                 Ext.Error.handle = standardHandler;
             }
-            
+
             // if there was an error the expect() above already thrown it
             return true;
         }, //eo toTrowExtErrorMsg
-        
+
         // test if a function is of an specific ext class
         toBeOfClass: function(className) {
             return Ext.ClassManager.getName(this.actual) === className; // right class
         },
-        
+
         // test if a function is an constructor of a model class
         toBeModelClass: function(className) {
             var modelClassName = Ext.ClassManager.getName(this.actual),
                 modelExtendsClass;
-                
+
             // for ExtJS 4
             if(Ext.versions.extjs) {
                 modelExtendsClass = Ext.ClassManager.getName(objectFromPath('prototype.superclass',this.actual));
@@ -118,7 +118,7 @@ beforeEach(function() {
             } else {
                 alert('Could not recognize if this is ExtJS 4 or Sencha Touch 2. This comes from Test/JavaScriptUnitTests/spec/helpers/ExtSpecHelper.js.');
             }
-            
+
             return (
                 typeof this.actual === 'function' && // constructor
                 className === modelClassName &&      // correct class

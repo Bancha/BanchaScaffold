@@ -21,7 +21,7 @@
 
 describe("Bancha.scaffold.Util tests",function() {
     var util = Bancha.scaffold.Util;
-        
+
     it("should pass all Bancha.scaffold.Util.toFirstUpper tests", function() {
         expect('User').toEqual(util.toFirstUpper('user'));
         expect('UserName').toEqual(util.toFirstUpper('userName'));
@@ -50,7 +50,7 @@ describe("Bancha.scaffold.Util tests",function() {
                ).toEqual(util.humanize('This is a normal text with spaces, Upper case words '+
                'and all UPPER CASE words!'));
     });
-    
+
     it("should humanize class names", function() {
         // Standard namespaced and not namespaced
         expect('User').toEqual(util.humanizeClassName('Bancha.model.User'));

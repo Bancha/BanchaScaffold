@@ -26,12 +26,12 @@ describe("Bancha.scaffold.Form tests",function() {
         // (actually this is also copying all the function references, but it doesn't matter)
         originalFormScaf = Ext.clone(formScaf),
         testDefaults = Ext.clone(formScaf);
-    
+
     beforeEach(function() {
         // re-enforce defaults
         Ext.apply(formScaf, testDefaults);
     });
-    
+
     it("should build field configs while considering the defined config", function() {
         // build a config
         var config = Ext.clone(testDefaults);
@@ -58,7 +58,7 @@ describe("Bancha.scaffold.Form tests",function() {
             fieldLabel: 'Some name',
             name: 'someName'
         });
-        
+
         // same for date field
         field = Ext.create('Ext.data.Field', {
             type: 'date',
@@ -71,7 +71,7 @@ describe("Bancha.scaffold.Form tests",function() {
             name: 'someName'
         });
     });
-    
+
     it("should add an format property to all datefield configs, which are created for an form panel", function() {
         // check that all default vallues are added, as well as name and label
         var field = Ext.create('Ext.data.Field', {
@@ -103,7 +103,7 @@ describe("Bancha.scaffold.Form tests",function() {
             handler: formScaf.onSave
         }];
     };
-    
+
     var getSimpleFormExpectation = function(modelName,config) {
         return Ext.apply({
             id: modelName+'-id', // forced
@@ -152,7 +152,7 @@ describe("Bancha.scaffold.Form tests",function() {
             buttons: getButtonConfig(modelName+'-id')
         },config);
     }; // eo getSimpleFormExpected
-    
+
 
     it("should build a form config, where it recognizes the type from the field type, when no "+
        "validation rules are set in the model (component test)", function() {
@@ -184,14 +184,14 @@ describe("Bancha.scaffold.Form tests",function() {
         "(component test)", function() {
         // prepare
         model('MyTest.model.FormConfigTwoTimesTest');
-        
+
         // first
         expect(formScaf.buildConfig('x', {
             target: 'MyTest.model.FormConfigTwoTimesTest'
         }, {
             id: 'MyTest.model.FormConfigTwoTimesTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTwoTimesTest'));
-        
+
         // second
         expect(formScaf.buildConfig('x', {
             target: 'MyTest.model.FormConfigTwoTimesTest'
@@ -199,7 +199,7 @@ describe("Bancha.scaffold.Form tests",function() {
             id: 'MyTest.model.FormConfigTwoTimesTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTwoTimesTest'));
     });
-    
+
     it("should build a form config, where it recognizes the type from the field type, when no "+
        "validation rules are set in the model (component test)", function() {
         // prepare
@@ -212,7 +212,7 @@ describe("Bancha.scaffold.Form tests",function() {
                 {type:'length', name:'login', min:3, max:64},
                 {type:'format', name:'login', matcher: /^[a-zA-Z0-9_]+$/},
                 {type:'presence', name:'email'},
-                {type:'format', name:'email', matcher: 
+                {type:'format', name:'email', matcher:
                                     /^(\w+)([\-+.][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/},
                 {type:'numberformat', name:'weight', precision:2},
                 {type:'numberformat', name:'height', min:50, max:300},
@@ -224,7 +224,7 @@ describe("Bancha.scaffold.Form tests",function() {
             // added from avatar validation rules
             isUpload: true,
             fileUpload: true,
-            
+
             id: 'MyTest.model.FormConfigWithValidationTest-id', // forced
             // configs for BasicForm
             api: {
@@ -289,7 +289,7 @@ describe("Bancha.scaffold.Form tests",function() {
             }],
             buttons: getButtonConfig('MyTest.model.FormConfigWithValidationTest-id')
         }; // eo expected
-        
+
         expect(formScaf.buildConfig('x', {
             target: 'MyTest.model.FormConfigWithValidationTest',
             fileuploadfieldDefaults: {
@@ -302,20 +302,20 @@ describe("Bancha.scaffold.Form tests",function() {
         }, {
             id: 'MyTest.model.FormConfigWithValidationTest-id'
         })).toEqualConfig(expected);
-        
-        
+
+
         expect(formScaf.buildConfig('x', {
             target: 'MyTest.model.FormConfigWithValidationTest'
         }, {
             id: 'MyTest.model.FormConfigWithValidationTest-id'
         }).buttons[0].handler).toEqualConfig(expected.buttons[0].handler);
     });
-    
-    
+
+
     it("should use class interceptors when building a config (component test)", function() {
         // prepare
         model('MyTest.model.FormConfigWithClassInterceptorsTest');
-        
+
         // the same when defining them on the class
         Ext.apply(formScaf,{
             beforeBuild: function() {
@@ -335,22 +335,22 @@ describe("Bancha.scaffold.Form tests",function() {
         var result = formScaf.buildConfig('x', {
             target: 'MyTest.model.FormConfigWithClassInterceptorsTest'
         });
-        
+
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqualConfig(['before','after']);
-        
+
         // transformFieldConfig
         expect(result.items).toBeAnObject();
         Ext.each(result.items, function(item) {
             expect(item.isAugmented).toEqual(true);
         });
     });
-    
-    
+
+
     it("should use config interceptors when building a config (component test)", function() {
         // prepare
         model('MyTest.model.FormConfigWithConfigInterceptorsTest');
-        
+
         var result = formScaf.buildConfig('x', {
             target: 'MyTest.model.FormConfigWithConfigInterceptorsTest',
             beforeBuild: function() {
@@ -367,10 +367,10 @@ describe("Bancha.scaffold.Form tests",function() {
                 return config;
             }
         });
-        
+
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqual(['before','after']);
-        
+
         // transformFieldConfig
         expect(result.items).toBeAnObject();
         Ext.each(result.items, function(item) {

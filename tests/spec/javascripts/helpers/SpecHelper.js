@@ -96,12 +96,12 @@ beforeEach(function() {
      */
     jasmine.Matchers.prototype.property = function(path) {
         var property = objectFromPath(path,this.actual);
-    
+
         // if the property doesn't exist fail
         if(property===null) {
             this.fail("Property "+path+" doesn't exist.");
         }
-    
+
         // return expect for property
         return expect(property);
     };

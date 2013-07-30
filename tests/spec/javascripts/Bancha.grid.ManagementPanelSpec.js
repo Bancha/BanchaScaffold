@@ -20,7 +20,7 @@
  */
 
 describe("Bancha.grid.ManagementPanel tests",function() {
-    
+
     // setup some models
     Ext.define('Bancha.model.ManagementPanelUser', {
         extend: 'Ext.data.Model',
@@ -146,6 +146,4 @@ describe("Bancha.grid.ManagementPanel tests",function() {
         expect(panel).property('items.items.0.dockedItems.items.length').toEqual(1);
         expect(panel).property('items.items.1.dockedItems.items.length').toEqual(1);
     });
-}); //eo management panel functions
-
-// eof
+});

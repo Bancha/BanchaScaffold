@@ -26,7 +26,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         // (actually this is also copying all the function references, but it doesn't matter)
         originalGridScaf = Ext.clone(gridScaf),
         testDefaults = Ext.clone(gridScaf);
-    
+
     // force easiert defaults for unit testing
     testDefaults = Ext.apply(testDefaults,{
         editable: false,
@@ -81,7 +81,7 @@ describe("Bancha.scaffold.Grid tests",function() {
             dataIndex: 'someName'
         });
     });
-    
+
     // expected columns
     var expectedColumns = [{
         flex     : 1,
@@ -128,7 +128,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         dataIndex: 'height'
     }];
 
-    
+
     it("should build a grid column config with #buildColumns (component test)", function() {
         // prepare
         model('MyTest.model.GridColumnsConfigTest');
@@ -139,7 +139,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         // compare
         expect(result).toEqual(expectedColumns);
     });
-    
+
 
     it("should exclude fields defined in the exclude property (component test)", function() {
         // prepare
@@ -153,8 +153,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         // compare
         expect(result.length).toEqual(6);
     });
-    
-    
+
+
     it("should build a editable grid column config with #buildColumns with "+
         "delete icons (component test)", function() {
         // prepare
@@ -221,7 +221,7 @@ describe("Bancha.scaffold.Grid tests",function() {
                 handler: gridScaf.onDelete
             }]
         }];
-        
+
         // test
         var result = gridScaf.buildColumns('MyTest.model.GridColumnsConfigWithUpdateDeleteTest', {
             editable  : true,
@@ -231,8 +231,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         // compare
         expect(result).toEqual(expectedColumnsWithUpdateDestroy);
     });
-    
-    
+
+
     it("should build a grid panel config with #buildConfig (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigTest');
@@ -244,11 +244,11 @@ describe("Bancha.scaffold.Grid tests",function() {
 
         // should have a store
         expect(result.store.getProxy().getModel()).toBeModelClass('MyTest.model.GridConfigTest');
-        
+
         // just a simple column check, buildColumns is already tested above
         expect(result.columns).toEqual(expectedColumns);
     });
-    
+
 
     it("should clone all configs, so that you can create multiple grids from the same defaults "+
         "(component test)", function() {
@@ -264,7 +264,7 @@ describe("Bancha.scaffold.Grid tests",function() {
                 'MyTest.model.GridConfigTwoTimesTest');
         // just a simple column check, buildColumns is already tested above
         expect(result.columns).toEqual(expectedColumns);
-        
+
         // second
         result = gridScaf.buildConfig('x', {
             target: 'MyTest.model.GridConfigTwoTimesTest'
@@ -275,8 +275,8 @@ describe("Bancha.scaffold.Grid tests",function() {
         // just a simple column check, buildColumns is already tested above
         expect(result.columns).toEqual(expectedColumns);
     });
-    
-    
+
+
     it("should build a editable grid panel config with update and delete support with "+
         "#buildConfig (component test)", function() {
         // prepare
@@ -293,26 +293,26 @@ describe("Bancha.scaffold.Grid tests",function() {
         // should have a store
         expect(result.store.getProxy().getModel()).toBeModelClass(
                 'MyTest.model.GridConfigWithUpdateDeleteTest');
-        
+
         // just a simple column check, buildColumns is already tested above
         expect(result.columns.length).toEqual(9);
 
         // should have all columns editable
         // (the first is the id-field and therefore is guessed to don't have an editorfield)
         expect(result.columns[1].field.xtype).toEqual("textfield");
-        
+
         // should be editable
         expect(result.selType).toEqual('cellmodel');
         // expect a celleditor plugin for update support
         expect(result).property("plugins.0").toBeOfClass("Ext.grid.plugin.CellEditing");
         // standardwise two clicks are expected for update start
         expect(result).property("plugins.0.clicksToEdit").toEqual(2);
-        
+
         // should have an update button
         expect(result).property("dockedItems.0.items.0.iconCls").toEqual('icon-save');
     });
-    
-    
+
+
     it("should build a grid panel config with full crud support with "+
         "#buildConfig (component test)", function() {
         // prepare
@@ -331,33 +331,33 @@ describe("Bancha.scaffold.Grid tests",function() {
         // should have a store
         expect(result.store.getProxy().getModel()).toBeModelClass(
                 'MyTest.model.GridConfigWithCRUDTest');
-        
+
         // just a simple column check, buildColumns is already tested above
         expect(result.columns.length).toEqual(9);
 
         // should be editable (simple check)
         expect(result.selType).toEqual('cellmodel');
         expect(result.plugins[0]).toBeOfClass("Ext.grid.plugin.CellEditing");
-        
+
         // should have an create button
         var buttons = result.dockedItems[0].items;
         expect(buttons[1].iconCls).toEqual('icon-add');
-        
+
         // should have an reset button
         expect(buttons[2].iconCls).toEqual('icon-reset');
-        
+
         // should have an update button
         expect(buttons[3].iconCls).toEqual("icon-save");
-        
+
         // should have added the additional grid config
         expect(result.additionalGridConfig).toBeTruthy();
     });
-    
-    
+
+
     it("should use singleton class interceptors when building a config (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigWithClassInterceptorsTest');
-        
+
         // the same when defining them on the class
         Ext.apply(gridScaf,{
             beforeBuild: function() {
@@ -377,22 +377,22 @@ describe("Bancha.scaffold.Grid tests",function() {
         var result = gridScaf.buildConfig('x', {
             target: 'MyTest.model.GridConfigWithClassInterceptorsTest'
         });
-        
+
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqual(['before','after']);
-        
+
         // transformColumnConfig
         expect(result.columns).toBeAnObject();
         Ext.each(result.columns, function(column) {
             expect(column.isAugmented).toEqual(true);
         });
     });
-    
+
 
     it("should use config interceptors when building a config (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigWithConfigInterceptorsTest');
-        
+
         // use a config specific only for this call
         var result = gridScaf.buildConfig('x', {
             target: 'MyTest.model.GridConfigWithConfigInterceptorsTest',
@@ -410,22 +410,22 @@ describe("Bancha.scaffold.Grid tests",function() {
                 return config;
             }
         });
-        
+
         // beforeBuild, afterBuild
         expect(result.interceptors).toEqual(['before','after']);
-        
+
         // guessFieldConfg
         expect(result.columns).toBeAnObject();
         Ext.each(result.columns, function(column) {
             expect(column.isAugmented).toEqual(true);
         });
     });
-	
+
 
     it("should use form class transformation interceptor for building editor fields (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigWithFormInterceptorTest');
-        
+
         // the same when defining them on the class
         Ext.apply(gridScaf, {
             editable: true,
@@ -440,7 +440,7 @@ describe("Bancha.scaffold.Grid tests",function() {
         var result = gridScaf.buildConfig('x', {
             target: 'MyTest.model.GridConfigWithFormInterceptorTest'
         });
-        
+
         // transformFieldConfig
         expect(result.columns).toBeAnObject();
         Ext.each(result.columns, function(column) {
@@ -449,7 +449,7 @@ describe("Bancha.scaffold.Grid tests",function() {
             }
         });
     });
-    
+
 
     it('This just reset configs, since jasmin doesn\' provide a after suite function', function() {
         Ext.apply(gridScaf, originalGridScaf);

@@ -20,9 +20,9 @@
  */
 
 describe("Ext.form.field.VTypes tests",function() {
-    
+
     var vtype = Ext.form.field.VTypes;
-        
+
     it("should allow undefined file extensions when testing with #fileExtension", function() {
         expect(vtype.fileExtension('',{validExtensions:['jpg']})).toBeTruthy();
     });
