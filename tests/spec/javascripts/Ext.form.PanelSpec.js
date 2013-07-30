@@ -1,7 +1,7 @@
 /*!
  *
  * Bancha Scaffolding Library
- * Copyright 2011-2012 Roland Schuetz
+ * Copyright 2011-2013 codeQ e.U.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
@@ -9,7 +9,7 @@
  * Ext.form.Panel extension tests
  *
  * @package       Bancha.scaffold.Test
- * @copyright     Copyright 2011-2012 Roland Schuetz
+ * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
  * @since         Bancha.scaffold 0.5.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
