@@ -39,7 +39,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
      * @class Ext.grid.Panel
      * **This is only available inside Ext JS.**
      *
-     * After requiring 'Bancha.scaffold.grid.override.Panel' form panels have
+     * After requiring 'Bancha.scaffold.grid.override.Panel', grid panels have
      * an additional scaffold configuration. The simplest usage is:
      *
      *     Ext.create("Ext.grid.Panel", {
