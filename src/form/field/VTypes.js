@@ -19,14 +19,14 @@
 
 /**
  * @private
- * @class Bancha.form.field.override.VTypes
+ * @class Bancha.scaffold.form.field.override.VTypes
  *
  * Add custom VTypes for scaffolding support.
  *
  * @author Roland Schuetz <mail@rolandschuetz.at>
  * @docauthor Roland Schuetz <mail@rolandschuetz.at>
  */
-Ext.define('Bancha.form.field.override.VTypes', {
+Ext.define('Bancha.scaffold.form.field.override.VTypes', {
     requires: ['Ext.form.field.VTypes']
 }, function() {
 

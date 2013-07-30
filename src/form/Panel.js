@@ -17,11 +17,27 @@
  * For more information go to http://scaffold.banchaproject.org
  */
 
-
-Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
+/**
+ * @private
+ * @class Bancha.scaffold.form.override.Panel
+ *
+ * Added support for the scaffold property in form configs.
+ *
+ * @author Roland Schuetz <mail@rolandschuetz.at>
+ * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+ */
+Ext.define('Bancha.scaffold.form.override.Panel', {
+    requires: [
+        'Ext.form.Panel',
+        'Bancha.scaffold.Form',
+        'Bancha.scaffold.Util',
+    ]
+}, function() {
 
     /**
      * @class Ext.form.Panel
+     * **This is only available inside Ext JS**
+     *
      * The Ext.form.Panel is extended for scaffolding. For an usage example see
      * {@link Bancha.scaffold.Form}
      * @author Roland Schuetz <mail@rolandschuetz.at>
@@ -89,6 +105,4 @@ Ext.require(['Ext.form.Panel', 'Bancha.scaffold'], function () {
             this.callOverridden();
         }
     });
-}); //eo require
-
-//eof
+});

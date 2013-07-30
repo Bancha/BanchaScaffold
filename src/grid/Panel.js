@@ -17,12 +17,27 @@
  * For more information go to http://scaffold.banchaproject.org
  */
 
-
-Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
-
+/**
+ * @private
+ * @class Bancha.scaffold.grid.override.Panel
+ *
+ * Added support for the scaffold property in grid configs.
+ *
+ * @author Roland Schuetz <mail@rolandschuetz.at>
+ * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+ */
+Ext.define('Bancha.scaffold.grid.override.Panel', {
+    requires: [
+        'Ext.form.Panel',
+        'Bancha.scaffold.Grid',
+        'Bancha.scaffold.Util',
+    ]
+}, function() {
 
     /**
      * @class Ext.grid.Panel
+     * **This is only available inside Ext JS**
+     *
      * The Ext.grid.Panel is extended for scaffolding. For an usage example see
      * {@link Bancha.scaffold.Grid}
      * @author Roland Schuetz <mail@rolandschuetz.at>
@@ -92,6 +107,4 @@ Ext.require(['Ext.grid.Panel', 'Bancha.scaffold'], function () {
         }
     });
 
-}); //eo require
-
-//eof
+});
