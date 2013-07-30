@@ -1,4 +1,4 @@
-[![Bancha Scaffold - Easy Prototyping](http://scaffold.banchaproject.org/images/bancha-scaffold.jpg)](http://scaffold.banchaproject.org/)
+[![Bancha Scaffold - Easy Prototyping](http://files.banchaproject.org/tl_files/Bancha/images/bancha-scaffold/bancha-scaffold-claim.jpg)](http://scaffold.banchaproject.org/)
 
 
 Bancha Scaffold Library (Beta)
@@ -20,7 +20,9 @@ Features
 Usage
 -----
 
-To use the latest stable code just include build/bancha-scaffold-debug.js into your project. 
+To use the latest stable code just include build/bancha-scaffold-debug.js into your project.
+
+
 For more information got to [http://scaffold.banchaproject.org](http://scaffold.banchaproject.org)
 
 License
@@ -53,4 +55,4 @@ Building a release
 
 
 ------------------------------
-For any further questions just ask us: mail@banchaproject.com
+For any further questions just ask us: support@banchaproject.org
