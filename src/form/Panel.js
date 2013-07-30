@@ -21,7 +21,8 @@
  * @private
  * @class Bancha.scaffold.form.override.Panel
  *
- * Added support for the scaffold property in form configs.
+ * This override adds support for defining a scaffold config in a formpanel
+ * configuration.
  *
  * @author Roland Schuetz <mail@rolandschuetz.at>
  * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -36,10 +37,80 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
     /**
      * @class Ext.form.Panel
-     * **This is only available inside Ext JS**
+     * **This is only available inside Ext JS.**
      *
-     * The Ext.form.Panel is extended for scaffolding. For an usage example see
-     * {@link Bancha.scaffold.Form}
+     * After requiring 'Bancha.scaffold.form.override.Panel' form panels have
+     * an additional scaffold configuration. The simplest usage is:
+     *
+     *     Ext.create("Ext.form.Panel", {
+     *         scaffold: 'MyApp.model.User', // the model name
+     *     });
+     *
+     * A more complex usage example:
+     *
+     *     Ext.create("Ext.form.Panel", {
+     *
+     *         scaffold: {
+     *             // define the model name here
+     *             target: 'MyApp.model.User',
+     *
+     *             // you can tell the form to automatically load a record for edting, by id
+     *             loadRecord: 3,
+     *
+     *             // define which buttons should be displayed
+     *             buttons: ['reset','save'],
+     *
+     *             // advanced configs can be set here:
+     *             textfieldDefaults: {
+     *                 emptyText: 'Please fill this out'
+     *             },
+     *             datefieldDefaults: {
+     *                 format: 'm/d/Y'
+     *             },
+     *             onSave: function() {
+     *                 Ext.MessageBox.alert("Tada","You've pressed the form save button");
+     *             }
+     *         },
+     *
+     *         // and add some styling
+     *         height: 350,
+     *         width: 650,
+     *         frame:true,
+     *         title: 'Form Panel',
+     *         renderTo: 'formpanel',
+     *         bodyStyle:'padding:5px 5px 0',
+     *         fieldDefaults: {
+     *             msgTarget: 'side',
+     *             labelWidth: 75
+     *         },
+     *         defaults: {
+     *             anchor: '100%'
+     *         }
+     *     });
+     *
+     * It currently creates fields for:
+     *
+     *  - string
+     *  - integer
+     *  - float (precision is read from metadata)
+     *  - boolean (checkboxes)
+     *  - date
+     *
+     * It's recognizing following validation rules on the model to add validations
+     * to the form fields:
+     *
+     *  - format
+     *  - file
+     *  - length
+     *  - numberformat
+     *  - presence
+     *
+     * You have three possible interceptors:
+     *
+     *  - beforeBuild         : executed before {@link #buildConfig}
+     *  - transformFieldConfig: executed after a field config is created, see {@link #transformFieldConfig}
+     *  - afterBuild          : executed after {@link #buildConfig} created the config
+     *
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */

@@ -21,7 +21,8 @@
  * @private
  * @class Bancha.scaffold.grid.override.Panel
  *
- * Added support for the scaffold property in grid configs.
+ * This override adds support for defining a scaffold config in a gridpanel
+ * configuration.
  *
  * @author Roland Schuetz <mail@rolandschuetz.at>
  * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -36,10 +37,67 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
 
     /**
      * @class Ext.grid.Panel
-     * **This is only available inside Ext JS**
+     * **This is only available inside Ext JS.**
      *
-     * The Ext.grid.Panel is extended for scaffolding. For an usage example see
-     * {@link Bancha.scaffold.Grid}
+     * After requiring 'Bancha.scaffold.grid.override.Panel' form panels have
+     * an additional scaffold configuration. The simplest usage is:
+     *
+     *     Ext.create("Ext.grid.Panel", {
+     *         scaffold: 'MyApp.model.User', // the model name
+     *     });
+     *
+     * A more complex usage example is:
+     *
+     *     Ext.create("Ext.grid.Panel", {
+     *
+     *         // for more configurations
+     *         scaffold: {
+     *
+     *             // define the model name here
+     *             target: 'MyApp.model.User',
+     *
+     *             // enable full CRUD on the grid (default)
+     *             deletable: true,
+     *             buttons: ['->','create','reset','save'],
+     *
+     *
+     *             // and some more advanced configs
+     *             columnDefaults: {
+     *                 width: 200
+     *             },
+     *             datecolumnDefaults: {
+     *                 format: 'm/d/Y'
+     *             },
+     *             // use the same store for all grids
+     *             oneStorePerModel: true,
+     *             // custom onSave function
+     *             onSave: function() {
+     *                 Ext.MessageBox.alert("Tada","You've pressed the save button");
+     *             },
+     *             formConfig: {
+     *                 textfieldDefaults: {
+     *                     minLength: 3
+     *                 }
+     *             }
+     *         },
+     *
+     *         // and add some styling
+     *         height   : 350,
+     *         width    : 650,
+     *         frame    : true,
+     *         title    : 'User Grid',
+     *         renderTo : 'gridpanel'
+     *     });
+     *
+     * If the editable property is true,
+     * {@link Bancha.scaffold.Form} is used to create the editor fields.
+     *
+     * You have three possible interceptors:
+     * 
+     *  - beforeBuild         : executed before {@link #buildConfig}
+     *  - transformFieldConfig: executed after a field config is created, see {@link #transformFieldConfigs}
+     *  - afterBuild          : executed after {@link #buildConfig} created the config
+     *
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */

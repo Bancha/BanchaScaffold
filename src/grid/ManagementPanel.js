@@ -19,7 +19,7 @@
 
 /**
  * @class Bancha.grid.ManagementPanel
- * **This is only available inside Ext JS**
+ * **This is only available inside Ext JS.**
  *
  * This will create a TabPanel with one tab per model.
  * It will autodetect the models capabilities from the proxy.
