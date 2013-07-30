@@ -73,14 +73,29 @@ describe("Ext.grid.Panel scaffold extension tests",function() {
 		// check if the grid really got scaffolded without a delete button
 		expect(panel.columns.length).toEqual(8);
 
-		// check that the first element really is your toolbar
-		expect(panel.getDockedItems()).property('0.dock').toEqual('bottom');
+		// expect a header component and a footer toolbar
+		expect(panel.getDockedItems().length).toEqual(2);
+
+		// get the toolbar
+		var toolbar;
+		// Prior to Ext JS 4.1 this is the second element, later it's the first docked item, normalize
+		if(panel.getDockedItems()[0].xtype === 'headercontainer') {
+			// In Ext JS 4.1+ the toolbar is the first element
+			toolbar = panel.getDockedItems()[1];
+		} else {
+			// In Ext JS prior this is the first one
+			toolbar = panel.getDockedItems()[0];
+			expect(panel.getDockedItems()[1].xtype).toEqual('headercontainer');
+		}
+
+		// check that the first (custom) element is your toolbar
+		expect(toolbar).property('dock').toEqual('bottom');
 
 		// check that the create, save and reset buttons are created (plus one filler)
-		expect(panel.getDockedItems()).property('0.items.items.length').toEqual(4);
-		
+		expect(toolbar).property('items.items.length').toEqual(4);
+
 		// check that the onSave function is used
-		expect(panel.getDockedItems()).property('0.items.items.3.handler').toEqual(onSave);
+		expect(toolbar).property('items.items.3.handler').toEqual(onSave);
 	});
 
     it('This just reset configs, since jasmin doesn\' provide a after suite function', function() {
