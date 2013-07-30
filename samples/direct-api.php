@@ -2,13 +2,13 @@
 /*!
  *
  * Bancha Scaffolding Library
- * Copyright 2011-2012 Roland Schuetz
+ * Copyright 2011-2013 codeQ e.U.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @package       Bancha.scaffold.samples
- * @copyright     Copyright 2011-2012 Roland Schuetz
+ * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
  * @since         Bancha.scaffold 0.5.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -197,7 +197,7 @@ foreach ($request as $key => $data) {
 			break;
 		case 'read':
 			// get the corresponding elemennts
-			$entries = $data->action=='User' ? $sample_user_data : 
+			$entries = $data->action=='User' ? $sample_user_data :
 						($data->action=='Article' ? $sample_article_data : $sample_book_data);
 			// if there is an id just send one record, otherwise send a paged result
 			$selected_entries = isset($data->data[0]->data->id) ? $entries[0] :

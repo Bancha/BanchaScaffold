@@ -1,7 +1,7 @@
 {
     projectName: 'Bancha Scaffold',
     deployDir: '.',
-    oldlicenseText: "Bancha\nCopyright(c) 2011-2012 Roland Schuetz\nroland@banchaproject.org",
+    oldlicenseText: "Bancha\nCopyright(c) 2011-2013 codeQ e.U.\mail@banchaproject.org",
     pkgs: [{
         name: 'Bancha Scaffold Package',
         file: 'bancha-scaffold.js',
