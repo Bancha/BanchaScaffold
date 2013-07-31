@@ -192,7 +192,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
         internalTransformColumnConfig: function (columnConfig, modelType) {
             if (columnConfig.dataIndex === 'id') {
                 columnConfig.hidden = true;
-                columnConfig.field = undefined;
+                columnConfig.editor = undefined;
             }
 
             return columnConfig;
@@ -267,13 +267,12 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
             // add an editor
             if(config.editable) {
                 // build the editor field
-                column.field = Ext.form.Panel.buildFieldConfig(field, config.formConfig, validations, true);
+                column.editor = Ext.form.Panel.buildFieldConfig(field, config.formConfig, validations, true);
 
                 // now make custom field transforms
-                column.field = Ext.form.Panel.internalTransformFieldConfig(column.field, fieldType);
+                column.editor = Ext.form.Panel.internalTransformFieldConfig(column.editor, fieldType);
                 if (typeof config.formConfig.transformFieldConfig === 'function') {
-                    // TODO field is deprecated in favor of editor: http://docs.sencha.com/ext-js/4-1/#!/api/Ext.grid.column.Number-cfg-field
-                    column.field = config.formConfig.transformFieldConfig(column.field, fieldType);
+                    column.editor = config.formConfig.transformFieldConfig(column.editor, fieldType);
                 }
             }
 

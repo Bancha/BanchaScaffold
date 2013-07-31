@@ -181,51 +181,51 @@
             format   : '0',
             text     : 'Id',
             dataIndex: 'id',
-            field    : undefined,
+            editor   : undefined,
             hidden   : true
         }, {
             flex     : 1,
             xtype    : 'gridcolumn',
             text     : 'Name',
             dataIndex: 'name',
-            field    : {xtype:'textfield', name:'name'}
+            editor   : {xtype:'textfield', name:'name'}
         }, {
             flex     : 1,
             xtype    : 'gridcolumn',
             text     : 'Login',
             dataIndex: 'login',
-            field    : {xtype:'textfield', name:'login'}
+            editor   : {xtype:'textfield', name:'login'}
         }, {
             flex     : 1,
             xtype    : 'datecolumn',
             text     : 'Created',
             dataIndex: 'created',
-            field    : {xtype:'datefield', name:'created'}
+            editor   : {xtype:'datefield', name:'created'}
         }, {
             flex     : 1,
             xtype    : 'gridcolumn',
             text     : 'Email',
             dataIndex: 'email',
-            field    : {xtype:'textfield', name:'email'}
+            editor   : {xtype:'textfield', name:'email'}
         }, {
             flex     : 1,
             xtype    : 'gridcolumn',
             text     : 'Avatar',
             dataIndex: 'avatar',
-            field    : {xtype:'textfield', name:'avatar'}
+            editor   : {xtype:'textfield', name:'avatar'}
         }, {
             flex     : 1,
             xtype    : 'numbercolumn',
             text     : 'Weight',
             dataIndex: 'weight',
-            field    : {xtype:'numberfield', name:'weight'}
+            editor   : {xtype:'numberfield', name:'weight'}
         }, {
             flex     : 1,
             xtype    : 'numbercolumn',
             format   : '0',
             text     : 'Height',
             dataIndex: 'height',
-            field    : {xtype:'numberfield', allowDecimals : false, name:'height'}
+            editor   : {xtype:'numberfield', allowDecimals : false, name:'height'}
         }, {
             xtype:'actioncolumn',
             width:50,
@@ -319,8 +319,8 @@
         expect(result.columns.length).toEqual(9);
 
         // should have all columns editable
-        // (the first is the id-field and therefore is guessed to don't have an editorfield)
-        expect(result.columns[1].field.xtype).toEqual("textfield");
+        // (the first is the id-editor and therefore is guessed to don't have an editorfield)
+        expect(result.columns[1].editor.xtype).toEqual("textfield");
 
         // should be editable
         expect(result.selType).toEqual('cellmodel');
@@ -486,7 +486,7 @@
         expect(result.columns).toBeAnObject();
         Ext.each(result.columns, function(column) {
             if(column.dataIndex!=='id') { // since the id column doesn't have an editor, ignore it
-                expect(column).property('field.isAugmented').toEqual(true);
+                expect(column).property('editor.isAugmented').toEqual(true);
             }
         });
     });
@@ -527,7 +527,7 @@
         expect(result.columns).toBeAnObject();
         Ext.each(result.columns, function(column) {
             if(column.dataIndex!=='id') { // since the id column doesn't have an editor, ignore it
-                expect(column).property('field.isAugmented').toEqual(true);
+                expect(column).property('editor.isAugmented').toEqual(true);
             }
         });
         
