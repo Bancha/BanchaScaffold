@@ -43,6 +43,7 @@
 					 but should not be deployed -->
 				<exclude name="**/deploy.jsb2"/>
 				<exclude name="**/website/**"/>
+				<exclude name="**/tests/lib/ext-all-**"/>
 		</fileset>
 
 		<!-- a fileset for the source code in the tmp build folder (files only) -->
@@ -295,7 +296,6 @@
 
 				<!-- api docs -->
 				<mkdir dir="${tmpdir}/docs"/>
-				<echo msg="${jsduck.file} &quot;${sourcedir}/src/*.js&quot; --guides=&quot;${sourcedir}/guide/*.js&quot; --output &quot;${tmpdir}/docs&quot; --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" />
 				<exec checkreturn="true" command="${jsduck.file} &quot;${sourcedir}/src&quot; --output &quot;${tmpdir}/docs&quot; --verbose --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" escape="false" />
 				<!-- add Bancha styling -->
 				<copy todir="${tmpdir}/docs/resources" overwrite="true">
@@ -445,9 +445,6 @@
 
 				<!-- remove the github latest-build dir -->
 				<delete dir="${builddir}/zip/latest-build" failonerror="true" verbose="false" includeemptydirs="true"/>
-
-				<!-- remove the extjs library -->
-				<delete file="${builddir}/zip/tests/lib/ext-all-debug-w-comments.js" failonerror="true" verbose="false" />
 
 				<!-- remove the possible old zip build -->
 				<delete file="${builddir}/zip/bancha-scaffold-${release_version}.zip" failonerror="true" verbose="false" />

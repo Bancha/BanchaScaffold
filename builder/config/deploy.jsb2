@@ -15,12 +15,12 @@
             path: '../../src/form/field/override/'
         },
         {
-            text: 'Form.js',
-            path: '../../src/'
+            text: 'Config.js',
+            path: '../../src/form/'
         },
         {
-            text: 'Grid.js',
-            path: '../../src/'
+            text: 'Config.js',
+            path: '../../src/grid/'
         },
         {
             text: 'Util.js',
