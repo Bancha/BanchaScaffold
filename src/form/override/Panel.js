@@ -153,15 +153,16 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
             isModel = Ext.isString(this.scaffold) || (Ext.isDefined(this.scaffold) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold)));
             
             // if there's a model or config object, transform to config class
-            if (isModel || (Ext.isObject(this.scaffold) && !this.scaffold.isInstance)) {
+            // normally we would use this.scaffold.isInstance instead of $className, but that was introduced in Ext JS 4.1
+            if (isModel || (Ext.isObject(this.scaffold) && !this.scaffold.$className)) {
                 this.scaffold.triggeredFrom = 'Ext.form.Panel';
                 this.scaffold = Ext.create('Bancha.scaffold.form.Config', this.scaffold);
             }
             
             // apply scaffolding
             if(this.scaffold) {
-            cls = Ext.ClassManager.getClass(this); //buildConfig is a static method
-            config = cls.buildConfig(this.scaffold, this.initialConfig);
+                cls = Ext.ClassManager.getClass(this); //buildConfig is a static method
+                config = cls.buildConfig(this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
@@ -545,7 +546,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 formConfig, id, validations, loadFn;
 
             // IFDEBUG
-            if(!config.isInstance) {
+            if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
                 Ext.Error.raise({
                     plugin: 'Bancha Scaffold',
                     msg: [
@@ -634,4 +635,9 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
         }
     } // eo statics
     }); //eo override
+
+    // Ext JS prior to 4.1 does not yet support statics, manually add them
+    if(parseInt(Ext.versions.extjs.shortVersion,10) < 410) {
+        Ext.apply(Ext.form.Panel, Ext.form.Panel.prototype.statics);
+    }
 });

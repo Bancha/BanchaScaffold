@@ -80,7 +80,8 @@ Ext.define('Bancha.scaffold.grid.Config', {
         config.target = Ext.ModelManager.getModel(modelName);
 
         // now build the form config
-        if (!Ext.isObject(config.formConfig) || !config.formConfig.isInstance) {
+        
+        if (!Ext.isObject(config.formConfig) || !config.formConfig.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
             config.formConfig = config.formConfig || this.formConfig || {}; // instance config, or default, or {}
             config.formConfig.triggeredFrom = config.triggeredFrom;
             // take the model the grid config

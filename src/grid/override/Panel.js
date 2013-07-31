@@ -134,7 +134,8 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
             isModel = Ext.isString(this.scaffold) || (Ext.isDefined(this.scaffold) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold)));
             
             // if there's a model or config object, transform to config class
-            if (isModel || (Ext.isObject(this.scaffold) && !this.scaffold.isInstance)) {
+            // normally we would use this.scaffold.isInstance instead of $className, but that was introduced in Ext JS 4.1
+            if (isModel || (Ext.isObject(this.scaffold) && !this.scaffold.$className)) {
                 this.scaffold.triggeredFrom = 'Ext.grid.Panel';
                 this.scaffold = Ext.create('Bancha.scaffold.grid.Config', this.scaffold);
             }
@@ -350,7 +351,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 gridConfig, modelName, buttons, button, cellEditing, store, scope, listeners;
 
             // IFDEBUG
-            if(!config.isInstance) {
+            if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
                 Ext.Error.raise({
                     plugin: 'Bancha Scaffold',
                     msg: [
@@ -426,4 +427,9 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
         }
     } // eo statics
     }); //eo override
+
+    // Ext JS prior to 4.1 does not yet support statics, manually add them
+    if(parseInt(Ext.versions.extjs.shortVersion,10) < 410) {
+        Ext.apply(Ext.grid.Panel, Ext.grid.Panel.prototype.statics);
+    }
 });
