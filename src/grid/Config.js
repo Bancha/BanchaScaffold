@@ -59,10 +59,13 @@ Ext.define('Bancha.scaffold.grid.Config', {
                 ].join('')
             });
         }
+        // ENDIF
         
         // check that the configured model is valid
         modelName = config.target;
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
+        
+        // IFDEBUG
         if (!Ext.ModelManager.isRegistered(modelName)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',

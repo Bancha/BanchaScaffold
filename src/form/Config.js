@@ -41,7 +41,7 @@ Ext.define('Bancha.scaffold.form.Config', {
     constructor: function(config) {
         config = config || {};
         var triggeredFrom = config.triggeredFrom || 'Unknown Origin';
-        
+
         // if the config is just a model or model name, transform to a config object
         if (Ext.isString(config) || (Ext.isDefined(config) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(config)))) {
             config = {
@@ -60,10 +60,13 @@ Ext.define('Bancha.scaffold.form.Config', {
                 ].join('')
             });
         }
-        
+        // ENDIF
+
         // check that the configured model is valid
         modelName = config.target;
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
+
+        // IFDEBUG
         if (!Ext.ModelManager.isRegistered(modelName)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
@@ -74,7 +77,7 @@ Ext.define('Bancha.scaffold.form.Config', {
                     (typeof config.target) + ' was set.'
                 ].join('')
             });
-        }    
+        }
         // ENDIF
 
         // make sure that the model property is always a model class
@@ -94,11 +97,11 @@ Ext.define('Bancha.scaffold.form.Config', {
             // ENDIF
             config.exclude = [];
         }
-        
+
         // apply to the object
         Ext.apply(this, config);
     },
-    
+
     statics: {
         /**
          * Set a new default for scaffolding forms
@@ -115,7 +118,7 @@ Ext.define('Bancha.scaffold.form.Config', {
             Ext.apply(this.prototype, config);
         }
     },
-    
+
     /**
      * @private
      * @cfg {String} triggeredFrom
@@ -177,9 +180,9 @@ Ext.define('Bancha.scaffold.form.Config', {
     },
     /**
      * @cfg
-     * The defaults class to create a stores for associated model selects for 
+     * The defaults class to create a stores for associated model selects for
      * form scaffolding.
-     * 
+     *
      * See also {@link Bancha.scaffold.Util#getStore}.
      *
      * Default: *"Ext.data.Store"*
@@ -187,9 +190,9 @@ Ext.define('Bancha.scaffold.form.Config', {
     storeDefaultClass: "Ext.data.Store",
     /**
      * @cfg
-     * Defaults for all stores for associated model selects created with 
+     * Defaults for all stores for associated model selects created with
      * this scaffolding.
-     * 
+     *
      * See also {@link Bancha.scaffold.Util#getStore}.
      *
      * Default:
@@ -204,12 +207,12 @@ Ext.define('Bancha.scaffold.form.Config', {
     /**
      * @cfg
      * True to use only one store per model (singleton),
-     * false to create a new store each time a associated 
+     * false to create a new store each time a associated
      * model is found and a selects field with a store is
      * build.
-     * 
+     *
      * See also {@link Bancha.scaffold.Util#getStore}.
-     * 
+     *
      * Default: *true*
      */
     oneStorePerModel: true,
