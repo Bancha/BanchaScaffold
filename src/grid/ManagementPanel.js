@@ -18,7 +18,7 @@
  */
 
 /**
- * @class Bancha.grid.ManagementPanel
+ * @class Bancha.scaffold.grid.ManagementPanel
  * **This is only available inside Ext JS.**
  *
  * This will create a TabPanel with one tab per model.
@@ -26,7 +26,7 @@
  *
  * Example:
  *
- *     Ext.create('Bancha.grid.ManagementPanel', {
+ *     Ext.create('Bancha.scaffold.grid.ManagementPanel', {
  *         models: [
  *             'MyApp.model.User',
  *             'MyApp.model.Post'
@@ -36,12 +36,12 @@
  * @author Roland Schuetz <mail@rolandschuetz.at>
  * @docauthor Roland Schuetz <mail@rolandschuetz.at>
  */
-Ext.define('Bancha.grid.ManagementPanel', {
+Ext.define('Bancha.scaffold.grid.ManagementPanel', {
     extend: 'Ext.tab.Panel',
     alias: 'widget.managementpanel',
 
     /**
-     * @cfg {[String|Ext.data.Model]} models
+     * @cfg {String[]|Ext.data.Model[]} models
      * Define the models which should be added to the panel.
      */
     models: [],
@@ -62,8 +62,9 @@ Ext.define('Bancha.grid.ManagementPanel', {
         if(!Ext.isArray(this.models)) {
             Ext.Error.raise({
                 plugin: 'Bancha.scaffold',
-                msg: ['Bancha.grid.ManagementPanel\'s models config has to be an array, ',
-                     'instead got ' + this.scaffold + ' (of type ' + (typeof this.scaffold) + ')'].join('')
+                msg: ['Bancha.scaffold.grid.ManagementPanel\'s models config has to be an array, ',
+                     'instead got ' + this.scaffold + ' (of type ' + (typeof this.scaffold) + ')'
+                ].join('')
             });
         }
         // ENDIF
@@ -87,7 +88,7 @@ Ext.define('Bancha.grid.ManagementPanel', {
             if(!model) {
                 Ext.Error.raise({
                     plugin: 'Bancha.scaffold',
-                    msg: ['Bancha.grid.ManagementPanel\'s models config had a model input "',
+                    msg: ['Bancha.scaffold.grid.ManagementPanel\'s models config had a model input "',
                             modelName + '" (of type ' + (typeof modelName) + '), ',
                             'which is not a valid model name'].join('')
                 });

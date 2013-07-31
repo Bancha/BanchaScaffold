@@ -51,7 +51,7 @@ Ext.define('Bancha.data.override.Validations', {
      * @class Ext.data.validations
      *
      * Bancha extends Ext.data.validations with two new validation rules:
-     * numberformat and file.
+     * *numberformat* and *file*.
      *
      * These custom validations are mapped from CakePHP.
      *
@@ -74,6 +74,7 @@ Ext.define('Bancha.data.override.Validations', {
          * Validates that the number is in the range of min and max.
          * Precision is not validated, but it is used for differenting int from float,
          * also it's metadata for scaffolding.
+         *
          * For example:
          *     {type: 'numberformat', field: 'euro', precision:2, min:0, max: 1000}
          */
@@ -93,6 +94,7 @@ Ext.define('Bancha.data.override.Validations', {
          * @method
          * Validates that the given filename is of the configured extension. Also validates
          * if no extension are defined and empty values.
+         *
          * For example:
          *     {type: 'file', field: 'avatar', extension:['jpg','jpeg','gif','png']}
          */

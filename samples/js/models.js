@@ -20,11 +20,6 @@
 // init Ext.Direct Provider
 Ext.direct.Manager.addProvider(Bancha.REMOTE_API);
 
-
-// setup the path to the delete image in local environments
-Bancha.scaffold.Grid.destroyButtonConfig.items[0].icon = 'img/icons/delete.png';
-
-
 // define the article model
 Ext.define('Bancha.model.Article', {
     extend: 'Ext.data.Model',

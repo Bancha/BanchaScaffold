@@ -19,7 +19,7 @@
  * For more information go to http://scaffold.banchaproject.org
  */
 
-describe("Bancha.grid.ManagementPanel tests",function() {
+describe("Bancha.scaffold.grid.ManagementPanel tests",function() {
 
     // setup some models
     Ext.define('Bancha.model.ManagementPanelUser', {
@@ -57,7 +57,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
     });
 
     it('should recognize both model strings and model objects', function() {
-        var panel = Ext.create('Bancha.grid.ManagementPanel', {
+        var panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: [
                 'Bancha.model.ManagementPanelUser',
                 Ext.ModelManager.getModel('Bancha.model.ManagementPanelArticle')
@@ -78,7 +78,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
     });
 
     it('should recognize the models capabilities and provides only those functionality', function() {
-        var panel = Ext.create('Bancha.grid.ManagementPanel', {
+        var panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: ['Bancha.model.ManagementPanelUser'],
             scaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
@@ -97,7 +97,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
 
 
         // test with a model with fewer capabilities
-        panel = Ext.create('Bancha.grid.ManagementPanel', {
+        panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: ['Bancha.model.ManagementPanelArticle'],
             scaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
@@ -110,7 +110,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
     });
 
     it('should use the panelDefaults and inject them into every panel', function() {
-        var panel = Ext.create('Bancha.grid.ManagementPanel', {
+        var panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: [
                 'Bancha.model.ManagementPanelUser',
                 'Bancha.model.ManagementPanelArticle'],
@@ -132,7 +132,7 @@ describe("Bancha.grid.ManagementPanel tests",function() {
     });
 
     it('should use the scaffoldDefaults and inject them into every panel', function() {
-        var panel = Ext.create('Bancha.grid.ManagementPanel', {
+        var panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: [
                 'Bancha.model.ManagementPanelUser',
                 'Bancha.model.ManagementPanelArticle'],

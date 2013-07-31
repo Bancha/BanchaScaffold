@@ -4,7 +4,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Bancha Scaffold - Easy ExtJS 4 Prototyping</title>
     <link rel="stylesheet" href="http://cdn.sencha.io/ext-4.2.0-gpl/resources/css/ext-all.css" type="text/css"/>
-    <style type="text/css"> *{margin:0;padding:0;}#container{text-align:center;}#centered_container{margin-left:auto;margin-right:auto;width:762px;text-align:left;border-left:1px solid #555555;border-right:1px solid #555555;border-bottom:1px solid #555555;background-color:#FFFFFF;}#content{padding:20px;text-align:left;}#footer{text-align:center;color:#000000;font-size:8pt;font-family:verdana,Arial,sans-serif;padding:20px 10px 20px 10px;}ul,li{margin:0 12px;}.productstable{border:0px solid black;text-align:left;}.left{text-align:left;}.center{text-align:center;}.productstable .select{vertical-align:top;width:70px;}.price{vertical-align:bottom;text-align:right;}.productstable th{border-bottom:1px solid black;}.productstable td{padding-top:10px;padding-bottom:30px;border-top:1px solid #cccccc;}.productstable td.no-border{border-width:0;}.productstable .price{width:120px;}.pricediv{vertical-align:bottom;text-align:right;font-weight:bold;font-size:14px;margin-top:0px;padding-right:10px;margin-bottom:10px;}.totalPriceInput label{font-size:140%;color:#ee3322;margin-left:10px;}.notice{background:#ffdaca url(/img/icons/notice.gif) center no-repeat;background-position:15px 50%;text-align:left;padding:0.6em 2em 0.6em 75px;margin:1em 0;border:2px solid #ff7349;border-width:2px 0;}.legendColor{color:#ee3322;}.insteadOf{color:#ee3322;font-weight:normal;text-decoration:line-through;}form{clear:both;font-size:10pt;font-family:verdana,Arial,sans-serif;margin-left:10px;margin-right:50px;padding:0;}fieldset{border:1px solid #ccc;margin-top:30px;padding:16px 20px;}fieldset legend{background:#fff;color:#ee3322;font-size:140%;font-weight:bold;}fieldset fieldset{margin-top:10px;margin-bottom:10px;padding:16px 10px;}fieldset fieldset legend{font-weight:normal;font-size:120%;margin-bottom:10px;}form div{clear:both;}label{font-weight:normal;width:150px;margin-left:20px;float:left;}input,select{margin:3px;}div.text input{width:200px;}option{padding:0 3px;}div.gender{margin:3px;}div.gender p{font-weight:normal;margin-left:20px;width:150px;float:left;}div.gender label{float:none;margin-left:2px;}div.checkbox label{float:none;width:500px;margin-left:0px;float:none;vertical-align:middle;}.productstable .select div{text-align:center;}.productstable .select input{float:none;}div.radio input{margin:7px 5px;vertical-align:middle;}div.radio label{float:none;width:100%;margin-left:0px;vertical-align:middle;}div.textarea label{margin-left:0px;}div.textarea textarea{width:100%;height:100px;}.conditionsBox{border:1px solid #ee3322;padding:10px;}form .submit{text-align:right;border:0;margin-top:10px;margin-left:auto;margin-right:0;}div.message{clear:both;color:#900;font-size:140%;font-weight:bold;margin:1em 0;}div.error-message{clear:both;color:#900;font-weight:bold;margin-left:20px;margin-bottom:20px;}p.error{background-color:#ee3322;color:#fff;font-family:Courier,monospace;font-size:120%;line-height:140%;padding:0.8em;margin:1em 0;}p.error em{color:#000;font-weight:normal;line-height:140%;}.success{background:green;color:#fff;}**/div.actions ul{margin:0px 0;padding:0;}div.actions li{display:inline;list-style-type:none;line-height:2em;margin:0 2em 0 0;white-space:nowrap;}div.actions ul li a{background:#fff;color:#003d4c;text-decoration:none;}div.actions ul li a:hover{color:#333;text-decoration:underline;}div.related{clear:both;display:block;}
+    <style type="text/css">
+/* basic layout */
+		*{margin:0;padding:0;}
+		#container{text-align:center;}
+		#centered_container{margin-left:auto;margin-right:auto;width:762px;text-align:left;border-left:1px solid #555555;border-right:1px solid #555555;border-bottom:1px solid #555555;background-color:#FFFFFF;}
+		#content{padding:20px;text-align:left;}
+		#footer{text-align:center;color:#000000;font-size:8pt;font-family:verdana,Arial,sans-serif;padding:20px 10px 20px 10px;}
+		ul,li{margin:0 12px;}
+		.notice{background:#ffdaca url(/img/icons/notice.gif) center no-repeat;background-position:15px 50%;text-align:left;padding:0.6em 2em 0.6em 75px;margin:1em 0;border:2px solid #ff7349;border-width:2px 0;}
       /* colors and fonts */
       body {
           background: url(http://banchaproject.org/tl_files/Bancha/images/bg.png);
@@ -63,6 +71,7 @@
       .icon-add { background-image:url(img/icons/add.png) ! important; }
       .icon-save { background-image:url(img/icons/disk.png) ! important; }
       .icon-reset { background-image:url(img/icons/arrow_undo.png) ! important; }
+      .icon-destroy { background-image:url(img/icons/delete.png) ! important; }
       .icon-upload { background-image:url(img/icons/image_add.png) ! important; }
       .icon-edit-user { background-image:url(img/icons/user_edit.png) ! important; }
     </style>
@@ -124,14 +133,10 @@ Ext.Error.handle = function(err) {
 
 <!-- include Bancha Scaffold -->
 <!--IFDEBUG -->
-<script type="text/javascript" src="../src/data/override/Validations.js"></script>
-<script type="text/javascript" src="../src/form/field/override/VTypes.js"></script>
-<script type="text/javascript" src="../src/Util.js"></script>
-<script type="text/javascript" src="../src/Form.js"></script>
-<script type="text/javascript" src="../src/Grid.js"></script>
-<script type="text/javascript" src="../src/form/override/Panel.js"></script>
-<script type="text/javascript" src="../src/grid/override/Panel.js"></script>
-<script type="text/javascript" src="../src/grid/ManagementPanel.js"></script>
+<script>
+	// dynamically load dependencies
+	Ext.Loader.setPath('Bancha.scaffold', '../src');
+</script>
 <!-- ENDIF --><!-- IFPRODUCTION
 <script type="text/javascript" src="js/bancha-scaffold-production.js"></script>
 ENDIF -->
