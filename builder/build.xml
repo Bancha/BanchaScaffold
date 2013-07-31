@@ -250,7 +250,7 @@
 
 		<target name="exec-gema-versionize">
 				<!-- Replace version placeholders -->
-				<exec checkreturn="true" dir="${gema.path}" command="./gema -p &quot;PRECOMPILER_ADD_RELEASE_VERSION=${release_version}&quot; &quot;${tmpdir}/${file}&quot; &quot;${tmpdir}/${file}&quot; -backup &quot;.gemaBak&quot;"/>
+				<exec checkreturn="true" dir="${gema.path}" command="./gema -p &quot;PRECOMPILER_ADD_BANCHA_SCAFFOLD_RELEASE_VERSION=${release_version}&quot; &quot;${tmpdir}/${file}&quot; &quot;${tmpdir}/${file}&quot; -backup &quot;.gemaBak&quot;"/>
 		</target>
 
 
