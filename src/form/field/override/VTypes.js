@@ -1,4 +1,4 @@
-/*!
+/*
  *
  * Bancha Scaffolding Library
  * Copyright 2011-2013 codeQ e.U.
