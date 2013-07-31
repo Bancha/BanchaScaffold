@@ -6,15 +6,15 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * Bancha.scaffold.Grid Tests
+ * Bancha.scaffold.grid.ManagementPanel tests
  *
- * @package       Bancha.scaffold.Test
+ * @package       Bancha.scaffold.tests
  * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
- * @since         Bancha.scaffold 0.5.0
+ * @since         Bancha Scaffold v 0.5.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha v PRECOMPILER_ADD_RELEASE_VERSION
+ * @version       Bancha Scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */

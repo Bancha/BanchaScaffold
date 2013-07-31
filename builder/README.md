@@ -1,5 +1,5 @@
-Bancha Builder
-=============================
+Bancha Scaffold Builder
+=======================
 
 This is the phing builder for Bancha Scaffold.
 

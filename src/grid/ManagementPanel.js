@@ -9,10 +9,10 @@
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
- * @since         Bancha.scaffold 0.5.3
+ * @since         Bancha Scaffold v 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
+ * @version       Bancha Scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -61,7 +61,7 @@ Ext.define('Bancha.scaffold.grid.ManagementPanel', {
         // IFDEBUG
         if(!Ext.isArray(this.models)) {
             Ext.Error.raise({
-                plugin: 'Bancha.scaffold',
+                plugin: 'Bancha Scaffold',
                 msg: ['Bancha.scaffold.grid.ManagementPanel\'s models config has to be an array, ',
                      'instead got ' + this.scaffold + ' (of type ' + (typeof this.scaffold) + ')'
                 ].join('')
@@ -87,7 +87,7 @@ Ext.define('Bancha.scaffold.grid.ManagementPanel', {
             // IFDEBUG
             if(!model) {
                 Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
+                    plugin: 'Bancha Scaffold',
                     msg: ['Bancha.scaffold.grid.ManagementPanel\'s models config had a model input "',
                             modelName + '" (of type ' + (typeof modelName) + '), ',
                             'which is not a valid model name'].join('')

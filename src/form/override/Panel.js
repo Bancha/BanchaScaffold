@@ -9,10 +9,10 @@
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
- * @since         Bancha.scaffold 0.3.0
+ * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
+ * @version       Bancha Scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -254,7 +254,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         if (field.xtype !== 'textfield') {
                             msgAddition = (field.xtype === 'numberfield') ? 'Use the rule numberformat to force minimal and maximal values.' : '';
                             Ext.Error.raise({
-                                plugin: 'Bancha.scaffold',
+                                plugin: 'Bancha Scaffold',
                                 msg: [
                                     'Bancha Scaffold: The model has a validation rule ',
                                     'length for the field ' + name + ', but this field ',
@@ -278,7 +278,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         // length validation works only only on textfields
                         if (field.xtype !== 'textfield') {
                             Ext.Error.raise({
-                                plugin: 'Bancha.scaffold',
+                                plugin: 'Bancha Scaffold',
                                 msg: [
                                     'Bancha Scaffold: The model has a validation rule ',
                                     'format for the field ' + name + ', but this field ',
@@ -321,7 +321,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         // IFDEBUG
                         if (field.xtype !== 'numberfield') {
                             Ext.Error.raise({
-                                plugin: 'Bancha.scaffold',
+                                plugin: 'Bancha Scaffold',
                                 msg: [
                                     'Bancha Scaffold: The model has a validation rule ',
                                     'numberformat for the field ' + name + ', but this ',
@@ -463,7 +463,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
             if (!Bancha.initialized) {
                 // the user is using Bancha, but hasn't initialized yet
                 Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
+                    plugin: 'Bancha Scaffold',
                     msg: [
                         'Bancha Scaffold: Bancha is not yet initalized, please ',
                         'init before using Ext.form.Panel with a scaffold config.'
@@ -479,7 +479,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
             // IFDEBUG
             if (!Ext.isDefined(stub)) {
                 Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
+                    plugin: 'Bancha Scaffold',
                     msg: [
                         'Bancha Scaffold: Ext.form.Panel used with a scaffold config ',
                         'expects an remotable bancha model, but got an "normal" model ',
@@ -547,7 +547,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
             // IFDEBUG
             if(!config.isInstance) {
                 Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
+                    plugin: 'Bancha Scaffold',
                     msg: [
                         'Bancha Scaffold: Ext.form.Panel#buildConfig expects a object ',
                         'of class Bancha.scaffold.form.Config.'

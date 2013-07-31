@@ -8,20 +8,16 @@
  *
  * ExtJS and Sencha Touch specific helper functions
  *
- * @package       Bancha.scaffold.Test
+ * @package       Bancha.scaffold.tests.helpers
  * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
- * @since         Bancha.scaffold 0.5.0
+ * @since         Bancha Scaffold v 0.5.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha v PRECOMPILER_ADD_RELEASE_VERSION
+ * @version       Bancha Scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */
-/*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
-/*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
-/*global Ext, Bancha, describe, it, beforeEach, expect, jasmine, Mock, alert, ExtSpecHelper:true */
-
 
 beforeEach(function() {
 

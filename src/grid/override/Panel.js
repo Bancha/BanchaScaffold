@@ -9,10 +9,10 @@
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
- * @since         Bancha.scaffold 0.3.0
+ * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
+ * @version       Bancha Scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -303,7 +303,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
             if(!Ext.isArray(config.exclude)) {
                 // IFDEBUG
                 Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
+                    plugin: 'Bancha Scaffold',
                     model: model,
                     msg: [
                         'Bancha Scaffold: When scaffolding a grid panel the exclude ',
@@ -353,7 +353,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
             // IFDEBUG
             if(!config.isInstance) {
                 Ext.Error.raise({
-                    plugin: 'Bancha.scaffold',
+                    plugin: 'Bancha Scaffold',
                     msg: [
                         'Bancha Scaffold: Ext.grid.Panel#buildConfig expects a object ',
                         'of class Bancha.scaffold.form.Config.'

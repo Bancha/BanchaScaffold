@@ -9,10 +9,10 @@
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
- * @since         Bancha.scaffold 0.0.1
+ * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
+ * @version       Bancha Scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -53,9 +53,9 @@ Ext.define('Bancha.scaffold.form.Config', {
         // check that a model is set
         if(!config.target) {
             Ext.Error.raise({
-                plugin: 'Bancha.Scaffold',
+                plugin: 'Bancha Scaffold',
                 msg: [
-                    'Bancha.Scaffold: If you set a form scaffold config object ',
+                    'Bancha Scaffold: If you set a form scaffold config object ',
                     'for '+triggeredFrom+', the target property must be set!'
                 ].join('')
             });
@@ -66,9 +66,9 @@ Ext.define('Bancha.scaffold.form.Config', {
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
         if (!Ext.ModelManager.isRegistered(modelName)) {
             Ext.Error.raise({
-                plugin: 'Bancha.Scaffold',
+                plugin: 'Bancha Scaffold',
                 msg: [
-                    'Bancha.Scaffold: If you set a form scaffold config object ',
+                    'Bancha Scaffold: If you set a form scaffold config object ',
                     'for '+triggeredFrom+', the target property must be a model ',
                     'name or model class. Instead ' + config.target + ' of type ',
                     (typeof config.target) + ' was set.'
@@ -83,7 +83,7 @@ Ext.define('Bancha.scaffold.form.Config', {
         if(Ext.isDefined(config.exclude) && !Ext.isArray(config.exclude)) {
             // IFDEBUG
             Ext.Error.raise({
-                plugin: 'Bancha.scaffold',
+                plugin: 'Bancha Scaffold',
                 model: model,
                 msg: [
                     'Bancha Scaffold: When scaffolding a ' + triggeredFrom,

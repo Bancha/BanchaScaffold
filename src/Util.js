@@ -9,10 +9,10 @@
  * @package       Bancha.scaffold
  * @copyright     Copyright 2011-2013 codeQ e.U.
  * @link          http://scaffold.banchaproject.org
- * @since         Bancha.scaffold 0.0.1
+ * @since         Bancha Scaffold v 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha.scaffold v PRECOMPILER_ADD_RELEASE_VERSION
+ * @version       Bancha Scaffold v PRECOMPILER_ADD_RELEASE_VERSION
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -211,7 +211,7 @@ Ext.define('Bancha.scaffold.Util', {
      * overwritten at any time.
      *
      * By default it used the models "displayField" config, which just exists
-     * in Bancha.Scaffold and soon should be implemented in Bancha for CakePHP.
+     * in Bancha Scaffold and soon should be implemented in Bancha for CakePHP.
      *
      * @param {Ext.data.Model} model The model to look through
      * @return {String} The most accurate field name

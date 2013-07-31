@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="lib/phing-grammar.rng" type="xml"?>
-<project name="Bancha.scaffold" default="deploy" basedir="../"
-		description="This package tests and creates a release for Bancha.scaffold">
+<project name="Bancha Scaffold" default="deploy" basedir="../"
+		description="This package tests and creates a release for Bancha Scaffold">
 
 		<!-- ============================================  -->
 		<!-- ============================================  -->
