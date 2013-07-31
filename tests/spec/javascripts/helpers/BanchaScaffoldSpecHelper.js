@@ -69,7 +69,6 @@ beforeEach(function() {
             delete config.scaffold;
             delete config.scaffoldLoadRecord;
             delete config.scaffold;
-            delete config.scaffoldConfig; // deprecated
             delete config.enableCreate;
             delete config.enableUpdate;
             delete config.enableDestroy;

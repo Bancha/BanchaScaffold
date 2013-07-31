@@ -120,7 +120,7 @@ Ext.application({
                         },
                         scope: 'scaffold-scope-me'
                     },'reset','save']
-            }, // eo scaffoldConfig
+            }, // eo scaffold
 
             api: {
                 load    : Bancha.RemoteStubs.User.read,

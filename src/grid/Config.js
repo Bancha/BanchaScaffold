@@ -133,7 +133,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
     exclude: [],
     /**
      * @cfg {String[]|false}
-     * If this is set to an array, only those fields are displayed. // TODO add tests, and feature for Forms
+     * If this is set to an array, only those fields are displayed.
      *
      * Note that the exclude setting are still applied.
      */
