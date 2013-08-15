@@ -31,16 +31,17 @@
  */
 Ext.define('Bancha.scaffold.grid.Config', {
     uses: [
-         'Ext.data.validations'
-     ],
+        'Ext.data.validations'
+    ],
 
     /**
      * Create a new config instance
      */
     constructor: function(config) {
         config = config || {};
-        var triggeredFrom = config.triggeredFrom || 'Unknown Origin';
-        
+        var triggeredFrom = config.triggeredFrom || 'Unknown Origin',
+            modelName;
+
         // if the config is just a model or model name, transform to a config object
         if (Ext.isString(config) || (Ext.isDefined(config) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(config)))) {
             config = {
@@ -60,11 +61,11 @@ Ext.define('Bancha.scaffold.grid.Config', {
             });
         }
         // ENDIF
-        
+
         // check that the configured model is valid
         modelName = config.target;
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
-        
+
         // IFDEBUG
         if (!Ext.ModelManager.isRegistered(modelName)) {
             Ext.Error.raise({
@@ -83,8 +84,9 @@ Ext.define('Bancha.scaffold.grid.Config', {
         config.target = Ext.ModelManager.getModel(modelName);
 
         // now build the form config
-        
-        if (!Ext.isObject(config.formConfig) || !config.formConfig.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
+
+        // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
+        if (!Ext.isObject(config.formConfig) || !config.formConfig.$className) {
             config.formConfig = config.formConfig || this.formConfig || {}; // instance config, or default, or {}
             config.formConfig.triggeredFrom = config.triggeredFrom;
             // take the model the grid config
@@ -94,12 +96,12 @@ Ext.define('Bancha.scaffold.grid.Config', {
             // build the instance
             config.formConfig = Ext.create('Bancha.scaffold.form.Config', config.formConfig);
         }
-        
+
         // apply to the object
         Ext.apply(this, config);
-     },
-     
-     statics: {
+    },
+
+    statics: {
         /**
          * Set a new default for scaffolding forms
          */
@@ -112,7 +114,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
          */
         setDefaults: function(config) {
             // apply to the class prototype
-             Ext.apply(this.prototype, config);
+            Ext.apply(this.prototype, config);
         }
     },
 
@@ -127,7 +129,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
      */
     /**
      * @private
-     * @propterty {Ext.data.Model} target
+     * @property {Ext.data.Model} target
      * The model to use
      */
     /**
@@ -171,32 +173,32 @@ Ext.define('Bancha.scaffold.grid.Config', {
     datecolumnDefaults: {},
     /**
      * @private
-     * @property {Bancha.scaffold.form.Config}
-     * If the editable property is true, these configurations will be applied
-     * for building the editor fields.
+     * @property {Bancha.scaffold.form.Config} formConfig
+     * If the editable property was true while building, these configurations
+     * were applied for building the editor fields.
      */
     /**
      * @cfg {Bancha.scaffold.form.Config|Object}
      * If the editable property is true, these configurations will be applied
-     * for building the editor fields. 
-     * 
-     * See {@link Bancha.scaffold.form.Config} 
+     * for building the editor fields.
+     *
+     * See {@link Bancha.scaffold.form.Config}
      * for all configuration options
      */
     formConfig: {},
     /**
      * @cfg
      * The defaults class to create an store for grid scaffolding.
-     * 
+     *
      * See also {@link Bancha.scaffold.Util#getStore}.
      *
      * Default: *"Ext.data.Store"*
      */
-    storeDefaultClass: "Ext.data.Store",
+    storeDefaultClass: 'Ext.data.Store',
     /**
      * @cfg
      * Defaults for all grid stores created with this scaffolding.
-     * 
+     *
      * See also {@link Bancha.scaffold.Util#getStore}.
      *
      * Default:
@@ -212,9 +214,9 @@ Ext.define('Bancha.scaffold.grid.Config', {
      * @cfg
      * True to use only one store per model (singleton),
      * false to create a new store each time.
-     * 
+     *
      * See also {@link Bancha.scaffold.Util#getStore}.
-     * 
+     *
      * Default: *true*
      */
     oneStorePerModel: true,
@@ -224,7 +226,8 @@ Ext.define('Bancha.scaffold.grid.Config', {
      *
      * This function can be overwritten by any custom function.
      * @param {Object} columnConfig the column config to transform
-     * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+     * @param {String} modelType A standard model field type like 'string'
+     * (also supports 'file' for compability with http://banchaproject.org)
      * @return {Object} Returns an Ext.grid.column.* configuration object
      */
     transformColumnConfig: function (columnConfig, modelType) {
@@ -292,10 +295,10 @@ Ext.define('Bancha.scaffold.grid.Config', {
         store.each(function (el) {
             if (!el.isValid()) {
                 valid = false;
-                name = el.get('name') || el.get('title') || (el.phantom ? "New entry" : el.getId());
-                msg += "<br><br><b>" + name + ":</b>";
+                name = el.get('name') || el.get('title') || (el.phantom ? 'New entry' : el.getId());
+                msg += '<br><br><b>' + name + ':</b>';
                 el.validate().each(function (error) {
-                    msg += "<br>&nbsp;&nbsp;&nbsp;" + error.field + " " + error.message;
+                    msg += '<br>&nbsp;&nbsp;&nbsp;' + error.field + ' ' + error.message;
                 });
             }
         });
@@ -303,7 +306,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
         if (!valid) {
             Ext.MessageBox.show({
                 title: 'Invalid Data',
-                msg: '<div style="text-align:left; padding-left:50px;">There are errors in your data:' + msg + "</div>",
+                msg: '<div style="text-align:left; padding-left:50px;">There are errors in your data:' + msg + '</div>',
                 icon: Ext.MessageBox.ERROR,
                 buttons: Ext.Msg.OK
             });
@@ -461,7 +464,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
      */
     destroyButtonConfig: {
         xtype: 'actioncolumn',
-        width: 50,
+        width: 30,
         items: [{
             iconCls: 'icon-destroy',
             tooltip: 'Delete',
@@ -471,20 +474,20 @@ Ext.define('Bancha.scaffold.grid.Config', {
     /**
      * @cfg {Function}
      * The function will be executed before scaffolding as interceptor.
-     * @param {Ext.data.Model} model see {@link #buildConfig}
+     * @param {Ext.data.Model} model the model used for scaffolding
      * @param {Object} config the scaffold full config for this call
-     * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
-     * @return {Object|Undefined} object with initial Ext.form.Panel configs
+     * @param {Object} initialPanelConfig please ignore, this is a legacy argument, may having some additional Ext.grid.Panel configs
+     * @return {Object|undefined} object with initial Ext.form.Panel configs
      */
     beforeBuild: function (model, config, initialPanelConfig) {},
     /**
      * @cfg {Function}
      * This function will be executed after scaffolding as interceptor.
      * @param {Object} gridConfig the just build grid panel config
-     * @param {Ext.data.Model} model see {@link #buildConfig}
+     * @param {Ext.data.Model} model the model used for scaffolding
      * @param {Object} config the scaffold full config for this call
-     * @param {Object|Undefined} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
-     * @return {Object|Undefined} object with final Ext.grid.Panel configs or undefined to use the passed config
+     * @param {Object} initialPanelConfig please ignore, this is a legacy argument, may having some additional Ext.grid.Panel configs
+     * @return {Object|undefined} object with final Ext.grid.Panel configs or undefined to use the passed config
      */
     afterBuild: function (gridConfig, model, config, initialPanelConfig) {}
 });

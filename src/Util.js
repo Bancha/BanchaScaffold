@@ -45,10 +45,10 @@ Ext.define('Bancha.scaffold.Util', {
         return str[0].toUpperCase() + str.substr(1);
     },
     /**
-     * Capitalizes the first word, turns underscores into spaces and strips 
+     * Capitalizes the first word, turns underscores into spaces and strips
      * trailing *'_id'*.
      *
-     * Also it converts camel case by finding upper case letters right after 
+     * Also it converts camel case by finding upper case letters right after
      * lower case and replaceing the upper case with an space and lower case.
      *
      * examples:
@@ -63,7 +63,7 @@ Ext.define('Bancha.scaffold.Util', {
         str = str.replace(/_id/g, ''); // delete _id from the string
         str = str.replace(/_/g, ' '); // _ to spaces
         str = str.replace(/([a-z])([A-Z])/g, function (all, first, second) {
-            return first + " " + second.toLowerCase();
+            return first + ' ' + second.toLowerCase();
         }); // convert camel case (only)
         return this.toFirstUpper(str);
     },
@@ -130,10 +130,11 @@ Ext.define('Bancha.scaffold.Util', {
      * It will also inject the scope into all elements where the scope
      * equals 'scaffold-scope-me'
      *
-     * @param {String[],Ext.button.Button[]} buttons the  button config, e.g. ['->','create','reset','save']
-     * @param {Bancha.scaffold.form.Config|Bancha.scaffold.grid.Config} config The config with all necessary replacements (onCreate, createButtonConfig, onReset, ...)
+     * @param {String[]|Ext.button.Button[]} buttons the  button config, e.g. ['->','create','reset','save']
+     * @param {Bancha.scaffold.form.Config|Bancha.scaffold.grid.Config} config The config with all necessary
+     * replacements (onCreate, createButtonConfig, onReset, ...)
      * @param buttonScope the scope, that's applied to all replaced buttons
-     * @return {String[],Ext.button.Button[]} The build buttons array
+     * @return {String[]|Ext.button.Button[]} The build buttons array
      */
     replaceButtonPlaceHolders: function(buttons, config, buttonScope) {
         if(typeof buttons === 'undefined' || buttons.length===0) {
@@ -142,29 +143,29 @@ Ext.define('Bancha.scaffold.Util', {
 
         for(var i=0, len=buttons.length; i<len; i++) {
             switch(buttons[i]) {
-                case 'create':
-                    buttons[i] = Ext.apply(config.createButtonConfig, {
-                        scope: buttonScope,
-                        handler: config.onCreate
-                    });
-                    break;
-                case 'reset':
-                    buttons[i] = Ext.apply(config.resetButtonConfig, {
-                        scope: buttonScope,
-                        handler: config.onReset
-                    });
-                    break;
-                case 'save':
-                    buttons[i] = Ext.apply(config.saveButtonConfig, {
-                        scope: buttonScope,
-                        handler: config.onSave
-                    });
-                    break;
-                default:
-                    // check if we should inject a scope
-                    if(buttons[i].scope === 'scaffold-scope-me') {
-                        buttons[i].scope = buttonScope;
-                    }
+            case 'create':
+                buttons[i] = Ext.apply(config.createButtonConfig, {
+                    scope: buttonScope,
+                    handler: config.onCreate
+                });
+                break;
+            case 'reset':
+                buttons[i] = Ext.apply(config.resetButtonConfig, {
+                    scope: buttonScope,
+                    handler: config.onReset
+                });
+                break;
+            case 'save':
+                buttons[i] = Ext.apply(config.saveButtonConfig, {
+                    scope: buttonScope,
+                    handler: config.onSave
+                });
+                break;
+            default:
+                // check if we should inject a scope
+                if(buttons[i].scope === 'scaffold-scope-me') {
+                    buttons[i].scope = buttonScope;
+                }
             }
         }
 
@@ -177,7 +178,7 @@ Ext.define('Bancha.scaffold.Util', {
      * Used to build the grid store and to build associated stores.
      *
      * @param {Ext.data.Model} model A model
-     * @param {Bancha.scaffold.form.Config|Bancha.scaffold.grid.Config} config (optional) 
+     * @param {Bancha.scaffold.form.Config|Bancha.scaffold.grid.Config} config (optional)
      * A config object with the properties oneStorePerModel, storeDefaults and storeDefaultClass
      * @return {Ext.data.Store} The store
      */
@@ -192,7 +193,7 @@ Ext.define('Bancha.scaffold.Util', {
                 return stores[modelName];
             }
 
-            store = Ext.create(config.storeDefaultClass || "Ext.data.Store", Ext.apply({
+            store = Ext.create(config.storeDefaultClass || 'Ext.data.Store', Ext.apply({
                 model: modelName
             }, Ext.clone(config.storeDefaults || {})));
 
@@ -245,6 +246,7 @@ Ext.define('Bancha.scaffold.Util', {
      *
      * The default uses CakePHP naming conventions, e.g.
      * fieldname *'book_author_id'* expects association name *'bookAuthors'*
+     *
      * @param {String} modelFieldName The fields name of an model, e.g. 'title'
      * @param {String} associationType The association type, e.g. belongsTo
      * @return {String} The guessed association name
@@ -270,8 +272,8 @@ Ext.define('Bancha.scaffold.Util', {
     /**
      * Returns the corresponding association for a given field, or false.
      *
-     * @param {Ext.data.Field} field The model field to look for an association (belongsTo)
-     * @param {Ext.data.Model} model The fields model
+     * @param {Ext.data.Field} field The model field to look for an association (belongsTo)
+     * @param {Ext.data.Model} model The fields model
      * @return {Ext.data.association.belongsTo|False} The found association or false
      */
     getBelongsToAssociation: function(field, model) {

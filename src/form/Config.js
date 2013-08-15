@@ -40,7 +40,8 @@ Ext.define('Bancha.scaffold.form.Config', {
      */
     constructor: function(config) {
         config = config || {};
-        var triggeredFrom = config.triggeredFrom || 'Unknown Origin';
+        var triggeredFrom = config.triggeredFrom || 'Unknown Origin',
+            modelName;
 
         // if the config is just a model or model name, transform to a config object
         if (Ext.isString(config) || (Ext.isDefined(config) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(config)))) {
@@ -87,7 +88,7 @@ Ext.define('Bancha.scaffold.form.Config', {
             // IFDEBUG
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
-                model: model,
+                model: modelName,
                 msg: [
                     'Bancha Scaffold: When scaffolding a ' + triggeredFrom,
                     ' the form scaffold exclude config should be an array ',
@@ -130,7 +131,7 @@ Ext.define('Bancha.scaffold.form.Config', {
      */
     /**
      * @private
-     * @propterty {Ext.data.Model} target
+     * @property {Ext.data.Model} target
      * The model to use
      */
     /**
@@ -187,7 +188,7 @@ Ext.define('Bancha.scaffold.form.Config', {
      *
      * Default: *"Ext.data.Store"*
      */
-    storeDefaultClass: "Ext.data.Store",
+    storeDefaultClass: 'Ext.data.Store',
     /**
      * @cfg
      * Defaults for all stores for associated model selects created with
@@ -222,12 +223,13 @@ Ext.define('Bancha.scaffold.form.Config', {
      *
      * This function can be overwritten by any custom function.
      * @param {Object} fieldConfig the field config to transform
-     * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
+     * @param {String} modelType A standard model field type like 'string'
+     * (also supports 'file' for compability with http://banchaproject.org)
      * @return {Object} Returns an Ext.form.field.* configuration object
      */
-     transformFieldConfig: function (fieldConfig, modelType) {
+    transformFieldConfig: function (fieldConfig, modelType) {
         return fieldConfig;
-     },
+    },
     /**
      * @cfg
      * Editable function to be called when the save button is pressed.
@@ -336,13 +338,13 @@ Ext.define('Bancha.scaffold.form.Config', {
 
             // IFDEBUG
             // warn the user that we can just guess part of the api
-            if (window.console && Ext.isFunction(window.console.warn)) {
-                window.console.warn([
+            if (Ext.global.console && Ext.isFunction(Ext.global.console.warn)) {
+                Ext.global.console.warn([
                     'Bancha Scaffold: You have not defined any form api. If you want ',
                     'Bancha to guess it, please define Bancha.scaffold.form.Config.',
                     'buildApiConfig. Bancha Scaffold can only try to get the load ',
                     'function from the model proxy, but not the submit function.'
-                    ].join(''));
+                ].join(''));
             }
             // ENDIF
         }
@@ -367,7 +369,7 @@ Ext.define('Bancha.scaffold.form.Config', {
      * The function will be executed before scaffolding as interceptor.
      * @param {Ext.data.Model} model the model used for scaffolding
      * @param {Bancha.scaffold.form.Config} config the scaffold full config for this call
-     * @param {Object} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
+     * @param {Object} initialPanelConfig please ignore, this is a legacy argument, may having some additional Ext.form.Panel configs
      * @return {Object|undefined} object with initial Ext.form.Panel configs
      */
     beforeBuild: function (model, config, initialPanelConfig) {},
@@ -377,8 +379,8 @@ Ext.define('Bancha.scaffold.form.Config', {
      * @param {Object} formConfig the just build form panel config
      * @param {Ext.data.Model} model the model used for scaffolding
      * @param {Bancha.scaffold.form.Config} config the scaffold full config for this call
-     * @param {Object} initialPanelConfig see {@link #buildConfig}'s initialPanelConfig property
-     * @return {Object|Undefined} object with final Ext.form.Panel configs or undefined to use the passed config
+     * @param {Object} initialPanelConfig please ignore, this is a legacy argument, may having some additional Ext.form.Panel configs
+     * @return {Object|undefined} object with final Ext.form.Panel configs or undefined to use the passed config
      */
     afterBuild: function (formConfig, model, config, initialPanelConfig) {}
 });

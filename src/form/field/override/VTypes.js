@@ -55,9 +55,9 @@ Ext.define('Bancha.scaffold.form.field.override.VTypes', {
          * @method
          * Validates that the file extension is of one of *field.validExtensions*.
          *
-         * This also returns true if *field.validExtensions* is undefined or 
+         * This also returns true if *field.validExtensions* is undefined or
          * if *val* is an empty string.
-         * 
+         *
          * @param {String} val The file name including file extension to validate
          * @param {Object} field The field to validate
          * @returns {Boolean} True if it matches the above described.
@@ -75,7 +75,7 @@ Ext.define('Bancha.scaffold.form.field.override.VTypes', {
         /**
          * @property
          * The keystroke filter mask to be applied on alpha input.
-         * 
+         *
          * Defaults: /[\^\r\n]/
          */
         fileExtensionMask: /[\^\r\n]/ // alow everything except new lines

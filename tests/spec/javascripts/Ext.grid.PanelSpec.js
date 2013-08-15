@@ -143,7 +143,7 @@
         var config = Ext.create('Bancha.scaffold.grid.Config', {
             target: 'MyTest.model.GridColumnsConfigTest'
         });
-        
+
         // test
         var result = panel.buildColumns(config, {});
 
@@ -160,7 +160,7 @@
             target: 'MyTest.model.GridColumnsConfigExcludeTest',
             exclude: ['created','avatar']
         });
-        
+
         // test
         var result = panel.buildColumns(config, {});
 
@@ -227,8 +227,8 @@
             dataIndex: 'height',
             editor   : {xtype:'numberfield', allowDecimals : false, name:'height'}
         }, {
-            xtype:'actioncolumn',
-            width:50,
+            xtype: 'actioncolumn',
+            width: 30,
             items: [{
                 iconCls: 'icon-destroy',
                 tooltip: 'Delete',
@@ -257,7 +257,7 @@
         var config = Ext.create('Bancha.scaffold.grid.Config', {
             target: 'MyTest.model.GridConfigTest'
         });
-        
+
         // test
         var result = panel.buildConfig(config);
 
@@ -307,7 +307,7 @@
             deletable : true,
             buttons: ['save']
         });
-        
+
         // test
         var result = panel.buildConfig(config);
 
@@ -345,7 +345,7 @@
             deletable : true,
             buttons: ['->','create','reset','save']
         });
-        
+
         // test
         var result = panel.buildConfig(config, {
             additionalGridConfig: true
@@ -382,14 +382,14 @@
         model('MyTest.model.GridConfigWithClassInterceptorsTest');
 
         // set up
-        
+
         // get the defaults before overriding them
         var defaults = {
             beforeBuild: Bancha.scaffold.grid.Config.prototype.beforeBuild,
             afterBuild: Bancha.scaffold.grid.Config.prototype.afterBuild,
             transformColumnConfig: Bancha.scaffold.grid.Config.prototype.transformColumnConfig
         };
-        
+
         // the same when defining them on the class
         Bancha.scaffold.grid.Config.setDefaults({
             beforeBuild: function() {
@@ -406,11 +406,11 @@
                 return config;
             }
         });
-        
+
         var config = Ext.create('Bancha.scaffold.grid.Config', {
             target: 'MyTest.model.GridConfigWithClassInterceptorsTest'
         });
-        
+
         var result = panel.buildConfig(config);
 
         // beforeBuild, afterBuild
@@ -421,7 +421,7 @@
         Ext.each(result.columns, function(column) {
             expect(column.isAugmented).toEqual(true);
         });
-        
+
         // tear down
         Bancha.scaffold.grid.Config.setDefaults(defaults);
     });
@@ -448,7 +448,7 @@
                 return config;
             }
         });
-        
+
         // use a config specific only for this call
         var result = panel.buildConfig(config);
 
@@ -478,7 +478,7 @@
                 }
             }
         });
-        
+
         // test
         var result = panel.buildConfig(config);
 
@@ -490,20 +490,20 @@
             }
         });
     });
-    
-    
+
+
     it("should use form class transformation interceptor for building editor fields from defaults (component test)", function() {
         // prepare
         model('MyTest.model.GridConfigWithFormInterceptorTest2');
 
         // set up
-        
+
         // get the defaults before overriding them
         var defaults = {
             editable: Bancha.scaffold.grid.Config.prototype.editable,
             formConfig: Bancha.scaffold.grid.Config.prototype.formConfig
         };
-        
+
         // the same when defining them on the class
         Bancha.scaffold.grid.Config.setDefaults({
             editable: true,
@@ -519,7 +519,7 @@
         var config = Ext.create('Bancha.scaffold.grid.Config', {
             target: 'MyTest.model.GridConfigWithFormInterceptorTest2'
         });
-        
+
         // test
         var result = panel.buildConfig(config);
 
@@ -530,7 +530,7 @@
                 expect(column).property('editor.isAugmented').toEqual(true);
             }
         });
-        
+
         //tear down
         Bancha.scaffold.grid.Config.setDefaults(defaults);
     });
@@ -541,8 +541,8 @@
     });
 
  }); //eo scaffold grid functions
- 
- 
+
+
 describe("Ext.grid.Panel scaffold extension tests",function() {
     var model = BanchaScaffoldSpecHelper.getSampleModel; //shortcut
 
@@ -558,7 +558,7 @@ describe("Ext.grid.Panel scaffold extension tests",function() {
 
         // this simply tests that the beforeEach correctly set up the storeDefaults
         expect(Bancha.scaffold.grid.Config.prototype.storeDefaults.autoLoad).toEqual(false);
-        
+
 		var panel = Ext.create("Ext.grid.Panel", {
 			scaffold: 'MyTest.model.GridPanelExtensionModelNameTestModel'
 		});

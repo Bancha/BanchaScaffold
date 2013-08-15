@@ -34,7 +34,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
         'Bancha.scaffold.grid.Config',
         'Bancha.scaffold.data.override.Validations',
         'Bancha.scaffold.form.field.override.VTypes',
-        'Bancha.scaffold.Util',
+        'Bancha.scaffold.Util'
     ]
 }, function() {
 
@@ -44,7 +44,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
      *
      * After requiring *'Bancha.scaffold.grid.override.Panel'*, grid panels have
      * an additional scaffold configuration.
-     * 
+     *
      * The simplest usage is:
      *
      *     Ext.create("Ext.grid.Panel", {
@@ -94,14 +94,14 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
      *         renderTo : 'gridpanel'
      *     });
      *
-     * If the editable property is true, a {@link Bancha.scaffold.form.Config} 
+     * If the editable property is true, a {@link Bancha.scaffold.form.Config}
      * config is used to create the editor fields.
      *
      * You have three possible interceptors:
-     * 
-     *  - beforeBuild         : executed before {@link #buildConfig}
-     *  - transformFieldConfig: executed after a field config is created, see {@link #transformFieldConfigs}
-     *  - afterBuild          : executed after {@link #buildConfig} created the config
+     *
+     *  - {@link Bancha.scaffold.form.Config#cfg-beforeBuild}         : executed before the config is build
+     *  - {@link Bancha.scaffold.form.Config#cfg-transformFieldConfig}: executed after a field config is created
+     *  - {@link Bancha.scaffold.form.Config#cfg-afterBuild}          : executed after the config is created
      *
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
@@ -114,8 +114,8 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
          * config. All fields, validation rules and other configurations are taken from
          * this model.
          *
-         * For more complex configurations you can set a {@link Bancha.scaffold.grid.Config} 
-         * config or instance. This config must have the model name defined as *target* 
+         * For more complex configurations you can set a {@link Bancha.scaffold.grid.Config}
+         * config or instance. This config must have the model name defined as *target*
          * config. Any property from {@link Bancha.scaffold.grid.Config} can be defined here.
          */
         /**
@@ -129,303 +129,305 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
     Ext.override(Ext.grid.Panel, {
         initComponent: function () {
             var isModel, cls, config;
-            
-            // check is the scaffold config is a model class or string
-            isModel = Ext.isString(this.scaffold) || (Ext.isDefined(this.scaffold) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold)));
-            
-            // if there's a model or config object, transform to config class
-            // normally we would use this.scaffold.isInstance instead of $className, but that was introduced in Ext JS 4.1
-            if (isModel || (Ext.isObject(this.scaffold) && !this.scaffold.$className)) {
-                this.scaffold.triggeredFrom = 'Ext.grid.Panel';
-                this.scaffold = Ext.create('Bancha.scaffold.grid.Config', this.scaffold);
-            }
-        
-            // apply scaffolding
+
             if(this.scaffold) {
+                // check is the scaffold config is a model class or string
+                isModel = Ext.isString(this.scaffold) || Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold));
+
+                // if there's a model or config object, transform to config class
+                // normally we would use this.scaffold.isInstance instead of $className, but that was introduced in Ext JS 4.1
+                if (isModel || (Ext.isObject(this.scaffold) && !this.scaffold.$className)) {
+                    this.scaffold.triggeredFrom = 'Ext.grid.Panel';
+                    this.scaffold = Ext.create('Bancha.scaffold.grid.Config', this.scaffold);
+                }
+
+                // apply scaffolding
                 cls = Ext.ClassManager.getClass(this); //buildConfig is a static method
                 config = cls.buildConfig(this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
-        
+
             // continue with standard behaviour
             this.callOverridden();
         },
         statics: {
-        /**
-         * @private
-         * @property
-         * Maps model types with column types and additional configs for prototyping
-         */
-        fieldToColumnConfigs: {
-            'auto': {
-                xtype: 'gridcolumn'
+            /**
+             * @private
+             * @property
+             * Maps model types with column types and additional configs for prototyping
+             */
+            fieldToColumnConfigs: {
+                'auto': {
+                    xtype: 'gridcolumn'
+                },
+                'string': {
+                    xtype: 'gridcolumn'
+                },
+                'int': {
+                    xtype: 'numbercolumn',
+                    format: '0'
+                },
+                'float': {
+                    xtype: 'numbercolumn'
+                },
+                'boolean': {
+                    xtype: 'booleancolumn'
+                },
+                'bool': {
+                    xtype: 'booleancolumn'
+                },
+                // a synonym
+                'date': {
+                    xtype: 'datecolumn'
+                }
             },
-            'string': {
-                xtype: 'gridcolumn'
+            /**
+             * @private
+             * @property {Function} internalTransformColumnConfig
+             * This function just hides id columns and makes it uneditable.
+             * @param {Object} columnConfig the column config to transform
+             * @param {String} modelType A standard model field type like 'string'
+             * (also supports 'file' for compability with http://banchaproject.org)
+             * @return {Object} Returns an Ext.grid.column.* configuration object
+             */
+            internalTransformColumnConfig: function (columnConfig, modelType) {
+                if (columnConfig.dataIndex === 'id') {
+                    columnConfig.hidden = true;
+                    columnConfig.editor = undefined;
+                }
+
+                return columnConfig;
             },
-            'int': {
-                xtype: 'numbercolumn',
-                format: '0'
+            /**
+             * @private
+             * Builds a column with all defaults defined here
+             * @param {String} type The model field type
+             * @param {Object} defaults (optional) Defaults like numbercolumnDefaults as property of this config.
+             * See {@link #buildConfig}'s config property
+             * @return {Object} Returns an Ext.grid.column.* configuration object
+             */
+            buildDefaultColumnFromModelType: function (type, defaults) {
+                defaults = defaults || {};
+                var column = this.fieldToColumnConfigs[type],
+                    columnDefaults = Ext.clone(defaults.columnDefaults || this.columnDefaults),
+                    // make a new object of defaults
+                    columnTypeDefaults = defaults[column.xtype + 'Defaults'] || this[column.xtype + 'Defaults'];
+                return Ext.apply(columnDefaults, column, columnTypeDefaults);
             },
-            'float': {
-                xtype: 'numbercolumn'
+            /**
+             * @private
+             * Creates a Ext.grid.Column config from an model field type
+             * @param {String}                       field         The model field
+             * @param {Bancha.scaffold.grid.Config} config        The grid config object
+             * @param {Object}                      gridListeners The grid listeners array, can be augmented by this function
+             * @param {Array}                       validations   (optional) An array of Ext.data.validations of the model
+             * @return {Object}                                   Returns an Ext.grid.column.* configuration object
+             */
+            buildColumnConfig: function (field, config, validations, gridListeners) {
+                var fieldType = field.type.type,
+                    column = this.buildDefaultColumnFromModelType(fieldType, config),
+                    model = config.target,
+                    association,
+                    store,
+                    fieldName;
+
+                // infer name
+                if (field.name) {
+                    column.text = Bancha.scaffold.Util.humanize(field.name);
+                    column.dataIndex = field.name;
+                }
+
+                // check for associations
+                association = Bancha.scaffold.Util.getBelongsToAssociation(field, model);
+                if(association) {
+                    // load the store
+                    store = Bancha.scaffold.Util.getStore(association.associatedModel, config);
+                    // calculate the field name only once per column
+                    fieldName = Bancha.scaffold.Util.getDisplayFieldName(association.associatedModel);
+
+                    // build a renderer
+                    column.renderer = function(id) {
+                        var rec = store.getById(id);
+
+                        // display either the found record name or Unknown
+                        return rec ? rec.get(fieldName) : (Bancha.t ? Bancha.t('Unknown') : 'Unknown');
+                    };
+
+                    // if necessary re-render when the data is available
+                    gridListeners.render = Ext.Function.createSequence(gridListeners.render || Ext.emptyFn, function(gridpanel) {
+                        if(store.getCount() === 0) {
+                            store.on('load', function(store, records, successful, eOpts) {
+                                if(successful) {
+                                    // re-render
+                                    gridpanel.getView().refresh();
+                                }
+                            });
+                        }
+                    });
+                } //eo if association
+
+                // add an editor
+                if(config.editable) {
+                    // build the editor field
+                    column.editor = Ext.form.Panel.buildFieldConfig(field, config.formConfig, validations, true);
+
+                    // now make custom field transforms
+                    column.editor = Ext.form.Panel.internalTransformFieldConfig(column.editor, fieldType);
+                    if (typeof config.formConfig.transformFieldConfig === 'function') {
+                        column.editor = config.formConfig.transformFieldConfig(column.editor, fieldType);
+                    }
+                }
+
+                // now make custom transforms
+                column = Ext.grid.Panel.internalTransformColumnConfig(column, fieldType);
+                if (typeof config.transformColumnConfig === 'function') {
+                    column = config.transformColumnConfig(column, fieldType);
+                }
+
+                return column;
             },
-            'boolean': {
-                xtype: 'booleancolumn'
-            },
-            'bool': {
-                xtype: 'booleancolumn'
-            },
-            // a synonym
-            'date': {
-                xtype: 'datecolumn'
-            }
-        },
-        /**
-         * @private
-         * @property {Function} internalTransformColumnConfig
-         * This function just hides id columns and makes it uneditable.
-         * @param {Object} columnConfig the column config to transform
-         * @param {String} modelType A standard model field type like 'string' (also supports 'file' for compability with http://banchaproject.org)
-         * @return {Object} Returns an Ext.grid.column.* configuration object
-         */
-        internalTransformColumnConfig: function (columnConfig, modelType) {
-            if (columnConfig.dataIndex === 'id') {
-                columnConfig.hidden = true;
-                columnConfig.editor = undefined;
-            }
+            /**
+             * @private
+             * Builds grid columns from the model definition, for scaffolding purposes.
+             * This does not unclude the support for create,update and/or destroy!
+             *
+             * @param {Bancha.scaffold.grid.Config} config        The grid config
+             * @param {Object}                      gridListeners The grid listeners array, can be augmented by this function
+             * @return {Array}                                    Returns an array of Ext.grid.column.* configs
+             */
+            buildColumns: function (config, gridListeners) {
+                var columns = [],
+                    model = config.target,
+                    me = this,
+                    validations, button;
 
-            return columnConfig;
-        },
-        /**
-         * @private
-         * Builds a column with all defaults defined here
-         * @param {Sring} type The model field type
-         * @param {Object} defaults (optional) Defaults like numbercolumnDefaults as property of this config.
-         * See {@link #buildConfig}'s config property
-         * @return {Object} Returns an Ext.grid.column.* configuration object
-         */
-        buildDefaultColumnFromModelType: function (type, defaults) {
-            defaults = defaults || {};
-            var column = this.fieldToColumnConfigs[type],
-                columnDefaults = Ext.clone(defaults.columnDefaults || this.columnDefaults),
-                // make a new object of defaults
-                columnTypeDefaults = defaults[column.xtype + 'Defaults'] || this[column.xtype + 'Defaults'];
-            return Ext.apply(columnDefaults, column, columnTypeDefaults);
-        },
-        /**
-         * @private
-         * Creates a Ext.grid.Column config from an model field type
-         * @param {Sring}                       field         The model field
-         * @param {Bancha.scaffold.grid.Config} config        The grid config object
-         * @param {Object}                      gridListeners The grid listeners array, can be augmented by this function
-         * @param {Array}                       validations   (optional) An array of Ext.data.validations of the model
-         * @return {Object}                                   Returns an Ext.grid.column.* configuration object
-         */
-        buildColumnConfig: function (field, config, validations, gridListeners) {
-            var fieldType = field.type.type,
-                column = this.buildDefaultColumnFromModelType(fieldType, config),
-                model = config.target,
-                association,
-                store,
-                fieldName;
+                if(!Ext.isArray(config.exclude)) {
+                    // IFDEBUG
+                    Ext.Error.raise({
+                        plugin: 'Bancha Scaffold',
+                        model: model,
+                        msg: [
+                            'Bancha Scaffold: When scaffolding a grid panel the exclude ',
+                            'property should be an array of field names to exclude.'
+                        ].join('')
+                    });
+                    // ENDIF
+                    config.exclude = [];
+                }
 
-            // infer name
-            if (field.name) {
-                column.text = Bancha.scaffold.Util.humanize(field.name);
-                column.dataIndex = field.name;
-            }
-
-            // check for associations
-            association = Bancha.scaffold.Util.getBelongsToAssociation(field, model);
-            if(association) {
-                // load the store
-                store = Bancha.scaffold.Util.getStore(association.associatedModel, config);
-                fieldName = Bancha.scaffold.Util.getDisplayFieldName(association.associatedModel); // calculate this only once per column
-
-                // build a renderer
-                column.renderer = function(id) {
-                    var rec = store.getById(id);
-
-                    // display either the found record name or Unknown
-                    return rec ? rec.get(fieldName) : (Bancha.t ? Bancha.t('Unknown') : 'Unknown');
-                };
-
-                // if necessary re-render when the data is available
-                gridListeners.render = Ext.Function.createSequence(gridListeners.render || Ext.emptyFn, function(gridpanel) {
-                    if(store.getCount() === 0) {
-                        store.on('load', function(store, records, successful, eOpts) {
-                            if(successful) {
-                                // re-render
-                                gridpanel.getView().refresh();
-                            }
-                        });
+                // build all columns
+                validations = model.prototype.validations;
+                model.prototype.fields.each(function (field) {
+                    if((!Ext.isArray(config.fields) || config.fields.indexOf(field.name) !== -1) &&
+                        config.exclude.indexOf(field.name) === -1) {
+                        columns.push(
+                            me.buildColumnConfig(field, config, validations, gridListeners));
                     }
                 });
-            } //eo if association
 
-            // add an editor
-            if(config.editable) {
-                // build the editor field
-                column.editor = Ext.form.Panel.buildFieldConfig(field, config.formConfig, validations, true);
-
-                // now make custom field transforms
-                column.editor = Ext.form.Panel.internalTransformFieldConfig(column.editor, fieldType);
-                if (typeof config.formConfig.transformFieldConfig === 'function') {
-                    column.editor = config.formConfig.transformFieldConfig(column.editor, fieldType);
+                // add a destroy button
+                if (config.deletable) {
+                    button = Ext.clone(config.destroyButtonConfig);
+                    if (button.items[0].handler === Ext.emptyFn) {
+                        button.items[0].handler = config.onDelete;
+                    }
+                    columns.push(button);
                 }
-            }
 
-            // now make custom transforms
-            column = Ext.grid.Panel.internalTransformColumnConfig(column, fieldType);
-            if (typeof config.transformColumnConfig === 'function') {
-                column = config.transformColumnConfig(column, fieldType);
-            }
+                return columns;
+            },
+            /**
+             * @private
+             * Builds a grid config from a model definition, for scaffolding purposes.
+             * Guesses are made by model field configs and validation rules.
+             *
+             * @param {Ext.data.Model|String}       model              The model class or model name
+             * @param {Bancha.scaffold.grid.Config} config             The grid config
+             * @param {Object}                      initialPanelConfig (optional) Some additional grid panel configs
+             * @return {Object}                                        Returns an Ext.grid.Panel configuration object
+             */
+            buildConfig: function (config, initialPanelConfig) {
+                initialPanelConfig = initialPanelConfig || {};
+                var model = Ext.ModelManager.getModel(config.target),
+                    gridConfig, cellEditing, store, scope, listeners;
 
-            return column;
-        },
-        /**
-         * @private
-         * Builds grid columns from the model definition, for scaffolding purposes.
-         * This does not unclude the support for create,update and/or destroy!
-         *
-         * @param {Bancha.scaffold.grid.Config} config        The grid config
-         * @param {Object}                      gridListeners The grid listeners array, can be augmented by this function
-         * @return {Array}                                    Returns an array of Ext.grid.column.* configs
-         */
-        buildColumns: function (config, gridListeners) {
-            var columns = [],
-                model = config.target,
-                me = this,
-                validations, button;
-
-            if(!Ext.isArray(config.exclude)) {
                 // IFDEBUG
-                Ext.Error.raise({
-                    plugin: 'Bancha Scaffold',
-                    model: model,
-                    msg: [
-                        'Bancha Scaffold: When scaffolding a grid panel the exclude ',
-                        'property should be an array of field names to exclude.'
-                    ].join('')
-                });
+                if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
+                    Ext.Error.raise({
+                        plugin: 'Bancha Scaffold',
+                        msg: [
+                            'Bancha Scaffold: Ext.grid.Panel#buildConfig expects a object ',
+                            'of class Bancha.scaffold.form.Config.'
+                        ].join('')
+                    });
+                }
                 // ENDIF
-                config.exclude = [];
-            }
 
-            // build all columns
-            validations = model.prototype.validations;
-            model.prototype.fields.each(function (field) {
-                if((!Ext.isArray(config.fields) || config.fields.indexOf(field.name) !== -1) &&
-                    config.exclude.indexOf(field.name) === -1) {
-                    columns.push(
-                        me.buildColumnConfig(field, config, validations, gridListeners));
-                }
-            });
+                // call beforeBuild callback
+                gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
-            // add a destroy button
-            if (config.deletable) {
-                button = Ext.clone(config.destroyButtonConfig);
-                if (button.items[0].handler === Ext.emptyFn) {
-                    button.items[0].handler = config.onDelete;
-                }
-                columns.push(button);
-            }
-
-            return columns;
-        },
-        /**
-         * @private
-         * Builds a grid config from a model definition, for scaffolding purposes.
-         * Guesses are made by model field configs and validation rules.
-         *
-         * @param {Ext.data.Model|String}       model              The model class or model name
-         * @param {Bancha.scaffold.grid.Config} config             The grid config
-         * @param {Object}                      initialPanelConfig (optional) Some additional grid configs which are applied to the config.
-         * @return {Object}                                        Returns an Ext.grid.Panel configuration object
-         */
-        buildConfig: function (config, initialPanelConfig) {
-            initialPanelConfig = initialPanelConfig || {};
-            var model = Ext.ModelManager.getModel(config.target),
-                gridConfig, modelName, buttons, button, cellEditing, store, scope, listeners;
-
-            // IFDEBUG
-            if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
-                Ext.Error.raise({
-                    plugin: 'Bancha Scaffold',
-                    msg: [
-                        'Bancha Scaffold: Ext.grid.Panel#buildConfig expects a object ',
-                        'of class Bancha.scaffold.form.Config.'
-                    ].join('')
-                });
-            }
-            // ENDIF
-
-            // call beforeBuild callback
-            gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
-
-            // basic config
-            store = Bancha.scaffold.Util.getStore(model, config);
-            listeners = {};
-            Ext.apply(gridConfig, {
-                store: store,
-                columns: this.buildColumns(config, listeners),
-                listeners: listeners // this is necessary for refreshing after associated stores are loaded
-            });
-
-            // add config for editable fields
-            if (config.editable) {
-                cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
-                    clicksToEdit: 2
-                });
+                // basic config
+                store = Bancha.scaffold.Util.getStore(model, config);
+                listeners = {};
                 Ext.apply(gridConfig, {
-                    selType: 'cellmodel',
-                    plugins: [cellEditing]
+                    store: store,
+                    columns: this.buildColumns(config, listeners),
+                    listeners: listeners // this is necessary for refreshing after associated stores are loaded
                 });
-            }
 
-            // replace button place holders and build toolbar
-            if(config.buttons && config.buttons.length) {
-
-                scope = {
-                    getCellEditing: function() {
-                        return cellEditing;
-                    },
-                    getStore: function() {
-                        return store;
-                    }
-                };
-                
-                // build buttons
-                if(!config.hasOwnProperty('buttons')) {
-                    // this a default, so clone before instanciating
-                    // See also test case "should clone all configs, so that you 
-                    // can create multiple forms from the same defaults"
-                    config.buttons = Ext.clone(config.buttons || []);
+                // add config for editable fields
+                if (config.editable) {
+                    cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+                        clicksToEdit: 2
+                    });
+                    Ext.apply(gridConfig, {
+                        selType: 'cellmodel',
+                        plugins: [cellEditing]
+                    });
                 }
-                config.buttons = Bancha.scaffold.Util.replaceButtonPlaceHolders(config.buttons, config, scope);
 
-                gridConfig.dockedItems = [{
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    ui: 'footer',
-                    items: config.buttons
-                }];
+                // replace button place holders and build toolbar
+                if(config.buttons && config.buttons.length) {
+
+                    scope = {
+                        getCellEditing: function() {
+                            return cellEditing;
+                        },
+                        getStore: function() {
+                            return store;
+                        }
+                    };
+
+                    // build buttons
+                    if(!config.hasOwnProperty('buttons')) {
+                        // this a default, so clone before instanciating
+                        // See also test case "should clone all configs, so that you
+                        // can create multiple forms from the same defaults"
+                        config.buttons = Ext.clone(config.buttons || []);
+                    }
+                    config.buttons = Bancha.scaffold.Util.replaceButtonPlaceHolders(config.buttons, config, scope);
+
+                    gridConfig.dockedItems = [{
+                        xtype: 'toolbar',
+                        dock: 'bottom',
+                        ui: 'footer',
+                        items: config.buttons
+                    }];
+                }
+
+                // apply user configs
+                if (Ext.isObject(initialPanelConfig)) {
+                    gridConfig = Ext.apply(gridConfig, initialPanelConfig);
+                }
+
+                // the scaffold config of the grid is saved as well
+                gridConfig.scaffold = config;
+
+                // return after interceptor
+                return config.afterBuild(gridConfig, model, config, initialPanelConfig) || gridConfig;
             }
-
-            // apply user configs
-            if (Ext.isObject(initialPanelConfig)) {
-                gridConfig = Ext.apply(gridConfig, initialPanelConfig);
-            }
-
-            // the scaffold config of the grid is saved as well
-            gridConfig.scaffold = config;
-
-            // return after interceptor
-            return config.afterBuild(gridConfig, model, config, initialPanelConfig) || gridConfig;
-        }
-    } // eo statics
+        } // eo statics
     }); //eo override
 
     // Ext JS prior to 4.1 does not yet support statics, manually add them
