@@ -26,7 +26,7 @@ Ext.application({
         'Bancha.scaffold.grid.override.Panel'
     ],
     launch: function() {
-        
+
         // ... create a full featured users grid
         Ext.create('Ext.grid.Panel', {
             title: 'Easily scaffold full CRUD support, based on the models proxy',
@@ -103,7 +103,7 @@ Ext.application({
                 // simply add you own buttons
                 buttons: ['->',{
                         text: 'Load Sample Record',
-                        iconCls: 'icon-edit-user',
+                        iconCls: 'icon-edit',
                         handler: function() {
                             var panel = this.getPanel(), // scopeButtonHandler enables this
                                 form = this.getForm(); // scopeButtonHandler enables this
