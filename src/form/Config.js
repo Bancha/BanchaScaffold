@@ -32,7 +32,8 @@
 Ext.define('Bancha.scaffold.form.Config', {
     uses: [
         'Ext.form.field.VTypes',
-        'Ext.data.validations'
+        'Ext.data.validations',
+        'Ext.window.MessageBox'
     ],
 
     /**

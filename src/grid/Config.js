@@ -31,7 +31,8 @@
  */
 Ext.define('Bancha.scaffold.grid.Config', {
     uses: [
-        'Ext.data.validations'
+        'Ext.data.validations',
+        'Ext.window.MessageBox'
     ],
 
     /**
