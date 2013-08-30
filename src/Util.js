@@ -224,7 +224,13 @@ Ext.define('Bancha.scaffold.Util', {
         }
 
         // get the field names
-        var fieldNames = Ext.Array.pluck(model.getFields(), 'name');
+        var fieldNames;
+        if(Ext.versions.extjs.shortVersion < 410) {
+            // legacy support
+            fieldNames = Ext.Array.pluck(model.prototype.fields.items, 'name');
+        } else {
+            fieldNames = Ext.Array.pluck(model.getFields(), 'name');
+        }
 
         // try to find name, title or code
         if(fieldNames.indexOf('name') !== -1) {
