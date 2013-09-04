@@ -51,7 +51,7 @@ Ext.define('Bancha.scaffold.form.Config', {
             };
         }
 
-        // IFDEBUG
+        //<debug>
         // check that a model is set
         if(!config.target) {
             Ext.Error.raise({
@@ -62,13 +62,13 @@ Ext.define('Bancha.scaffold.form.Config', {
                 ].join('')
             });
         }
-        // ENDIF
+        //</debug>
 
         // check that the configured model is valid
         modelName = config.target;
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
 
-        // IFDEBUG
+        //<debug>
         if (!Ext.ModelManager.isRegistered(modelName)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
@@ -80,13 +80,13 @@ Ext.define('Bancha.scaffold.form.Config', {
                 ].join('')
             });
         }
-        // ENDIF
+        //</debug>
 
         // make sure that the model property is always a model class
         config.target = Ext.ModelManager.getModel(modelName);
 
         if(Ext.isDefined(config.exclude) && !Ext.isArray(config.exclude)) {
-            // IFDEBUG
+            //<debug>
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
                 model: modelName,
@@ -96,7 +96,7 @@ Ext.define('Bancha.scaffold.form.Config', {
                     'of field names to exclude.'
                 ].join('')
             });
-            // ENDIF
+            //</debug>
             config.exclude = [];
         }
 
@@ -337,7 +337,7 @@ Ext.define('Bancha.scaffold.form.Config', {
                 return initialApi;
             }
 
-            // IFDEBUG
+            //<debug>
             // warn the user that we can just guess part of the api
             if (Ext.global.console && Ext.isFunction(Ext.global.console.warn)) {
                 Ext.global.console.warn([
@@ -347,7 +347,7 @@ Ext.define('Bancha.scaffold.form.Config', {
                     'function from the model proxy, but not the submit function.'
                 ].join(''));
             }
-            // ENDIF
+            //</debug>
         }
 
         // try to find the proxy configuration for load

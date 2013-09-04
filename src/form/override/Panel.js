@@ -250,7 +250,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             field.allowBlank = false;
                             break;
                         case 'length':
-                            // IFDEBUG
+                            //<debug>
                             // length validation works only only on textfields
                             if (field.xtype !== 'textfield') {
                                 msgAddition = (field.xtype === 'numberfield') ?
@@ -265,7 +265,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                     ].join('')
                                 });
                             }
-                            // ENDIF
+                            //</debug>
                             if (field.xtype === 'textfield') {
                                 if (Ext.isDefined(rule.min)) {
                                     field.minLength = rule.min;
@@ -276,7 +276,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             }
                             break;
                         case 'format':
-                            // IFDEBUG
+                            //<debug>
                             // length validation works only only on textfields
                             if (field.xtype !== 'textfield') {
                                 Ext.Error.raise({
@@ -289,7 +289,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                     ].join('')
                                 });
                             }
-                            // ENDIF
+                            //</debug>
                             switch (rule.matcher.toString()) {
                             case alpha:
                                 field.vtype = 'alpha';
@@ -304,7 +304,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                 field.vtype = 'url';
                                 break;
                             default:
-                                // IFDEBUG
+                                //<debug>
                                 if (Ext.global.console && Ext.isFunction(Ext.global.console.warn)) {
                                     Ext.global.console.warn([
                                         'Bancha Scaffold: Currently Bancha.scaffold.form.Config ',
@@ -314,13 +314,13 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                         rule.matcher.toString() + ' will just be ignored.'
                                     ].join(''));
                                 }
-                                // ENDIF
+                                //</debug>
                                 break;
                             }
                             break;
                         case 'numberformat':
                             // numberformat validation works only only on numberfields
-                            // IFDEBUG
+                            //<debug>
                             if (field.xtype !== 'numberfield') {
                                 Ext.Error.raise({
                                     plugin: 'Bancha Scaffold',
@@ -332,7 +332,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                     ].join('')
                                 });
                             }
-                            // ENDIF
+                            //</debug>
                             if (field.xtype === 'numberfield') {
                                 if (Ext.isDefined(rule.min)) {
                                     field.minValue = rule.min;
@@ -360,7 +360,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             }
                             break;
                         default:
-                            // IFDEBUG
+                            //<debug>
                             if (Ext.global.console && Ext.isFunction(Ext.global.console.warn)) {
                                 Ext.global.console.warn([
                                     'Bancha Scaffold: Could not recognize rule ',
@@ -368,7 +368,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                     'form field field.'
                                 ].join(''));
                             }
-                            // ENDIF
+                            //</debug>
                             break;
                         }
                         // TODO OPTIMIZE Also include inclusion and exclusion
@@ -460,7 +460,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
             buildBanchaApiConfig: function(model, initialApi) {
                 initialApi = initialApi || {};
 
-                // IFDEBUG
+                //<debug>
                 if (!Bancha.initialized) {
                     // the user is using Bancha, but hasn't initialized yet
                     Ext.Error.raise({
@@ -471,13 +471,13 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         ].join('')
                     });
                 }
-                // ENDIF
+                //</debug>
 
                 var modelName = Ext.ClassManager.getName(model),
                     stubName = modelName.substr(Bancha.modelNamespace.length + 1),
                     stub = Bancha.getStubsNamespace()[stubName];
 
-                // IFDEBUG
+                //<debug>
                 if (!Ext.isDefined(stub)) {
                     Ext.Error.raise({
                         plugin: 'Bancha Scaffold',
@@ -488,7 +488,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         ].join('')
                     });
                 }
-                // ENDIF
+                //</debug>
 
                 return {
                     // The server-side method to call for load() requests
@@ -545,7 +545,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     me = this,
                     formConfig, id, validations, loadFn;
 
-                // IFDEBUG
+                //<debug>
                 if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
                     Ext.Error.raise({
                         plugin: 'Bancha Scaffold',
@@ -555,7 +555,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         ].join('')
                     });
                 }
-                // ENDIF
+                //</debug>
 
                 // build initial config
                 formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};

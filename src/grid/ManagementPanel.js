@@ -58,7 +58,7 @@ Ext.define('Bancha.scaffold.grid.ManagementPanel', {
      */
     scaffoldDefaults: {},
     initComponent: function () {
-        // IFDEBUG
+        //<debug>
         if(!Ext.isArray(this.models)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
@@ -67,7 +67,7 @@ Ext.define('Bancha.scaffold.grid.ManagementPanel', {
                 ].join('')
             });
         }
-        // ENDIF
+        //</debug>
         this.models = this.models || [];
         this.items = this.items || [];
 
@@ -84,7 +84,7 @@ Ext.define('Bancha.scaffold.grid.ManagementPanel', {
                 model = Ext.ModelManager.getModel(Bancha.modelNamespace + '.' + modelName);
             }
 
-            // IFDEBUG
+            //<debug>
             if(!model) {
                 Ext.Error.raise({
                     plugin: 'Bancha Scaffold',
@@ -93,7 +93,7 @@ Ext.define('Bancha.scaffold.grid.ManagementPanel', {
                             'which is not a valid model name'].join('')
                 });
             }
-            // ENDIF
+            //</debug>
 
             var tabitem = {
                 xtype: 'gridpanel',

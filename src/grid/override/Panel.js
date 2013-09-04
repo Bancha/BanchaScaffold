@@ -303,7 +303,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                     validations, button;
 
                 if(!Ext.isArray(config.exclude)) {
-                    // IFDEBUG
+                    //<debug>
                     Ext.Error.raise({
                         plugin: 'Bancha Scaffold',
                         model: model,
@@ -312,7 +312,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                             'property should be an array of field names to exclude.'
                         ].join('')
                     });
-                    // ENDIF
+                    //</debug>
                     config.exclude = [];
                 }
 
@@ -352,7 +352,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 var model = Ext.ModelManager.getModel(config.target),
                     gridConfig, cellEditing, store, scope, listeners;
 
-                // IFDEBUG
+                //<debug>
                 if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
                     Ext.Error.raise({
                         plugin: 'Bancha Scaffold',
@@ -362,7 +362,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                         ].join('')
                     });
                 }
-                // ENDIF
+                //</debug>
 
                 // call beforeBuild callback
                 gridConfig = config.beforeBuild(model, config, initialPanelConfig) || {};

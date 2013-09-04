@@ -50,7 +50,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
             };
         }
 
-        // IFDEBUG
+        //<debug>
         // check that a model is set
         if(!config.target) {
             Ext.Error.raise({
@@ -61,13 +61,13 @@ Ext.define('Bancha.scaffold.grid.Config', {
                 ].join('')
             });
         }
-        // ENDIF
+        //</debug>
 
         // check that the configured model is valid
         modelName = config.target;
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
 
-        // IFDEBUG
+        //<debug>
         if (!Ext.ModelManager.isRegistered(modelName)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
@@ -79,7 +79,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
                 ].join('')
             });
         }
-        // ENDIF
+        //</debug>
 
         // make sure that the model property is always a model class
         config.target = Ext.ModelManager.getModel(modelName);
