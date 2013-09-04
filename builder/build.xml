@@ -228,7 +228,7 @@
 
 				<!-- create a production version without debugging statements -->
 				<copy file="${tmpdir}/bancha-scaffold-debug.js" tofile="${tmpdir}/bancha-scaffold-production.js"/>
-				<exec checkreturn="true" dir="${gema.path}" command="./gema -f &quot;${builderdir}/config/gema-production-patterns.js&quot; -p &quot;DEBUG_LEVEL=${debug_level}&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; -backup &quot;.gemaBak&quot;"/>
+				<exec checkreturn="true" dir="${gema.path}" command="./gema -f &quot;${builderdir}/config/gema-js-production.tpl&quot; -p &quot;DEBUG_LEVEL=${debug_level}&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; &quot;${tmpdir}/bancha-scaffold-production.js&quot; -backup &quot;.gemaBak&quot;"/>
 
 				<!-- versionize build -->
 				<foreach target="exec-gema-versionize" param="file">
@@ -264,7 +264,7 @@
 		<!-- ============================================  -->
 		<target name="buildSamples">
 				<!-- change samples code to production version -->
-				<exec checkreturn="true" dir="${gema.path}" command="./gema -f &quot;${builderdir}/config/gema-production-patterns.html&quot; -p &quot;DEBUG_LEVEL=${debug_level}&quot; &quot;${tmpdir}/samples/index.html&quot; &quot;${tmpdir}/samples/index.html&quot; -backup &quot;.gemaBak&quot;"/>
+				<exec checkreturn="true" dir="${gema.path}" command="./gema -f &quot;${builderdir}/config/gema-html-production.tpl&quot; -p &quot;DEBUG_LEVEL=${debug_level}&quot; &quot;${tmpdir}/samples/index.html&quot; &quot;${tmpdir}/samples/index.html&quot; -backup &quot;.gemaBak&quot;"/>
 				<!-- GEMA allways creates backup files when writing
 				  	to the same file, we force to use .gemaBak
 				  	Now clean them all up
