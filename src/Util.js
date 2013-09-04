@@ -97,33 +97,6 @@ Ext.define('Bancha.scaffold.Util', {
     },
     /**
      * @private
-     * DEPRECATED - CURRENTLY NOT USED
-     * This enables the developer to change the default scaffolding functions at any time
-     * and the Scaffold Library will always use the current functions, since there are no references
-     * @member Bancha.scaffold.Util
-     */
-    createFacade: function (scopeName, scope, method) {
-        // IFDEBUG
-        /*
-         * totally stupid, but we need a singleton pattern in debug mode here, since
-         * jasmine provides us only with VERY little compare options
-         */
-        this.singletonFns = this.singletonFns || {};
-        this.singletonFns[scopeName] = this.singletonFns[scopeName] || {};
-        this.singletonFns[scopeName][method] = this.singletonFns[scopeName][method] ||
-        function () {
-            return scope[method].apply(this, arguments);
-        };
-        return this.singletonFns[scopeName][method];
-        // ENDIF
-        /* IFPRODUCTION
-        return function() {
-        return scope[method].apply(scope,arguments);
-        };
-        ENDIF */
-    },
-    /**
-     * @private
      * This function will search for 'create', 'reset' and 'save' and will
      * properly replace them with the values from the config object
      *
