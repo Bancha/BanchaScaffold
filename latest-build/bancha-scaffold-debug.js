@@ -12,7 +12,7 @@
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -117,7 +117,7 @@ Ext.define('Bancha.data.override.Validations', {
  * @since         Bancha Scaffold v 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -200,7 +200,7 @@ Ext.define('Bancha.scaffold.form.field.override.VTypes', {
  * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -587,7 +587,7 @@ Ext.define('Bancha.scaffold.form.Config', {
  * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1081,7 +1081,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
  * @since         Bancha Scaffold v 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1111,7 +1111,8 @@ Ext.define('Bancha.scaffold.Util', {
         if (str.length === 1) {
             return str.toUpperCase();
         }
-        return str[0].toUpperCase() + str.substr(1);
+        // note: IE6 ad 7 doesn't allow array syntax for getting the first letter
+        return str.substr(0,1).toUpperCase() + str.substr(1);
     },
     /**
      * Capitalizes the first word, turns underscores into spaces and strips
@@ -1275,13 +1276,13 @@ Ext.define('Bancha.scaffold.Util', {
         }
 
         // try to find name, title or code
-        if(fieldNames.indexOf('name') !== -1) {
+        if(Ext.Array.indexOf(fieldNames, 'name') !== -1) {
             return 'name';
         }
-        if(fieldNames.indexOf('title') !== -1) {
+        if(Ext.Array.indexOf(fieldNames, 'title') !== -1) {
             return 'title';
         }
-        if(fieldNames.indexOf('code') !== -1) {
+        if(Ext.Array.indexOf(fieldNames, 'code') !== -1) {
             return 'code';
         }
 
@@ -1347,7 +1348,7 @@ Ext.define('Bancha.scaffold.Util', {
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1898,8 +1899,8 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 // create all fields
                 validations = model.prototype.validations;
                 model.prototype.fields.each(function (field) {
-                    if((!Ext.isArray(config.fields) || config.fields.indexOf(field.name) !== -1) &&
-                        config.exclude.indexOf(field.name) === -1) {
+                    if((!Ext.isArray(config.fields) || Ext.Array.indexOf(config.fields, field.name) !== -1) &&
+                        Ext.Array.indexOf(config.exclude, field.name) === -1) {
                         fields.push(
                             me.buildFieldConfig(field, config, validations));
                     }
@@ -1990,7 +1991,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -2297,8 +2298,8 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 // build all columns
                 validations = model.prototype.validations;
                 model.prototype.fields.each(function (field) {
-                    if((!Ext.isArray(config.fields) || config.fields.indexOf(field.name) !== -1) &&
-                        config.exclude.indexOf(field.name) === -1) {
+                    if((!Ext.isArray(config.fields) || Ext.Array.indexOf(config.fields, field.name) !== -1) &&
+                        Ext.Array.indexOf(config.exclude, field.name) === -1) {
                         columns.push(
                             me.buildColumnConfig(field, config, validations, gridListeners));
                     }
@@ -2427,7 +2428,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
  * @since         Bancha Scaffold v 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.2
+ * @version       Bancha Scaffold v 1.0.3
  *
  * For more information go to http://scaffold.banchaproject.org
  */
