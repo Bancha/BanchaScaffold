@@ -563,8 +563,8 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 // create all fields
                 validations = model.prototype.validations;
                 model.prototype.fields.each(function (field) {
-                    if((!Ext.isArray(config.fields) || config.fields.indexOf(field.name) !== -1) &&
-                        config.exclude.indexOf(field.name) === -1) {
+                    if((!Ext.isArray(config.fields) || Ext.Array.indexOf(config.fields, field.name) !== -1) &&
+                        Ext.Array.indexOf(config.exclude, field.name) === -1) {
                         fields.push(
                             me.buildFieldConfig(field, config, validations));
                     }

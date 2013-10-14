@@ -206,13 +206,13 @@ Ext.define('Bancha.scaffold.Util', {
         }
 
         // try to find name, title or code
-        if(fieldNames.indexOf('name') !== -1) {
+        if(Ext.Array.indexOf(fieldNames, 'name') !== -1) {
             return 'name';
         }
-        if(fieldNames.indexOf('title') !== -1) {
+        if(Ext.Array.indexOf(fieldNames, 'title') !== -1) {
             return 'title';
         }
-        if(fieldNames.indexOf('code') !== -1) {
+        if(Ext.Array.indexOf(fieldNames, 'code') !== -1) {
             return 'code';
         }
 
