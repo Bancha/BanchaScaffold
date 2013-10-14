@@ -138,6 +138,4 @@ describe("Bancha.scaffold.Util tests",function() {
         }];
         expect(util.replaceButtonPlaceHolders(input, {}, scope)).toEqual(expected);
     });
-}); //eo scaffold util functions
-
-//eof
+});

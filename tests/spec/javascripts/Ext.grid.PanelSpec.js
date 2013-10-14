@@ -19,10 +19,10 @@
  * For more information go to http://scaffold.banchaproject.org
  */
 
- describe("Ext.grid.Panel unit tests",function() {
-     var model = BanchaScaffoldSpecHelper.getSampleModel, //shortcut
-         panel = Ext.grid.Panel,
-         defaults, testDefaults;
+describe("Ext.grid.Panel unit tests",function() {
+    var model = BanchaScaffoldSpecHelper.getSampleModel, //shortcut
+        panel = Ext.grid.Panel,
+        defaults, testDefaults;
 
     //default values, used for tear down
     defaults = {
@@ -540,7 +540,7 @@
         Bancha.scaffold.grid.Config.setDefaults(defaults);
     });
 
- }); //eo scaffold grid functions
+}); //eo scaffold grid functions
 
 
 describe("Ext.grid.Panel scaffold extension tests",function() {
@@ -629,6 +629,4 @@ describe("Ext.grid.Panel scaffold extension tests",function() {
         });
     });
 
-}); //eo scaffold grid functions
-
-//eof
+});

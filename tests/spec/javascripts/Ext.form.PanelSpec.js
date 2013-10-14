@@ -19,7 +19,7 @@
  * For more information go to http://scaffold.banchaproject.org
  */
 
- describe("Ext.form.Panel unit tests",function() {
+describe("Ext.form.Panel unit tests",function() {
     var model = BanchaScaffoldSpecHelper.getSampleModel, //shortcut
         panel = Ext.form.Panel,
         defaultBuildApiConfig = Bancha.scaffold.form.Config.prototype.buildApiConfig,
@@ -287,21 +287,21 @@
                     iconCls: 'icon-upload'
                 },
                 vtype: 'fileExtension',
-               validExtensions: ['gif', 'jpeg', 'png', 'jpg']
-           }, {
-               xtype: 'numberfield',
-               fieldLabel: 'Weight',
-               name: 'weight',
-               decimalPrecision: 2
-           }, {
-               xtype: 'numberfield',
-               allowDecimals: false,
-               fieldLabel: 'Height',
-               name: 'height',
-               minValue: 50,
-               maxValue: 300
-           }],
-           buttons: getButtonConfig('MyTest.model.FormConfigWithValidationTest-id')
+                validExtensions: ['gif', 'jpeg', 'png', 'jpg']
+            }, {
+                xtype: 'numberfield',
+                fieldLabel: 'Weight',
+                name: 'weight',
+                decimalPrecision: 2
+            }, {
+                xtype: 'numberfield',
+                allowDecimals: false,
+                fieldLabel: 'Height',
+                name: 'height',
+                minValue: 50,
+                maxValue: 300
+            }],
+            buttons: getButtonConfig('MyTest.model.FormConfigWithValidationTest-id')
         }; // eo expected
 
         var config = Ext.create('Bancha.scaffold.form.Config', {
@@ -319,7 +319,7 @@
             id: 'MyTest.model.FormConfigWithValidationTest-id'
         })).toEqualConfig(expected);
 
-        var config = Ext.create('Bancha.scaffold.form.Config', {
+        config = Ext.create('Bancha.scaffold.form.Config', {
             target: 'MyTest.model.FormConfigWithValidationTest'
         });
 
@@ -450,6 +450,4 @@ describe("Ext.form.Panel scaffold extension tests",function() {
         expect(panel.getDockedItems()[0].items.items[2].handler).toEqual(onSave);
     });
 
-}); //eo scaffold form functions
-
-//eof
+});

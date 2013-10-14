@@ -112,7 +112,10 @@ beforeEach(function() {
             } else if(Ext.versions.touch) {
                 modelExtendsClass = Ext.ClassManager.getName(objectFromPath('superclass',this.actual));
             } else {
-                alert('Could not recognize if this is ExtJS 4 or Sencha Touch 2. This comes from Test/JavaScriptUnitTests/spec/helpers/ExtSpecHelper.js.');
+                alert([
+                    'Could not recognize if this is ExtJS 4 or Sencha Touch 2. This comes from ',
+                    'Test/JavaScriptUnitTests/spec/helpers/ExtSpecHelper.js.'
+                ].join(''));
             }
 
             return (
@@ -133,5 +136,3 @@ ExtSpecHelper = {
      */
     isExt: !!Ext.versions.extjs
 };
-
-//eof

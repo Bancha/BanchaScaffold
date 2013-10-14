@@ -40,6 +40,4 @@ describe("Ext.form.field.VTypes tests",function() {
         expect(vtype.fileExtension('user.jpg.txt',{validExtensions:['jpeg','jpg','gif']})).toBeFalsy();
     });
 
-}); //eo vtype tests
-
-//eof
+});

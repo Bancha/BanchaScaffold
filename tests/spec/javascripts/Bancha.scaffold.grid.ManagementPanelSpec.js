@@ -36,8 +36,8 @@ describe("Bancha.scaffold.grid.ManagementPanel tests",function() {
             }
         },
         fields:[{
-                name:'id',
-                type:'int'
+            name:'id',
+            type:'int'
         }]
     });
     Ext.define('Bancha.model.ManagementPanelArticle', {
@@ -51,8 +51,8 @@ describe("Bancha.scaffold.grid.ManagementPanel tests",function() {
             }
         },
         fields:[{
-                name:'id',
-                type:'int'
+            name:'id',
+            type:'int'
         }]
     });
 
@@ -113,7 +113,8 @@ describe("Bancha.scaffold.grid.ManagementPanel tests",function() {
         var panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: [
                 'Bancha.model.ManagementPanelUser',
-                'Bancha.model.ManagementPanelArticle'],
+                'Bancha.model.ManagementPanelArticle'
+            ],
             scaffoldDefaults: { storeDefaults: {}}, // prevent autoloading
             panelDefaults: {
                 title: 'Overwritten',
@@ -135,7 +136,8 @@ describe("Bancha.scaffold.grid.ManagementPanel tests",function() {
         var panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: [
                 'Bancha.model.ManagementPanelUser',
-                'Bancha.model.ManagementPanelArticle'],
+                'Bancha.model.ManagementPanelArticle'
+            ],
             scaffoldDefaults: {
                 storeDefaults: {}, // prevent autoloading
                 buttons: false

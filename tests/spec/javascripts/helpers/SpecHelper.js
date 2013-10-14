@@ -18,40 +18,82 @@
  *
  * For more information go to http://scaffold.banchaproject.org
  */
-/*jslint browser: true, vars: true, undef: true, nomen: true, eqeq: false, plusplus: true, bitwise: true, regexp: true, newcap: true, sloppy: true, white: true */
-/*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, immed:true, latedef:true, newcap:true, noarg:true, noempty:true, regexp:true, undef:true, trailing:false */
-/*global Ext, Bancha, describe, it, beforeEach, expect, jasmine, Mock, BanchaScaffoldSpecHelper */
-
 
 /*
  * Add some basic matcher functions for type checks
  */
 beforeEach(function() {
-  this.addMatchers({
-    toBeAFunction: function() {
-      return (typeof this.actual === 'function');
-    },
-    toBeAnObject: function() {
-        return typeof this.actual === 'object';
-    },
-    toBeAnArray: function() {
-        var isArray = function(testObject) {
-            return testObject && !(testObject.propertyIsEnumerable('length')) &&
-                    typeof testObject === 'object' && typeof testObject.length === 'number';
-        };
-        return isArray(this.actual);
-    },
-    toBeAString: function() {
-        return typeof this.actual === 'string';
-    },
-    toBeANumber: function() {
-        return typeof this.actual === 'number';
-    }
-  });
+    this.addMatchers({
+        toBeAFunction: function() {
+            return (typeof this.actual === 'function');
+        },
+        toBeAnObject: function() {
+            return typeof this.actual === 'object';
+        },
+        toBeAnArray: function() {
+            var isArray = function(testObject) {
+                return testObject && !(testObject.propertyIsEnumerable('length')) &&
+                        typeof testObject === 'object' && typeof testObject.length === 'number';
+            };
+            return isArray(this.actual);
+        },
+        toBeAString: function() {
+            return typeof this.actual === 'string';
+        },
+        toBeANumber: function() {
+            return typeof this.actual === 'number';
+        }
+    });
 });
 
 
 (function() {
+
+    /**
+     * Add Array.reduce for ES3 implementations (IE 6-8)
+     * Uses in objectFromPath below
+     * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce#Compatibility
+     */
+    /* jshint bitwise:false */
+    if ('function' !== typeof Array.prototype.reduce) {
+        Array.prototype.reduce = function(callback, optInitialValue){
+            'use strict';
+            if (null === this || 'undefined' === typeof this) {
+                // At the moment all modern browsers, that support strict mode, have
+                // native implementation of Array.prototype.reduce. For instance, IE8
+                // does not support strict mode, so this check is actually useless.
+                throw new TypeError(
+                    'Array.prototype.reduce called on null or undefined');
+            }
+            if ('function' !== typeof callback) {
+                throw new TypeError(callback + ' is not a function');
+            }
+            var index, value,
+                length = this.length >>> 0,
+                isValueSet = false;
+            if (1 < arguments.length) {
+                value = optInitialValue;
+                isValueSet = true;
+            }
+            for (index = 0; length > index; ++index) {
+                if (this.hasOwnProperty(index)) {
+                    if (isValueSet) {
+                        value = callback(value, this[index], index, this);
+                    }
+                    else {
+                        value = this[index];
+                        isValueSet = true;
+                    }
+                }
+            }
+            if (!isValueSet) {
+                throw new TypeError('Reduce of empty array with no initial value');
+            }
+            return value;
+        };
+    }
+    /* jshint bitwise:true */
+
     /**
      * Safely finds an object, used internally for getStubsNamespace and getRemoteApi
      * (This function is tested in RS.util, not part of the package testing, but it is tested)

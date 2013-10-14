@@ -58,6 +58,4 @@ describe("Ext.data.validations tests", function() {
         expect(validations.numberformat(config,10)).toBeTruthy();
         expect(validations.numberformat(config,11)).toBeFalsy();
     });
-}); //eo data validation tests
-
-//eof
+});
