@@ -52,7 +52,7 @@ beforeEach(function() {
     /**
      * Add Array.reduce for ES3 implementations (IE 6-8)
      * Uses in objectFromPath below
-     * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce#Compatibility
+     * See http://www.sencha.com/forum/showthread.php?273799
      */
     /* jshint bitwise:false */
     if ('function' !== typeof Array.prototype.reduce) {

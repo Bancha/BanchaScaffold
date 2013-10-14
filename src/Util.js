@@ -42,7 +42,8 @@ Ext.define('Bancha.scaffold.Util', {
         if (str.length === 1) {
             return str.toUpperCase();
         }
-        return str[0].toUpperCase() + str.substr(1);
+        // note: IE6 ad 7 doesn't allow array syntax for getting the first letter
+        return str.substr(0,1).toUpperCase() + str.substr(1);
     },
     /**
      * Capitalizes the first word, turns underscores into spaces and strips
