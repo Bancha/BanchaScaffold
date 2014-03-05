@@ -637,7 +637,7 @@ Ext.define('Bancha.scaffold.form.Config', {
      * This function can be overwritten by any custom function.
      * @param {Object} fieldConfig the field config to transform
      * @param {String} modelType A standard model field type like 'string'
-     * (also supports 'file' for compability with http://banchaproject.org)
+     * (also supports 'file' for compability with http://bancha.io)
      * @return {Object} Returns an Ext.form.field.* configuration object
      */
     transformFieldConfig: function (fieldConfig, modelType) {
@@ -1032,7 +1032,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
      * This function can be overwritten by any custom function.
      * @param {Object} columnConfig the column config to transform
      * @param {String} modelType A standard model field type like 'string'
-     * (also supports 'file' for compability with http://banchaproject.org)
+     * (also supports 'file' for compability with http://bancha.io)
      * @return {Object} Returns an Ext.grid.column.* configuration object
      */
     transformColumnConfig: function (columnConfig, modelType) {
@@ -1886,7 +1886,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
              * This function just hides id columns and makes it uneditable.
              * @param {Object} fieldConfig the field config to transform
              * @param {String} modelType A standard model field type like 'string'
-             * (also supports 'file' for compability with http://banchaproject.org)
+             * (also supports 'file' for compability with http://bancha.io)
              * @return {Object} Returns an Ext.form.field.* configuration object
              */
             internalTransformFieldConfig: function (fieldConfig, modelType) {
@@ -2600,7 +2600,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
              * This function just hides id columns and makes it uneditable.
              * @param {Object} columnConfig the column config to transform
              * @param {String} modelType A standard model field type like 'string'
-             * (also supports 'file' for compability with http://banchaproject.org)
+             * (also supports 'file' for compability with http://bancha.io)
              * @return {Object} Returns an Ext.grid.column.* configuration object
              */
             internalTransformColumnConfig: function (columnConfig, modelType) {

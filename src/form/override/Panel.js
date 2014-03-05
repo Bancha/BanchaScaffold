@@ -208,7 +208,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
              * This function just hides id columns and makes it uneditable.
              * @param {Object} fieldConfig the field config to transform
              * @param {String} modelType A standard model field type like 'string'
-             * (also supports 'file' for compability with http://banchaproject.org)
+             * (also supports 'file' for compability with http://bancha.io)
              * @return {Object} Returns an Ext.form.field.* configuration object
              */
             internalTransformFieldConfig: function (fieldConfig, modelType) {
