@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Bancha Scaffold - Easy Ext JS 5 Prototyping</title>
+    <link rel="stylesheet" href="http://cdn.sencha.com/ext/gpl/5.0.0/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css" type="text/css"/>
+    <style type="text/css">
+/* basic layout */
+		*{margin:0;padding:0;}
+		#container{text-align:center;}
+		#centered_container{margin-left:auto;margin-right:auto;width:762px;text-align:left;border-left:1px solid #555555;border-right:1px solid #555555;border-bottom:1px solid #555555;background-color:#FFFFFF;}
+		#content{padding:20px;text-align:left;}
+		#footer{text-align:center;color:#000000;font-size:8pt;font-family:verdana,Arial,sans-serif;padding:20px 10px 20px 10px;}
+		ul,li{margin:0 12px;}
+		.notice{background:#ffdaca url(/img/icons/notice.gif) center no-repeat;background-position:15px 50%;text-align:left;padding:0.6em 2em 0.6em 75px;margin:1em 0;border:2px solid #ff7349;border-width:2px 0;}
+      /* colors and fonts */
+      body {
+          background: url(http://bancha.io/tl_files/Bancha/images/bg.png);
+          color: #555;
+          font: 15px 'Droid Serif', Georgia, 'Times New Roman', Times, serif;
+      }
+      html, body, form, input {
+          color: #555;
+          font: 15px 'Droid Serif', Georgia, 'Times New Roman', Times, serif;
+      }
+      h1 {
+          font-size: 25px;
+          color: #663333;
+          padding-bottom: 40px;
+          text-align: center;
+      }
+      h2 {
+          margin: 30px 0 10px 0;
+          color: #663333;
+          font-weight: normal;
+          font-size: 22px;
+      }
+      h3 {
+          margin: 20px 0 10px 0;
+          color: #663333;
+          font-weight: normal;
+          font-size: 18px;
+      }
+      h4 {
+          margin: 15px 0 5px;
+          color: #663333;
+          font-weight: normal;
+          font-size: 16px;
+      }
+
+      li {
+          margin: 2px;
+      }
+      p {
+          margin: 15px 0;
+      }
+      pre {
+          margin-bottom: 20px;
+      }
+      a {
+        color: #663333;
+      }
+      #content {
+          padding: 55px;
+          min-height: 900px;
+      }
+      #gridpanel, #paginated-gridpanel, #formpanel, #managementpanel {
+          margin: 50px 0;
+      }
+
+      .icon-add { background-image:url(img/icons/add.png) ! important; }
+      .icon-save { background-image:url(img/icons/disk.png) ! important; }
+      .icon-reset { background-image:url(img/icons/arrow_undo.png) ! important; }
+      .icon-destroy { background-image:url(img/icons/delete.png) ! important; }
+      .icon-upload { background-image:url(img/icons/image_add.png) ! important; }
+      .icon-edit { background-image:url(img/icons/user_edit.png) ! important; }
+    </style>
+</head>
+<body>
+
+    <a href="https://github.com/Bancha/BanchaScaffold"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" alt="Fork it on GitHub"></a>
+
+
+    <div id="container">
+        <div id="centered_container">
+            <div id="header"><a href="http://scaffold.bancha.io"><img width="760" height="178" src="http://files.banchaproject.org/tl_files/Bancha/images/bancha-scaffold/bancha-scaffold-claim.jpg" border="0" style="padding:0; margin:0;"></a></div>
+            <div id="content">
+
+                <h1>Bancha Scaffold Examples</h1>
+
+                <p style="text-align:center;">
+                    Check out <a href="https://raw.github.com/Bancha/BanchaScaffold/master/samples/js/models-extjs5.js" target="_blank">
+                    the model's configuration </a> and <a href="https://raw.github.com/Bancha/BanchaScaffold/master/samples/js/samples.js" target="_blank">
+                    the scaffolding code</a>.
+                </p>
+                <p style="text-align:center;"><i>
+                    Please note, the server will always accept the save request, but will not persist the changes, <br />
+                    since this a javascript library for any generic backend.
+                </i></p>
+
+                <div id="gridpanel"></div>
+
+                <div id="paginated-gridpanel"></div>
+
+                <div id="formpanel"></div>
+
+                <div id="managementpanel"></div>
+
+            </div>
+            <div id="footer">
+                <hr><br>&copy; 2011-2013 codeQ e.U., licensed under <a href="http://www.opensource.org/licenses/mit-license.php">The MIT License</a>. <a href="http://scaffold.bancha.io/contact.html">Imprint</a>
+            </div>
+        </div>
+    </div>
+
+
+<!-- include Ext JS -->
+<!--IFDEBUG -->
+<script src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all-debug.js"></script>
+<!-- ENDIF -->
+<!-- IFPRODUCTION
+<script src="http://cdn.sencha.com/ext/gpl/5.0.0/build/ext-all.js"></script>
+ENDIF -->
+<script src="http://cdn.sencha.com/ext/gpl/5.0.0/packages/ext-theme-crisp/build/ext-theme-crisp.js"></script>
+
+<!-- error handling -->
+<script type="text/javascript">
+// catch every debug exception thrown from either Ext JS or Bancha
+Ext.Error.handle = function(err) {
+    Ext.Msg.alert('Error', err.msg);
+};
+</script>
+
+
+<!-- include Bancha Scaffold -->
+<!--IFDEBUG -->
+<script>
+	// dynamically load dependencies
+	Ext.Loader.setConfig('enabled', true);
+	Ext.Loader.setPath('Bancha.scaffold', '../src');
+</script>
+<!-- ENDIF --><!-- IFPRODUCTION
+<script type="text/javascript" src="js/bancha-scaffold-production.js"></script>
+ENDIF -->
+
+<!-- include the remote API -->
+<script type="text/javascript" src="direct-api.php"></script>
+
+<!-- include sample code -->
+<script type="text/javascript" src="js/models-extjs5.js"></script>
+<script type="text/javascript" src="js/samples.js"></script>
+
+
+<!-- Add a feedback widget -->
+<script type="text/javascript">
+  var uvOptions = {};
+  (function() {
+    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/0UXfPisT7dSYfaE0il292w.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+  })();
+</script>
+
+<!-- add anonyminized google analytics -->
+<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-10118336-4']);_gaq.push(['_setDomainName', 'scaffold.banchaproject.org']);_gaq.push(['_gat._anonymizeIp']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();
+</script>
+
+</body>
+</html>

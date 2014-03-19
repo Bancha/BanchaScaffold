@@ -22,8 +22,12 @@
 Ext.application({
     name: 'Bancha Scaffold examples',
     requires: [
+        'Bancha.model.User',
+        'Bancha.model.Article',
+        'Bancha.model.Book',
         'Bancha.scaffold.form.override.Panel',
-        'Bancha.scaffold.grid.override.Panel'
+        'Bancha.scaffold.grid.override.Panel',
+        'Bancha.scaffold.grid.ManagementPanel'
     ],
     launch: function() {
 
@@ -85,7 +89,7 @@ Ext.application({
             },
 
             // add some styling
-            height: 300,
+            height: (Ext.versions.extjs.major === 4) ? 300 : 357,
             width: 650,
             frame: true,
             renderTo: 'paginated-gridpanel'
@@ -137,8 +141,7 @@ Ext.application({
 
             // some additional styles
             width: 650,
-            frame:true,
-            renderTo: 'formpanel',
+            frame: true,
             id: 'form',
             bodyStyle:'padding:5px 5px 0',
             fieldDefaults: {
@@ -148,7 +151,8 @@ Ext.application({
             defaultType: 'textfield',
             defaults: {
                 anchor: '100%'
-            }
+            },
+            renderTo: 'formpanel'
         }); // eo form create
 
 

@@ -23,15 +23,16 @@
  * @private
  * @class Bancha.data.override.Validations
  *
- * Add custom validators to Ext.data.validations.
+ * Ext JS 4 and Sencha Touch range and file 
+ * validation rules.
  *
  * @author Roland Schuetz <mail@rolandschuetz.at>
  * @docauthor Roland Schuetz <mail@rolandschuetz.at>
  */
-Ext.define('Bancha.data.override.Validations', {
+Ext.define('Bancha.scaffold.data.override.Validations', {
     requires: ['Ext.data.validations'],
     alternateClassName: [
-        'Bancha.scaffold.data.override.Validations' // Bancha.Scaffold uses the same class
+        'Bancha.data.override.Validations' // Bancha.Scaffold uses the same class
     ]
 }, function() {
 
@@ -47,30 +48,54 @@ Ext.define('Bancha.data.override.Validations', {
         return Ext.Array.contains(validExtensions,ext);
     };
 
+    // Ext.Logger might not be available
+    var markDeprecated = function(msg) {
+        if(Ext.Logger && Ext.Logger.deprecate !== Ext.emptyFn) {
+            Ext.Logger.deprecate(msg);
+        } else if(Bancha.Logger) {
+            Bancha.Logger.warn('[DEPRECATE]'+msg);
+        } else if(Ext.global.console && Ext.global.console.warn) {
+            Ext.global.console.warn('[DEPRECATE]'+msg);
+        }
+    };
+
     /**
      * @class Ext.data.validations
      *
      * Bancha extends Ext.data.validations with two new validation rules:
-     * *numberformat* and *file*.
+     * *range* and *file*.
      *
      * These custom validations are mapped from CakePHP.
      *
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
-    Ext.apply(Ext.data.validations, { // this is differently called in Ext JS and Sencha Touch, but work by alias just fine
+    Ext.apply(Ext.data.validations, { // this is differently called in Ext JS 4 and Sencha Touch, but work by alias just fine
+
         /**
          * @property
-         * The default error message used when a numberformat validation fails.
+         * @deprecated In favor of the validation rule range.
+         * 
+         * The default error message used when a range validation fails.
          */
         numberformatMessage: 'is not a number or not in the allowed range',
+
+        /**
+         * @property
+         * The default error message used when a range validation fails.
+         */
+        rangeMessage: 'is not a number or not in the allowed range',
+
         /**
          * @property
          * The default error message used when a file validation fails.
          */
         fileMessage: 'is not a valid file',
+
         /**
          * @method
+         * @deprecated In favor of the validation rule range.
+         * 
          * Validates that the number is in the range of min and max.
          * Precision is not validated, but it is used for differenting int from float,
          * also it's metadata for scaffolding.
@@ -79,8 +104,9 @@ Ext.define('Bancha.data.override.Validations', {
          *     {type: 'numberformat', field: 'euro', precision:2, min:0, max: 1000}
          */
         numberformat: function(config, value) {
+            markDeprecated('Bancha: Validation rules "numberformat" is deprecated in favor of "range" for Ext JS 5 compatibility.');
             if(typeof value !== 'number') {
-                value = (config.precision===0) ? parseInt(value,10) : parseFloat(value);
+                value = (config.precision===0) ? parseInt(value, 10) : parseFloat(value);
                 if(typeof value !== 'number') {
                     return false; // could not be converted to a number
                 }
@@ -90,6 +116,29 @@ Ext.define('Bancha.data.override.Validations', {
             }
             return true;
         },
+
+        /**
+         * @method
+         * Validates that the number is in the range of min and max.
+         * Precision is not validated, but it is used for differenting int from float,
+         * also it's metadata for scaffolding.
+         *
+         * For example:
+         *     {type: 'range', field: 'euro', precision:2, min:0, max: 1000}
+         */
+        range: function(config, value) {
+            if(typeof value !== 'number') {
+                value = (config.precision===0) ? parseInt(value, 10) : parseFloat(value);
+                if(typeof value !== 'number') {
+                    return false; // could not be converted to a number
+                }
+            }
+            if((Ext.isDefined(config.min) && config.min > value) || (Ext.isDefined(config.max) && value > config.max)) {
+                return false; // not in the range
+            }
+            return true;
+        },
+
         /**
          * @method
          * Validates that the given filename is of the configured extension. Also validates

@@ -278,16 +278,67 @@ Ext.define('Bancha.scaffold.Util', {
     /**
      * Returns the corresponding association for a given field, or false.
      *
+     * This will not return a reference, if defined on the field. See getBelongsToModel.
+     *
      * @param {Ext.data.Field} field The model field to look for an association (belongsTo)
      * @param {Ext.data.Model} model The fields model
-     * @return {Ext.data.association.belongsTo|False} The found association or false
+     * @return {Ext.data.association.belongsTo|Ext.data.schema.ManyToOne|False} The found association or false
      */
     getBelongsToAssociation: function(field, model) {
-        var associationName = this.fieldNameToModelAssociationName(field.name, 'belongsTo'),
-            associations = Ext.isFunction(model.getAssociations) ? model.getAssociations():
-                            (model.prototype ? model.prototype.associations : false),
-            association = (associationName && associations) ? associations.get(associationName) : false;
+        var associationName,
+            associations,
+            key;
 
-        return association;
+        // Ext JS 5 works differently then older versions
+        if(Ext.versions.extjs && Ext.versions.extjs.major === 5) {
+            associations = model.associations;
+            // this will detect Bancha associations
+            for(key in associations) {
+                if(associations.hasOwnProperty(key) && associations[key].foreignKey === field.name) {
+                    return associations[key]; // match
+                }
+            }
+            return false; // no match
+        }
+
+        // Ext JS 4 and Sencha Touch
+        associationName = this.fieldNameToModelAssociationName(field.name, 'belongsTo');
+        associations = Ext.isFunction(model.getAssociations) ? model.getAssociations():
+                            (model.prototype ? model.prototype.associations : false);
+        if(!associationName || !associations) {
+            return false;
+        }
+        return associations.get(associationName);
+    },
+    /**
+     * Returns the associated model for a given field. 
+     *
+     * Normalized the function across Ext JS 4 and 5.
+     * 
+     * @param {Ext.data.Field} field The model field to look for an association (belongsTo)
+     * @param {Ext.data.Model} model The fields model
+     * @return {Ext.data.Model|null} The associated model or null
+     */
+    getBelongsToModel: function(field, model) {
+        // this will detect new Ext JS 5 reference associations
+        if(field.reference) {
+            return field.reference.cls;
+        }
+
+        // below will detect associations array configurations
+        var association = this.getBelongsToAssociation(field, model);
+
+        // if no association found
+        if(!association) {
+            return association;
+        }
+
+        // Ext JS 5 works differently then older versions
+        if(Ext.versions.extjs && Ext.versions.extjs.major === 5) {
+            return Ext.ClassManager.get(association.model);
+        }
+
+        // Ext JS 4
+        return association.associatedModel;
     }
 });

@@ -280,8 +280,8 @@ describe("Ext.form.Panel unit tests",function() {
                 {type:'presence', name:'email'},
                 {type:'format', name:'email', matcher:
                                  /^(\w+)([\-+.][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/},
-                {type:'numberformat', name:'weight', precision:2},
-                {type:'numberformat', name:'height', min:50, max:300},
+                {type:'range', name:'weight', precision:2},
+                {type:'range', name:'height', min:50, max:300},
                 {type:'file', name:'avatar', extension:['gif', 'jpeg', 'png', 'jpg']}
             ]
         });

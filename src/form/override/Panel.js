@@ -31,7 +31,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
     requires: [
         'Ext.form.Panel',
         'Bancha.scaffold.form.Config',
-        'Bancha.scaffold.data.override.Validations',
+        'Bancha.scaffold.data.Validators',
         'Bancha.scaffold.form.field.override.VTypes',
         'Bancha.scaffold.Util'
     ]
@@ -106,7 +106,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
      *  - format
      *  - file
      *  - length
-     *  - numberformat
+     *  - range
      *  - presence
      *
      * You have three possible interceptors:
@@ -169,6 +169,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
             this.callOverridden();
         },
         statics: {
+
             /**
              * @private
              * @property
@@ -200,6 +201,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 }
                 // TODO OPTIMIZE Add combobox support
             },
+
             /**
              * @private
              * @property {Function} internalTransformFieldConfig
@@ -216,10 +218,15 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
                 return fieldConfig;
             },
+
             /**
              * @private
+             *
+             * Parses ExtJS 4 validation rules.
+             * 
              * Analysis the validation rules for a field and adds validation rules to the field config.
              * For what is supported see {@link Bancha.scaffold.form.Config}
+             * 
              * @param {Object} field A Ext.form.field.* config
              * @param {Array} validations An array of Ext.data.validations of the model
              * @param {Bancha.scaffold.form.Config} config A Bancha.scaffold.form.Config config
@@ -241,9 +248,10 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         msgAddition;
 
                     Ext.Array.forEach(validations, function (rule) {
-                        if (rule.name !== name) {
-                            return;
+                        if (Ext.versions.extjs.major===4 && rule.name !== name) {
+                            return; // In Ext JS 4 these are all fields, not just the mathing ones, so filter
                         }
+
                         switch (rule.type) {
                         case 'presence':
                             field.allowBlank = false;
@@ -253,7 +261,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             // length validation works only only on textfields
                             if (field.xtype !== 'textfield') {
                                 msgAddition = (field.xtype === 'numberfield') ?
-                                                'Use the rule numberformat to force minimal and maximal values.' : '';
+                                                'Use the range rule to force minimal and maximal values.' : '';
                                 Ext.Error.raise({
                                     plugin: 'Bancha Scaffold',
                                     msg: [
@@ -266,11 +274,19 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             }
                             //</debug>
                             if (field.xtype === 'textfield') {
+                                // Ext JS 4
                                 if (Ext.isDefined(rule.min)) {
                                     field.minLength = rule.min;
                                 }
                                 if (Ext.isDefined(rule.max)) {
                                     field.maxLength = rule.max;
+                                }
+                                // Ext JS 5
+                                if (Ext.isDefined(rule._min)) {
+                                    field.minLength = rule._min;
+                                }
+                                if (Ext.isDefined(rule._max)) {
+                                    field.maxLength = rule._max;
                                 }
                             }
                             break;
@@ -289,7 +305,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                 });
                             }
                             //</debug>
-                            switch (rule.matcher.toString()) {
+                            switch ((rule.matcher || rule.getMatcher()).toString()) {
                             case alpha:
                                 field.vtype = 'alpha';
                                 break;
@@ -317,15 +333,15 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                 break;
                             }
                             break;
-                        case 'numberformat':
-                            // numberformat validation works only only on numberfields
+                        case 'range':
+                            // range validation works only only on numberfields
                             //<debug>
                             if (field.xtype !== 'numberfield') {
                                 Ext.Error.raise({
                                     plugin: 'Bancha Scaffold',
                                     msg: [
                                         'Bancha Scaffold: The model has a validation rule ',
-                                        'numberformat for the field ' + name + ', but this ',
+                                        'range for the field ' + name + ', but this ',
                                         'field is of type ' + field.xtype + ', so the rule ',
                                         'makes no sense. A numberfield is expected.'
                                     ].join('')
@@ -333,6 +349,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             }
                             //</debug>
                             if (field.xtype === 'numberfield') {
+                                // Ext JS 4
                                 if (Ext.isDefined(rule.min)) {
                                     field.minValue = rule.min;
                                 }
@@ -341,6 +358,16 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                 }
                                 if (Ext.isDefined(rule.precision)) {
                                     field.decimalPrecision = rule.precision;
+                                }
+                                // Ext JS 5
+                                if (Ext.isDefined(rule._min)) {
+                                    field.minValue = rule._min;
+                                }
+                                if (Ext.isDefined(rule._max)) {
+                                    field.maxValue = rule._max;
+                                }
+                                if (Ext.isDefined(rule._precision)) {
+                                    field.decimalPrecision = rule._precision;
                                 }
                             }
                             break;
@@ -353,9 +380,12 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             if (Ext.isString(rule.extension)) {
                                 rule.extension = [rule.extension];
                             }
-                            if (Ext.isArray(rule.extension)) {
+                            if (Ext.isString(rule._extension)) {
+                                rule._extension = [rule._extension];
+                            }
+                            if (Ext.isArray(rule.extension) || Ext.isArray(rule._extension)) {
                                 field.vtype = 'fileExtension';
-                                field.validExtensions = rule.extension;
+                                field.validExtensions = rule.extension || rule._extension;
                             }
                             break;
                         default:
@@ -375,6 +405,32 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     return field;
                 }; //eo return fn
             }()),
+
+            /**
+             * @private
+             *
+             * Parses ExtJS 5 validator rules.
+             * 
+             * Analysis the validator rules for a field and adds validation rules to the field config.
+             * For what is supported see {@link Bancha.scaffold.form.Config}
+             * 
+             * @param {Object} field A Ext.form.field.* config
+             * @param {Array} validators An array of Ext.data.validators.*'s of the model
+             * @param {Bancha.scaffold.form.Config} config A Bancha.scaffold.form.Config config
+             * @return {Object} Returns a Ext.form.field.* config
+             */
+            addValidatorRuleConfigs: function (field, validators, config) {
+                var fieldValidators = validators[field.name];
+                if(!fieldValidators) {
+                    return field; // no validator rules found
+                }
+                if(!Ext.isArray(fieldValidators)) {
+                    fieldValidators = [fieldValidators]; // always have an array
+                }
+
+                return this.addValidationRuleConfigs(field, fieldValidators, config);
+            },
+
             /**
              * @private
              * Builds a field with all defaults defined here
@@ -391,6 +447,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     fieldTypeDefaults = Ext.clone(defaults[field.xtype + 'Defaults'] || this[field.xtype + 'Defaults']);
                 return Ext.apply(fieldDefaults, field, fieldTypeDefaults);
             },
+
             /**
              * @private
              * Creates a Ext.form.Field config from an model field type
@@ -403,12 +460,12 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
              * @return {Object} Returns a field config
              */
             buildFieldConfig: function (modelField, config, validations, isEditorfield) {
-                var type = modelField.type.type,
+                var type = Ext.versions.extjs.major === 5 ? modelField.type : modelField.type.type,
                     model = config.target,
                     field = this.buildDefaultFieldFromModelType(type, config),
                     Util = Bancha.scaffold.Util,
                     defaultAltFormats,
-                    association;
+                    associatedModel;
 
                 // infer name
                 field.name = modelField.name;
@@ -439,15 +496,21 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 if (Ext.isDefined(validations) && validations.length) {
                     field = this.addValidationRuleConfigs(field, validations, config);
                 }
+                if (Ext.isDefined(validations) && Ext.Object.getSize(validations)>0) {
+                    field = this.addValidatorRuleConfigs(field, validations, config);
+                }
+                if(!field) {
+                    return;
+                }
 
                 // check for associations
-                association = Util.getBelongsToAssociation(field, model);
-                if(association) {
+                associatedModel = Util.getBelongsToModel(modelField, model);
+                if(associatedModel) {
                     Ext.apply(field, {
                         xtype: 'combobox',
-                        store: Util.getStore(association.associatedModel, config),
-                        displayField: Util.getDisplayFieldName(association.associatedModel),
-                        valueField: association.associatedModel.prototype.idProperty || 'id',
+                        store: Util.getStore(associatedModel, config),
+                        displayField: Util.getDisplayFieldName(associatedModel),
+                        valueField: associatedModel.prototype.idProperty || 'id',
                         queryMode: 'local'
                     });
                 }
@@ -465,6 +528,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
                 return field;
             },
+
             /**
              * @private
              * This function is used if you are using Bancha.scaffold.form.Config with
@@ -512,6 +576,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     submit: initialApi.submit || stub.submit
                 };
             },
+
             /**
              * @private
              * You only need this is you're adding additional buttoms to the form inside the
@@ -540,6 +605,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     }, scopePrototype);
                 };
             }()),
+
             /**
              * @private
              * Builds form configs from the metadata, for scaffolding purposes.
@@ -559,8 +625,8 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     me = this,
                     formConfig,
                     fieldNames,
-                    modelFields,
                     validations,
+                    isExtJS5,
                     id,
                     loadFn;
 
@@ -580,15 +646,18 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
                 // if there is a fields config, use this for ordering
-                fieldNames = config.fields || model.prototype.fields.keys;
+                // Otherwise use fields.keys for Sencha Touch and Ext JS 4
+                fieldNames = config.fields || model.prototype.fields.keys || Ext.Object.getKeys(model.fieldsMap);
 
-                // build all fields
-                modelFields = model.prototype.fields;
-                validations = model.prototype.validations;
+                // build all columns
+                validations = model.prototype.validations || model.validators; // ST & Ext JS 4 || Ext JS 5
+                isExtJS5 = Ext.versions.extjs.major === 5;
                 Ext.each(fieldNames, function(fieldName) {
-                    if(Ext.Array.indexOf(config.exclude, modelFields.getByKey(fieldName).name) === -1) { // if not excluded
+                    if(Ext.Array.indexOf(config.exclude, fieldName) === -1) { // if not excluded
+                        var field = isExtJS5 ? model.getField(fieldName) : model.prototype.fields.getByKey(fieldName);
                         fields.push(
-                            me.buildFieldConfig(modelFields.getByKey(fieldName), config, validations));
+                            me.buildFieldConfig(field, config, validations)
+                        );
                     }
                 });
 

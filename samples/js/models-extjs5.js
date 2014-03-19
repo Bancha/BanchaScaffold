@@ -35,13 +35,13 @@ Ext.define('Bancha.model.Article', {
         },
         reader: {
             type: 'json',
-            root: 'data',
+            rootProperty: 'data',
             messageProperty: 'message'
         },
         writer: {
             type: 'json',
             writeAllFields: false,
-            root: 'data'
+            rootProperty: 'data'
         }
     },
     idProperty:'id',
@@ -64,31 +64,20 @@ Ext.define('Bancha.model.Article', {
             type:'boolean'
         },{
             name:'user_id',
-            type:'int'
+            type:'int',
+            reference: 'Bancha.model.User'
         }
     ],
-    validations: [
-        {
-            type:'presence',
-            field:'title'
-        },{
-            type:'range',
-            field:'user_id'
-        }
-    ],
-    associations: [
-        {
-            type:'belongsTo',
-            model:'Bancha.model.User',
-            name:'user',
-            foreignKey: 'user_id'
-        }
-    ]
+    validators: {
+        name: { type: 'presence' },
+        user_id: { type: 'range', min: 0 }
+    }
 });
 
 // define the user model
 Ext.define('Bancha.model.User', {
     extend: 'Ext.data.Model',
+    requires: ['Bancha.scaffold.data.Validators'],
     proxy: {
         type: 'direct',
         batchActions: false,
@@ -100,13 +89,13 @@ Ext.define('Bancha.model.User', {
         },
         reader: {
             type: 'json',
-            root: 'data',
+            rootProperty: 'data',
             messageProperty: 'message'
         },
         writer: {
             type: 'json',
             writeAllFields: false,
-            root: 'data'
+            rootProperty: 'data'
         }
     },
     idProperty: 'id',
@@ -138,58 +127,24 @@ Ext.define('Bancha.model.User', {
             type: 'int'
         }
     ],
-    validations: [
-        {
-            type: 'presence',
-            field: 'name'
-        }, {
-            type: 'length',
-            field: 'name',
-            min: 3,
-            max: 64
-        }, {
-            type: 'presence',
-            field: 'login'
-        }, {
-            type: 'length',
-            field: 'login',
-            min: 3,
-            max: 64
-        }, {
-            type: 'format',
-            field: 'login',
-            matcher: /^[a-zA-Z0-9_]+$/ // alphanum regex
-        }, {
-            type: 'presence',
-            field: 'email'
-        }, {
-            type: 'format',
-            field: 'email',
-            matcher: /^(\w+)([\-+.][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/ // email regex
-        }, {
-            type: 'range',
-            field: 'weight',
-            precision: 2
-        }, {
-            type: 'range',
-            field: 'height',
-            precision: 0,
-            min: 50,
-            max: 300
-        }, {
-            type: 'file', // todo should create a file upload field
-            field: 'avatar',
-            extension: ['gif', 'jpeg', 'png', 'jpg']
-        }
-    ],
-    associations: [
-        {
-            type: 'hasMany',
-            model: 'Bancha.model.Article',
-            name: 'articles',
-            foreignKey: 'user_id'
-        }
-    ]
+    validators: {
+        name: [
+            { type: 'presence' },
+            { type: 'length', min: 3, max: 64 }
+        ],
+        login: [
+            { type: 'presence' },
+            { type: 'length', min: 3, max: 64 },
+            { type: 'format', matcher: /^[a-zA-Z0-9_]+$/ } // alphanum regex
+        ],
+        email: [
+            { type: 'presence' },
+            { type: 'format', matcher: /^(\w+)([\-+.][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/ } // email regex
+        ],
+        weight: { type: 'range', min: 0, 'precision': 2 },
+        height: { type: 'range', min: 50, max: 300, 'precision': 0 },
+        avatar: { type: 'file', extension: ['gif', 'jpeg', 'png', 'jpg'] }
+    }
 });
 
 
@@ -200,11 +155,11 @@ Ext.define('Bancha.model.Book', {
         type: 'direct',
         batchActions: false,
         api: {
-            read    : Bancha.RemoteStubs.Book.read
+            read: Bancha.RemoteStubs.Book.read
         },
         reader: {
             type: 'json',
-            root: 'data',
+            rootProperty: 'data',
             messageProperty: 'message'
         }
     },
@@ -221,27 +176,16 @@ Ext.define('Bancha.model.Book', {
             type:'boolean'
         },{
             name:'user_id',
-            type:'int'
+            type:'int',
+            reference: 'Bancha.model.User'
         }
     ],
-    validations: [
-        {
-            type:'presence',
-            field:'title'
-        },{
-            type:'range',
-            field:'user_id'
-        }
-    ],
-    associations: [
-        {
-            type:'belongsTo',
-            model:'Bancha.model.User',
-            name:'user',
-            foreignKey: 'user_id'
-        }
-    ]
+    validators: {
+        id: { type: 'range', min: 0, precision: 0 },
+        title: [
+            { type: 'presence' },
+            { type: 'length', min: 3, max: 64 }
+        ],
+        user_id: { type: 'range', precision: 0 }
+    }
 });
-
-
-// eof

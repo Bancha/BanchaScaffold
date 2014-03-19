@@ -32,7 +32,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
         'Ext.grid.Panel',
         'Bancha.scaffold.form.Config',
         'Bancha.scaffold.grid.Config',
-        'Bancha.scaffold.data.override.Validations',
+        'Bancha.scaffold.data.Validators',
         'Bancha.scaffold.form.field.override.VTypes',
         'Bancha.scaffold.Util'
     ]
@@ -224,10 +224,10 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
              * @return {Object}                                   Returns an Ext.grid.column.* configuration object
              */
             buildColumnConfig: function (field, config, validations, gridListeners) {
-                var fieldType = field.type.type,
+                var fieldType = Ext.versions.extjs.major === 5 ? field.type : field.type.type,
                     column = this.buildDefaultColumnFromModelType(fieldType, config),
                     model = config.target,
-                    association,
+                    associatedModel,
                     store,
                     fieldName;
 
@@ -238,12 +238,12 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 }
 
                 // check for associations
-                association = Bancha.scaffold.Util.getBelongsToAssociation(field, model);
-                if(association) {
+                associatedModel = Bancha.scaffold.Util.getBelongsToModel(field, model);
+                if(associatedModel) {
                     // load the store
-                    store = Bancha.scaffold.Util.getStore(association.associatedModel, config);
+                    store = Bancha.scaffold.Util.getStore(associatedModel, config);
                     // calculate the field name only once per column
-                    fieldName = Bancha.scaffold.Util.getDisplayFieldName(association.associatedModel);
+                    fieldName = Bancha.scaffold.Util.getDisplayFieldName(associatedModel);
 
                     // build a renderer
                     column.renderer = function(id) {
@@ -251,6 +251,12 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
 
                         // display either the found record name or Unknown
                         return rec ? rec.get(fieldName) : (Bancha.t ? Bancha.t('Unknown') : 'Unknown');
+                    };
+
+                    // For Ext JS 5, update after the id was changed
+                    column.updater = function(cell, value, record, view) {
+                        var name = column.renderer(value);
+                        Ext.fly(cell).child('div').setHtml(name);
                     };
 
                     // if necessary re-render when the data is available
@@ -275,10 +281,13 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                     ]);
                     column.editor = Ext.form.Panel.buildFieldConfig(field, config.formConfig, validations, true);
 
-                    // now make custom field transforms
-                    column.editor = Ext.form.Panel.internalTransformFieldConfig(column.editor, fieldType);
-                    if (typeof config.formConfig.transformFieldConfig === 'function') {
-                        column.editor = config.formConfig.transformFieldConfig(column.editor, fieldType);
+                    if(column.editor) {
+                        // if this should have an editor field
+                        // now make custom field transforms
+                        column.editor = Ext.form.Panel.internalTransformFieldConfig(column.editor, fieldType);
+                        if (typeof config.formConfig.transformFieldConfig === 'function') {
+                            column.editor = config.formConfig.transformFieldConfig(column.editor, fieldType);
+                        }
                     }
                 }
 
@@ -293,7 +302,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
             /**
              * @private
              * Builds grid columns from the model definition, for scaffolding purposes.
-             * This does not unclude the support for create,update and/or destroy!
+             * This does not unclude the support for create, update and/or destroy!
              *
              * @param {Bancha.scaffold.grid.Config} config        The grid config
              * @param {Object}                      gridListeners The grid listeners array, can be augmented by this function
@@ -304,8 +313,8 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                     model = config.target,
                     me = this,
                     fieldNames,
-                    fields,
                     validations,
+                    isExtJS5,
                     button;
 
                 if(!Ext.isArray(config.exclude)) {
@@ -323,15 +332,18 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 }
 
                 // if there is a fields config, use this for ordering
-                fieldNames = config.fields || model.prototype.fields.keys;
+                // Otherwise use fields.keys for Sencha Touch and Ext JS 4
+                fieldNames = config.fields || model.prototype.fields.keys || Ext.Object.getKeys(model.fieldsMap);
 
                 // build all columns
-                fields = model.prototype.fields;
-                validations = model.prototype.validations;
+                validations = model.prototype.validations || model.validators; // ST & Ext JS 4 || Ext JS 5
+                isExtJS5 = Ext.versions.extjs.major === 5;
                 Ext.each(fieldNames, function(fieldName) {
-                    if(Ext.Array.indexOf(config.exclude, fields.getByKey(fieldName).name) === -1) { // if not excluded
+                    if(Ext.Array.indexOf(config.exclude, fieldName) === -1) { // if not excluded
+                        var field = isExtJS5 ? model.getField(fieldName) : model.prototype.fields.getByKey(fieldName);
                         columns.push(
-                            me.buildColumnConfig(fields.getByKey(fieldName), config, validations, gridListeners));
+                            me.buildColumnConfig(field, config, validations, gridListeners)
+                        );
                     }
                 });
 
