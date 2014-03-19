@@ -2,25 +2,23 @@
 /*!
  *
  * Bancha Scaffolding Library
- * Copyright 2011-2013 codeQ e.U.
+ * Copyright 2011-2014 codeQ e.U.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @package       Bancha.scaffold.samples
- * @copyright     Copyright 2011-2013 codeQ e.U.
- * @link          http://scaffold.banchaproject.org
+ * @copyright     Copyright 2011-2014 codeQ e.U.
+ * @link          http://scaffold.bancha.io
  * @since         Bancha.scaffold 0.5.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha v PRECOMPILER_ADD_BANCHA_SCAFFOLD_RELEASE_VERSION
  *
- * For more information go to http://scaffold.banchaproject.org
+ * For more information go to http://scaffold.bancha.io
  */
 
-
-
-if(empty($HTTP_RAW_POST_DATA) && empty($_POST)) {
+if (empty($HTTP_RAW_POST_DATA) && empty($_POST)) {
 	// send the remote api
 	exit('
 		Ext.ns("Bancha");
@@ -150,8 +148,8 @@ for($i=0;$i<35;$i++) {
 };
 
 // handle form posts with uploads
-if(isset($_POST['extMethod'])) {
-	if($_POST['extMethod']!='submit') {
+if (isset($_POST['extMethod'])) {
+	if ($_POST['extMethod'] != 'submit') {
 		exit('Error: Could not recodnize the post request');
 	}
 	// simply return everything, so the client things everything is ok
@@ -160,7 +158,7 @@ if(isset($_POST['extMethod'])) {
 	// make up an id in the case of an create
 	$response['id'] = isset($_POST['id']) ? $_POST['id'] : rand();
 	// transform structure for form uploads
-	if(isset($_POST['extUpload']) && $_POST['extUpload']=="true") {
+	if (isset($_POST['extUpload']) && $_POST['extUpload']=="true") {
 		exit('upload');
 		$response = '<html><body><textarea>' . json_encode($_POST) . '</textarea></body></html>';
 	} else {
@@ -179,8 +177,6 @@ if(isset($_POST['extMethod'])) {
 	exit($response);
 }
 
-
-
 // handle XHR requests
 $request = json_decode($HTTP_RAW_POST_DATA);
 $request = is_array($request) ? $request : array($request); // for single requests
@@ -197,8 +193,8 @@ foreach ($request as $key => $data) {
 			break;
 		case 'read':
 			// get the corresponding elemennts
-			$entries = $data->action=='User' ? $sample_user_data :
-						($data->action=='Article' ? $sample_article_data : $sample_book_data);
+			$entries = $data->action == 'User' ? $sample_user_data :
+						($data->action == 'Article' ? $sample_article_data : $sample_book_data);
 			// if there is an id just send one record, otherwise send a paged result
 			$selected_entries = isset($data->data[0]->data->id) ? $entries[0] :
 					array_slice($entries, $data->data[0]->start, $data->data[0]->limit);
@@ -218,7 +214,7 @@ foreach ($request as $key => $data) {
 			break;
 		case 'destroy':
 			// nothing to do here
-			$result = array('success'=>true);
+			$result = array('success' => true);
 			break;
 		default:
 			exit('Error: Could not recodnize the request number '.$key);

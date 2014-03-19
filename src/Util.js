@@ -1,20 +1,20 @@
 /*
  *
  * Bancha Scaffolding Library
- * Copyright 2011-2013 codeQ e.U.
+ * Copyright 2011-2014 codeQ e.U.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @package       Bancha.scaffold
- * @copyright     Copyright 2011-2013 codeQ e.U.
- * @link          http://scaffold.banchaproject.org
+ * @copyright     Copyright 2011-2014 codeQ e.U.
+ * @link          http://scaffold.bancha.io
  * @since         Bancha Scaffold v 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha Scaffold v PRECOMPILER_ADD_BANCHA_SCAFFOLD_RELEASE_VERSION
  *
- * For more information go to http://scaffold.banchaproject.org
+ * For more information go to http://scaffold.bancha.io
  */
 
 /**
@@ -45,6 +45,7 @@ Ext.define('Bancha.scaffold.Util', {
         // note: IE6 ad 7 doesn't allow array syntax for getting the first letter
         return str.substr(0,1).toUpperCase() + str.substr(1);
     },
+
     /**
      * Capitalizes the first word, turns underscores into spaces and strips
      * trailing *'_id'*.
@@ -68,6 +69,7 @@ Ext.define('Bancha.scaffold.Util', {
         }); // convert camel case (only)
         return this.toFirstUpper(str);
     },
+
     /**
      * Transforms a namespacd class name like *'Bancha.model.AwesomeArticle'*
      * and transforms it into a name you can show to users, in this case
@@ -85,6 +87,7 @@ Ext.define('Bancha.scaffold.Util', {
         }
         return this.humanize(classname);
     },
+
     /**
      * Makes every words first letter upper case.
      *
@@ -96,6 +99,7 @@ Ext.define('Bancha.scaffold.Util', {
             return ' ' + letter.toUpperCase();
         });
     },
+
     /**
      * @private
      * This function will search for 'create', 'reset' and 'save' and will
@@ -145,6 +149,7 @@ Ext.define('Bancha.scaffold.Util', {
 
         return buttons;
     },
+
     /**
      * @method
      * For separation of concerns, gets/creates a store.
@@ -178,6 +183,7 @@ Ext.define('Bancha.scaffold.Util', {
             return store;
         };
     }()),
+
     /**
      * This method can be overriden by your own needs.
      *
@@ -220,6 +226,7 @@ Ext.define('Bancha.scaffold.Util', {
         // nothing usefull found
         return model.idProperty || fieldNames[0];
     },
+
     /**
      * This function may need to be customized, it generates the expected model associations "name" value,
      * to check if this field has a association (this is used for replacing id values with actual data).
@@ -249,6 +256,7 @@ Ext.define('Bancha.scaffold.Util', {
 
         return associationType==='belongsTo' ? name : name+'s';
     },
+
     /**
      * Returns the corresponding association for a given field, or false.
      *

@@ -1,20 +1,20 @@
 /*
  *
  * Bancha Scaffolding Library
- * Copyright 2011-2013 codeQ e.U.
+ * Copyright 2011-2014 codeQ e.U.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @package       Bancha.scaffold
- * @copyright     Copyright 2011-2013 codeQ e.U.
- * @link          http://scaffold.banchaproject.org
+ * @copyright     Copyright 2011-2014 codeQ e.U.
+ * @link          http://scaffold.bancha.io
  * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha Scaffold v PRECOMPILER_ADD_BANCHA_SCAFFOLD_RELEASE_VERSION
  *
- * For more information go to http://scaffold.banchaproject.org
+ * For more information go to http://scaffold.bancha.io
  */
 
 /**
@@ -419,7 +419,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
      * If an array of elements, a footer toolbar is rendered.
      *
      * 'create','reset' and 'save' will be replaced by scaffolded
-     * buttons, other elements are treated like default ExtJS items.
+     * buttons, other elements are treated like default Ext JS items.
      *
      * Inside your own buttons you can set the scope property to
      * 'scaffold-scope-me', this scope provides two functions:

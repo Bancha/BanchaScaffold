@@ -1,22 +1,22 @@
 /*!
  *
  * Bancha Scaffolding Library
- * Copyright 2011-2013 codeQ e.U.
+ * Copyright 2011-2014 codeQ e.U.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * ExtJS and Sencha Touch specific helper functions
+ * Ext JS and Sencha Touch specific helper functions
  *
  * @package       Bancha.scaffold.tests.helpers
- * @copyright     Copyright 2011-2013 codeQ e.U.
- * @link          http://scaffold.banchaproject.org
+ * @copyright     Copyright 2011-2014 codeQ e.U.
+ * @link          http://scaffold.bancha.io
  * @since         Bancha Scaffold v 0.5.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
  * @version       Bancha Scaffold v PRECOMPILER_ADD_BANCHA_SCAFFOLD_RELEASE_VERSION
  *
- * For more information go to http://scaffold.banchaproject.org
+ * For more information go to http://scaffold.bancha.io
  */
 
 beforeEach(function() {
@@ -150,14 +150,14 @@ beforeEach(function() {
             var modelClassName = Ext.ClassManager.getName(this.actual),
                 modelExtendsClass;
 
-            // for ExtJS 4
+            // for Ext JS 4
             if(Ext.versions.extjs) {
                 modelExtendsClass = Ext.ClassManager.getName(objectFromPath('prototype.superclass',this.actual));
             } else if(Ext.versions.touch) {
                 modelExtendsClass = Ext.ClassManager.getName(objectFromPath('superclass',this.actual));
             } else {
                 alert([
-                    'Could not recognize if this is ExtJS 4 or Sencha Touch 2. This comes from ',
+                    'Could not recognize if this is Ext JS 4 or Sencha Touch 2. This comes from ',
                     'Test/JavaScriptUnitTests/spec/helpers/ExtSpecHelper.js.'
                 ].join(''));
             }
@@ -172,11 +172,11 @@ beforeEach(function() {
 
 ExtSpecHelper = {
     /**
-     * This helps to regonize if this is a Sencha Touch or ExtJS test.
+     * This helps to regonize if this is a Sencha Touch or Ext JS test.
      */
     isTouch: !!Ext.versions.touch,
     /**
-     * This helps to regonize if this is a Sencha Touch or ExtJS test.
+     * This helps to regonize if this is a Sencha Touch or Ext JS test.
      */
     isExt: !!Ext.versions.extjs
 };

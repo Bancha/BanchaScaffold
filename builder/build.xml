@@ -296,7 +296,7 @@
 
 				<!-- api docs -->
 				<mkdir dir="${tmpdir}/docs"/>
-				<exec checkreturn="true" command="${jsduck.file} &quot;${sourcedir}/src&quot; --output &quot;${tmpdir}/docs&quot; --verbose --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.banchaproject.org'&gt;http://scaffold.banchaproject.org&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" escape="false" />
+				<exec checkreturn="true" command="${jsduck.file} &quot;${sourcedir}/src&quot; --output &quot;${tmpdir}/docs&quot; --verbose --ignore-global --external Ext.Base --external Ext.data.Model --title &quot;Bancha Scaffold API Documentation&quot; --footer &quot;Bancha Scaffold API Documentation. See &lt;a href='http://scaffold.bancha.io'&gt;http://scaffold.bancha.io&lt;a&gt;. Generated with &lt;a href='https://github.com/senchalabs/jsduck'&gt;JSDuck&lt;/a&gt;&quot;" escape="false" />
 				<!-- add Bancha styling -->
 				<copy todir="${tmpdir}/docs/resources" overwrite="true">
 						<fileset refid="files.source.jsDocRessources"/>
