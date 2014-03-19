@@ -158,9 +158,17 @@ if (isset($_POST['extMethod'])) {
 	// make up an id in the case of an create
 	$response['id'] = isset($_POST['id']) ? $_POST['id'] : rand();
 	// transform structure for form uploads
-	if (isset($_POST['extUpload']) && $_POST['extUpload']=="true") {
-		exit('upload');
-		$response = '<html><body><textarea>' . json_encode($_POST) . '</textarea></body></html>';
+	if (isset($_POST['extUpload']) && $_POST['extUpload']=='true') {
+		$response = '<html><body><textarea>' . json_encode(array(array(
+			'type'		=> 'rpc',
+			'tid'		=> $_POST['extTID'],
+			'action'	=> $_POST['extAction'],
+			'method'	=> $_POST['extMethod'],
+			'result' => array(
+				'success'=> true,
+				'data'   => $_POST
+			)
+		))) . '</textarea></body></html>';
 	} else {
 		// transform to standard result
 		$response = json_encode(array(array(
@@ -209,7 +217,7 @@ foreach ($request as $key => $data) {
 			// just send the data back to the user
 			$result = array(
 				'success' => true,
-				'data'    => json_encode($data->data)
+				'data'    => $data->data
 				);
 			break;
 		case 'destroy':
