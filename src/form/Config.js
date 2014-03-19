@@ -42,12 +42,13 @@ Ext.define('Bancha.scaffold.form.Config', {
     constructor: function(config) {
         config = config || {};
         var triggeredFrom = config.triggeredFrom || 'Unknown Origin',
+            me = this,
             modelName;
 
-        // if the config is just a model or model name, transform to a config object
-        if (Ext.isString(config) || (Ext.isDefined(config) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(config)))) {
+        // if the config is just a model name or model, transform to a config object
+        if (Ext.isString(config) || !!Bancha.scaffold.Util.getModel(config)) {
             config = {
-                target: config // this is a valid model
+                target: config // use the model as target
             };
         }
 
@@ -69,7 +70,7 @@ Ext.define('Bancha.scaffold.form.Config', {
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
 
         //<debug>
-        if (!Ext.ModelManager.isRegistered(modelName)) {
+        if (!Bancha.scaffold.Util.getModel(modelName)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
                 msg: [
@@ -83,7 +84,7 @@ Ext.define('Bancha.scaffold.form.Config', {
         //</debug>
 
         // make sure that the model property is always a model class
-        config.target = Ext.ModelManager.getModel(modelName);
+        config.target = Bancha.scaffold.Util.getModel(modelName);
 
         if(Ext.isDefined(config.exclude) && !Ext.isArray(config.exclude)) {
             //<debug>
@@ -101,7 +102,7 @@ Ext.define('Bancha.scaffold.form.Config', {
         }
 
         // apply to the object
-        Ext.apply(this, config);
+        Ext.apply(me, config);
     },
 
     statics: {
@@ -279,7 +280,7 @@ Ext.define('Bancha.scaffold.form.Config', {
      * If an array of elements, a footer toolbar is rendered.
      *
      * 'reset' and 'save' will be replaced by scaffolded
-     * buttons, other elements are treated like default ExtJS items.
+     * buttons, other elements are treated like default Ext JS items.
      *
      * Inside your own buttons you can set the scope property to
      * 'scaffold-scope-me', this scope provides two functions:

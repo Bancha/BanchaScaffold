@@ -150,7 +150,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
             if(this.scaffold) {
                 // check if the scaffold config is a model class or string
-                isModel = Ext.isString(this.scaffold) || Ext.ModelManager.isRegistered(Ext.ClassManager.getName(this.scaffold));
+                isModel = Ext.isString(this.scaffold) || !!Bancha.scaffold.Util.getModel(this.scaffold);
 
                 // if there's a model or config object, transform to config class
                 // normally we would use this.scaffold.isInstance instead of $className, but that was introduced in Ext JS 4.1
@@ -555,7 +555,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
             buildConfig: function (config, initialPanelConfig) {
                 initialPanelConfig = initialPanelConfig || {};
                 var fields = [],
-                    model = Ext.ModelManager.getModel(config.target),
+                    model = Bancha.scaffold.Util.getModel(config.target),
                     me = this,
                     formConfig,
                     fieldNames,
@@ -592,7 +592,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     }
                 });
 
-                // probably not neccessary in extjs4!
+                // probably not neccessary in Ext JS 4 and 5!
                 // if one of the fields is a fileupload, mark the form
                 Ext.each(fields, function (field) {
                     if (field.xtype === 'fileuploadfield') {

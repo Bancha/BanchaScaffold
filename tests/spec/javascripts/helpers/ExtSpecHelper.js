@@ -150,14 +150,15 @@ beforeEach(function() {
             var modelClassName = Ext.ClassManager.getName(this.actual),
                 modelExtendsClass;
 
-            // for Ext JS 4
             if(Ext.versions.extjs) {
+                // for Ext JS
                 modelExtendsClass = Ext.ClassManager.getName(objectFromPath('prototype.superclass',this.actual));
             } else if(Ext.versions.touch) {
+                // for Sencha Touch
                 modelExtendsClass = Ext.ClassManager.getName(objectFromPath('superclass',this.actual));
             } else {
                 alert([
-                    'Could not recognize if this is Ext JS 4 or Sencha Touch 2. This comes from ',
+                    'Could not recognize if this is Ext JS 4/5 or Sencha Touch 2. This comes from ',
                     'Test/JavaScriptUnitTests/spec/helpers/ExtSpecHelper.js.'
                 ].join(''));
             }

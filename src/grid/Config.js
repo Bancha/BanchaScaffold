@@ -44,7 +44,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
             modelName;
 
         // if the config is just a model or model name, transform to a config object
-        if (Ext.isString(config) || (Ext.isDefined(config) && Ext.ModelManager.isRegistered(Ext.ClassManager.getName(config)))) {
+        if (Ext.isString(config) || !!Bancha.scaffold.Util.getModel(config)) {
             config = {
                 target: config // this is a valid model
             };
@@ -68,7 +68,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
 
         //<debug>
-        if (!Ext.ModelManager.isRegistered(modelName)) {
+        if (!Bancha.scaffold.Util.getModel(modelName)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
                 msg: [
@@ -82,7 +82,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
         //</debug>
 
         // make sure that the model property is always a model class
-        config.target = Ext.ModelManager.getModel(modelName);
+        config.target = Bancha.scaffold.Util.getModel(modelName);
 
         // now build the form config
 
@@ -373,7 +373,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
         store.remove(rec);
 
         // sync to server
-        // for before-ExtJS 4.1 the callbacks will be ignored,
+        // for before-Ext JS 4.1 the callbacks will be ignored,
         // since they were added in 4.1
         store.sync({
             success: function (record, operation) {

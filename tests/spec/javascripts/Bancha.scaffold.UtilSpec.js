@@ -138,4 +138,23 @@ describe("Bancha.scaffold.Util tests",function() {
         }];
         expect(util.replaceButtonPlaceHolders(input, {}, scope)).toEqual(expected);
     });
+
+    it("should return a model given when calling getModel, given a model or model name", function() {
+        // return null if model doesn't exist
+        expect(util.getModel(null)).toEqual(null);
+        expect(util.getModel('RANDOM_NONSENSE')).toEqual(null);
+
+        // return the class is a model is given
+        Ext.define('Bancha.model.UtilSpecTestModel', {
+            extend: 'Ext.data.Model'
+        });
+        expect(util.getModel('Bancha.model.UtilSpecTestModel')).toEqual(Bancha.model.UtilSpecTestModel);
+        expect(util.getModel(Bancha.model.UtilSpecTestModel)).toEqual(Bancha.model.UtilSpecTestModel);
+
+        // return null if a class, but not a model
+        Ext.define('Bancha.model.UtilSpecTestClass', {
+        });
+        expect(util.getModel('Bancha.model.UtilSpecTestClass')).toEqual(null);
+        expect(util.getModel(Bancha.model.UtilSpecTestClass)).toEqual(null);
+    });
 });

@@ -60,7 +60,7 @@ describe("Bancha.scaffold.grid.ManagementPanel tests",function() {
         var panel = Ext.create('Bancha.scaffold.grid.ManagementPanel', {
             models: [
                 'Bancha.model.ManagementPanelUser',
-                Ext.ModelManager.getModel('Bancha.model.ManagementPanelArticle')
+                Ext.ClassManager.get('Bancha.model.ManagementPanelArticle')
             ],
             scaffoldDefaults: { storeDefaults: {}} // prevent autoloading
         });
@@ -73,8 +73,8 @@ describe("Bancha.scaffold.grid.ManagementPanel tests",function() {
         expect(panel).property('items.items.1.title').toEqual('Management Panel Article');
 
         // expect scaffold model to be set on both tabs
-        expect(panel).property('items.items.0.store.model').toEqual(Ext.ModelManager.getModel('Bancha.model.ManagementPanelUser'));
-        expect(panel).property('items.items.1.store.model').toEqual(Ext.ModelManager.getModel('Bancha.model.ManagementPanelArticle'));
+        expect(panel).property('items.items.0.store.model').toEqual(Ext.ClassManager.get('Bancha.model.ManagementPanelUser'));
+        expect(panel).property('items.items.1.store.model').toEqual(Ext.ClassManager.get('Bancha.model.ManagementPanelArticle'));
     });
 
     it('should recognize the models capabilities and provides only those functionality', function() {

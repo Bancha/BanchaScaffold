@@ -76,12 +76,12 @@ Ext.define('Bancha.scaffold.grid.ManagementPanel', {
             me = this;
         Ext.each(this.models, function(model) {
             var modelName = Ext.isString(model) ? model : model.getName();
-            model = Ext.ModelManager.getModel(modelName);
+            model = Bancha.scaffold.Util.getModel(modelName);
 
             // probably some newbies confuse the namespaced and unnamespaced model names
             // so for Bancha users also support not namespaced version
             if(!model && Bancha.modelNamespace) {
-                model = Ext.ModelManager.getModel(Bancha.modelNamespace + '.' + modelName);
+                model = Bancha.scaffold.Util.getModel(Bancha.modelNamespace + '.' + modelName);
             }
 
             //<debug>

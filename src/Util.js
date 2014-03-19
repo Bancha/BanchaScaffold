@@ -151,6 +151,24 @@ Ext.define('Bancha.scaffold.Util', {
     },
 
     /**
+     * Returns the model for a given class name (or class)
+     * 
+     * Normalized Ext JS 4 and 5.
+     * 
+     * @param {string} classOrClassName The class name or class itself.
+     * @returns {Ext.Class|null} The corresponsing class, or null
+     */
+    getModel: function(classOrClassName) {
+        var className = Ext.isString(classOrClassName) ? classOrClassName : Ext.ClassManager.getName(classOrClassName);
+        if(Ext.versions.extjs.major===4) {
+            // Ext JS 4
+            return Ext.ModelManager.getModel(className);
+        }
+        // Ext JS 5
+        return Ext.data.schema.Schema.lookupEntity(className);
+    },
+
+    /**
      * @method
      * For separation of concerns, gets/creates a store.
      *

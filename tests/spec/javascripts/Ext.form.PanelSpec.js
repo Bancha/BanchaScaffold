@@ -470,7 +470,7 @@ describe("Ext.form.Panel scaffold extension tests",function() {
         model('MyTest.model.FormPanelExtensionModelClassTestModel');
 
         var panel = Ext.create("Ext.form.Panel", {
-            scaffold: Ext.ModelManager.getModel('MyTest.model.FormPanelExtensionModelClassTestModel')
+            scaffold: Ext.ClassManager.get('MyTest.model.FormPanelExtensionModelClassTestModel')
         });
 
         // since this function is using #buildConfig,
