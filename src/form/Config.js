@@ -44,7 +44,7 @@ Ext.define('Bancha.scaffold.form.Config', {
             modelName;
 
         // if the config is just a model name or model, transform to a config object
-        if (Ext.isString(config) || !!Bancha.scaffold.Util.getModel(config)) {
+        if (Ext.isString(config) || Bancha.scaffold.Util.isModel(config)) {
             config = {
                 target: config // use the model as target
             };
@@ -71,7 +71,7 @@ Ext.define('Bancha.scaffold.form.Config', {
         Ext.syncRequire(modelName);
 
         //<debug>
-        if (!Bancha.scaffold.Util.getModel(modelName)) {
+        if (!Bancha.scaffold.Util.isModel(modelName)) {
             Ext.Error.raise({
                 plugin: 'Bancha Scaffold',
                 msg: [

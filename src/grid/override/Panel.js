@@ -132,7 +132,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
 
             if(this.scaffold) {
                 // check is the scaffold config is a model class or string
-                isModel = Ext.isString(this.scaffold) || !!Bancha.scaffold.Util.getModel(this.scaffold);
+                isModel = Ext.isString(this.scaffold) || Bancha.scaffold.Util.isModel(this.scaffold);
 
                 // if there's a model or config object, transform to config class
                 // normally we would use this.scaffold.isInstance instead of $className, but that was introduced in Ext JS 4.1

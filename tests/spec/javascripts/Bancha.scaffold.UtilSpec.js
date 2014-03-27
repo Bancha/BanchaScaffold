@@ -139,22 +139,42 @@ describe("Bancha.scaffold.Util tests",function() {
         expect(util.replaceButtonPlaceHolders(input, {}, scope)).toEqual(expected);
     });
 
-    it("should return a model given when calling getModel, given a model or model name", function() {
+    it("should return a boolean when calling isModel, given a model or model name", function() {
         // return null if model doesn't exist
-        expect(util.getModel(null)).toEqual(null);
-        expect(util.getModel('RANDOM_NONSENSE')).toEqual(null);
+        expect(util.isModel(null)).toBeFalsy();
+        expect(util.isModel('RANDOM_NONSENSE')).toBeFalsy();
 
         // return the class is a model is given
-        Ext.define('Bancha.model.UtilSpecTestModel', {
+        Ext.define('Bancha.model.UtilSpecTestModel1', {
             extend: 'Ext.data.Model'
         });
-        expect(util.getModel('Bancha.model.UtilSpecTestModel')).toEqual(Bancha.model.UtilSpecTestModel);
-        expect(util.getModel(Bancha.model.UtilSpecTestModel)).toEqual(Bancha.model.UtilSpecTestModel);
+        expect(util.isModel('Bancha.model.UtilSpecTestModel1')).toBeTruthy();
+        expect(util.isModel(Bancha.model.UtilSpecTestModel1)).toBeTruthy();
 
         // return null if a class, but not a model
-        Ext.define('Bancha.model.UtilSpecTestClass', {
+        Ext.define('Bancha.model.UtilSpecTestClass1', {
         });
-        expect(util.getModel('Bancha.model.UtilSpecTestClass')).toEqual(null);
-        expect(util.getModel(Bancha.model.UtilSpecTestClass)).toEqual(null);
+        expect(util.isModel('Bancha.model.UtilSpecTestClass1')).toBeFalsy();
+        expect(util.isModel(Bancha.model.UtilSpecTestClass1)).toBeFalsy();
     });
+
+    it("should return a model given when calling getModel, given a model or model name", function() {
+        // return null if model doesn't exist
+        expect(util.getModel.bind(util, null)).toThrow();
+        expect(util.getModel.bind(util, 'RANDOM_NONSENSE')).toThrow();
+
+        // return the class is a model is given
+        Ext.define('Bancha.model.UtilSpecTestModel2', {
+            extend: 'Ext.data.Model'
+        });
+        expect(util.getModel('Bancha.model.UtilSpecTestModel2')).toEqual(Bancha.model.UtilSpecTestModel2);
+        expect(util.getModel(Bancha.model.UtilSpecTestModel2)).toEqual(Bancha.model.UtilSpecTestModel2);
+
+        // return null if a class, but not a model
+        Ext.define('Bancha.model.UtilSpecTestClass2', {
+        });
+        expect(util.getModel.bind(util, 'Bancha.model.UtilSpecTestClass2')).toThrow();
+        expect(util.getModel.bind(util, Bancha.model.UtilSpecTestClass2)).toThrow();
+    });
+
 });
