@@ -248,8 +248,11 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                         msgAddition;
 
                     Ext.Array.forEach(validations, function (rule) {
-                        if (Ext.versions.extjs.major===4 && rule.name !== name) {
-                            return; // In Ext JS 4 these are all fields, not just the mathing ones, so filter
+                        if (rule.field && rule.field !== name) {
+                            // If there's a name property it means that's validation syntax, 
+                            // otherwise already filtered validators.
+                            // For validation rules these are all fields, not just the mathing ones, so filter
+                            return;
                         }
 
                         switch (rule.type) {
