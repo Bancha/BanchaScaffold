@@ -210,7 +210,7 @@ describe("Ext.grid.Panel unit tests",function() {
             xtype    : 'gridcolumn',
             text     : 'Name',
             dataIndex: 'name',
-            editor   : {xtype:'textfield', name:'name'}
+            editor   : {xtype:'textfield', name:'name', allowBlank: false, minLength: 2, maxLength: 64 }
         }, {
             flex     : 1,
             xtype    : 'gridcolumn',

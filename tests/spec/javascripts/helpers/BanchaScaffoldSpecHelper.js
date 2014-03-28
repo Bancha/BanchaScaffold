@@ -46,10 +46,9 @@ BanchaScaffoldSpecHelper = {
         ],
         validations: [
             { type:"range", field:"id", precision:0},
-            { type:"presence",     field:"name"},
-            { type:"length",       field:'name', min: 2},
-            { type:"length",       field:"name", max:64},
-            { type:"format",       field:"login", matcher:"banchaAlphanum"}
+            { type:"presence", field:"name"},
+            { type:"length", field:'name', min: 2},
+            { type:"length", field:"name", max: 64}
         ],
         sorters: [{
             property: 'name',
@@ -57,7 +56,7 @@ BanchaScaffoldSpecHelper = {
         }]
     },
     getSampleModel: function(name,/*optional*/config) {
-        return Ext.define(name,Ext.applyIf(config || {}, BanchaScaffoldSpecHelper.sampleModelData));
+        return Ext.define(name, Ext.applyIf(config || {}, BanchaScaffoldSpecHelper.sampleModelData));
     }
 };
 

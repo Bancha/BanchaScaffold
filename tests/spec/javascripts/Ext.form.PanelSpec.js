@@ -156,11 +156,15 @@ describe("Ext.form.Panel unit tests",function() {
                 xtype: 'hiddenfield',
                 allowDecimals : false,
                 name: 'id',
-                fieldLabel: 'Id'
+                fieldLabel: 'Id',
+                decimalPrecision: 0
             },{
                 xtype: 'textfield',
                 name: 'name',
-                fieldLabel: 'Name'
+                fieldLabel: 'Name',
+                allowBlank: false,
+                minLength: 2,
+                maxLength: 64
             },{
                 xtype: 'textfield',
                 name: 'login',
@@ -271,18 +275,18 @@ describe("Ext.form.Panel unit tests",function() {
         // prepare
         model('MyTest.model.FormConfigWithValidationTest',{
             validations: [
-                {type:'presence', name:'id'},
-                {type:'presence', name:'name'},
-                {type:'length', name:'name', min:3, max:64},
-                {type:'presence', name:'login'},
-                {type:'length', name:'login', min:3, max:64},
-                {type:'format', name:'login', matcher: /^[a-zA-Z0-9_]+$/},
-                {type:'presence', name:'email'},
-                {type:'format', name:'email', matcher:
+                {type:'presence', field:'id'},
+                {type:'presence', field:'name'},
+                {type:'length', field:'name', min:3, max:64},
+                {type:'presence', field:'login'},
+                {type:'length', field:'login', min:3, max:64},
+                {type:'format', field:'login', matcher: /^[a-zA-Z0-9_]+$/},
+                {type:'presence', field:'email'},
+                {type:'format', field:'email', matcher:
                                  /^(\w+)([\-+.][\w]+)*@(\w[\-\w]*\.){1,5}([A-Za-z]){2,6}$/},
-                {type:'range', name:'weight', precision:2},
-                {type:'range', name:'height', min:50, max:300},
-                {type:'file', name:'avatar', extension:['gif', 'jpeg', 'png', 'jpg']}
+                {type:'range', field:'weight', precision:2},
+                {type:'range', field:'height', min:50, max:300},
+                {type:'file', field:'avatar', extension:['gif', 'jpeg', 'png', 'jpg']}
             ]
         });
 
