@@ -49,9 +49,9 @@ Building a release
 1. Configure builder/config/production.properties
 1. Open the terminal/console and type
 
-    cd builder
-    phing
-    (run "phing gitDeploy" for the github stable release folder)
+      cd builder
+      phing
+      (run "phing gitDeploy" for the github stable release folder)
 
 
 ------------------------------
