@@ -475,7 +475,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
                 var modelName = Ext.ClassManager.getName(model),
                     stubName = modelName.substr(Bancha.modelNamespace.length + 1),
-                    stub = Bancha.getStubsNamespace()[stubName];
+                    stub = Bancha.getStub(stubName);
 
                 //<debug>
                 if (!Ext.isDefined(stub)) {
