@@ -12,7 +12,7 @@
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -117,7 +117,7 @@ Ext.define('Bancha.data.override.Validations', {
  * @since         Bancha Scaffold v 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -200,7 +200,7 @@ Ext.define('Bancha.scaffold.form.field.override.VTypes', {
  * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -587,7 +587,7 @@ Ext.define('Bancha.scaffold.form.Config', {
  * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1081,7 +1081,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
  * @since         Bancha Scaffold v 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1348,7 +1348,7 @@ Ext.define('Bancha.scaffold.Util', {
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1811,7 +1811,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
                 var modelName = Ext.ClassManager.getName(model),
                     stubName = modelName.substr(Bancha.modelNamespace.length + 1),
-                    stub = Bancha.getStubsNamespace()[stubName];
+                    stub = Bancha.getStub(stubName);
 
                 //<debug>
                 if (!Ext.isDefined(stub)) {
@@ -1991,7 +1991,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -2428,7 +2428,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
  * @since         Bancha Scaffold v 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.3
+ * @version       Bancha Scaffold v 1.0.4
  *
  * For more information go to http://scaffold.banchaproject.org
  */
