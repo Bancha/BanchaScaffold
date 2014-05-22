@@ -64,8 +64,10 @@ Ext.define('Bancha.model.Article', {
         },{
             name:'user_id',
             type:'int'
-        }],
-        validations:[{
+        }
+    ],
+    validations:[
+        {
             type:'presence',
             field:'title'
         },{
@@ -75,9 +77,9 @@ Ext.define('Bancha.model.Article', {
     ],
     associations:[
         {
-          type:'belongsTo',
-           model:'Bancha.model.User',
-           name:'users'
+            type:'belongsTo',
+            model:'Bancha.model.User',
+            name:'user'
         }
     ]
 });
@@ -224,8 +226,10 @@ Ext.define('Bancha.model.Book', {
         },{
             name:'user_id',
             type:'int'
-        }],
-        validations:[{
+        }
+    ],
+    validations:[
+        {
             type:'presence',
             field:'title'
         },{
@@ -235,9 +239,9 @@ Ext.define('Bancha.model.Book', {
     ],
     associations:[
         {
-          type:'belongsTo',
-           model:'Bancha.model.User',
-           name:'users'
+            type:'belongsTo',
+            model:'Bancha.model.User',
+            name:'user'
         }
     ]
 });
