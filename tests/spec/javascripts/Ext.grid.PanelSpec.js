@@ -152,6 +152,28 @@ describe("Ext.grid.Panel unit tests",function() {
     });
 
 
+    it("should use only fields from the fields config (component test)", function() {
+        // prepare
+        model('MyTest.model.GridColumnsConfigFieldsTest');
+
+        var config = Ext.create('Bancha.scaffold.grid.Config', {
+            target: 'MyTest.model.GridColumnsConfigFieldsTest',
+            fields: ['name', 'email', 'login']
+        });
+
+        // test
+        var result = panel.buildColumns(config, {});
+
+        // check that not-defined fields got excluded
+        expect(result.length).toEqual(3);
+
+        // check that the order of the fields array was used
+        expect(result).property('0.dataIndex').toEqual('name');
+        expect(result).property('1.dataIndex').toEqual('email');
+        expect(result).property('2.dataIndex').toEqual('login');
+    });
+
+
     it("should exclude fields defined in the exclude property (component test)", function() {
         // prepare
         model('MyTest.model.GridColumnsConfigExcludeTest');

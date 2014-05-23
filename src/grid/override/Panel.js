@@ -300,7 +300,10 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 var columns = [],
                     model = config.target,
                     me = this,
-                    validations, button;
+                    fieldNames,
+                    fields,
+                    validations,
+                    button;
 
                 if(!Ext.isArray(config.exclude)) {
                     //<debug>
@@ -316,13 +319,16 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                     config.exclude = [];
                 }
 
+                // if there is a fields config, use this for ordering
+                fieldNames = config.fields || model.prototype.fields.keys;
+
                 // build all columns
+                fields = model.prototype.fields;
                 validations = model.prototype.validations;
-                model.prototype.fields.each(function (field) {
-                    if((!Ext.isArray(config.fields) || Ext.Array.indexOf(config.fields, field.name) !== -1) &&
-                        Ext.Array.indexOf(config.exclude, field.name) === -1) {
+                Ext.each(fieldNames, function(fieldName) {
+                    if(Ext.Array.indexOf(config.exclude, fields.getByKey(fieldName).name) === -1) { // if not excluded
                         columns.push(
-                            me.buildColumnConfig(field, config, validations, gridListeners));
+                            me.buildColumnConfig(fields.getByKey(fieldName), config, validations, gridListeners));
                     }
                 });
 

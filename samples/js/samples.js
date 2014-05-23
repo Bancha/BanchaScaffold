@@ -68,6 +68,9 @@ Ext.application({
                     remoteSort: true
                 },
 
+                // simply reorder the fields and exclude unnecessary ones
+                fields: ['title', 'body', 'user_id', 'date', 'published'],
+
                 // add a paging bar
                 afterBuild: function(config) {
                     // paging bar on the bottom
