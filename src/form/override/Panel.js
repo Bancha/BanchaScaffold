@@ -408,6 +408,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     model = config.target,
                     field = this.buildDefaultFieldFromModelType(type, config),
                     Util = Bancha.scaffold.Util,
+                    defaultAltFormats,
                     association;
 
                 // infer name
@@ -418,7 +419,21 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
                 // infer date format into editor (not needed for editor fields)
                 if(type==='date' && !isEditorfield && modelField.dateFormat) {
-                    field.format = modelField.dateFormat;
+                    if(!field.format) {
+                        // keep it simple and use the model date format as display format
+                        field.format = modelField.dateFormat;
+                    } else {
+                        // allow the developer to override the date format
+
+                        // to make sure reading and writing still works as expected
+                        // add the model date format to altFormats for reading
+                        defaultAltFormats = (((Ext.form.field || {}).Date || {}).prototype || {}).altFormats ||
+                                    'm/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j';
+                        field.altFormats = (field.altFormats || defaultAltFormats)+'|'+modelField.dateFormat;
+
+                        // and enforce the submit value to match the model date format
+                        field.submitFormat = modelField.dateFormat;
+                    }
                 }
 
                 // add some additional validation rules from model validation rules

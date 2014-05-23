@@ -79,11 +79,11 @@ describe("Ext.form.Panel unit tests",function() {
         });
     });
 
-    it("should add an format property to all datefield configs, which are created for an form panel", function() {
+    it("should add all format properties to all datefield configs, which are created for an form panel", function() {
         // prepare
         model('MyTest.model.FormConfigDateFieldTest');
 
-        // check that all default vallues are added, as well as name and label
+        // check that all default values are added, as well as name and label
         var config = Ext.create('Bancha.scaffold.form.Config', {
             target: 'MyTest.model.FormConfigDateFieldTest'
         });
@@ -97,6 +97,32 @@ describe("Ext.form.Panel unit tests",function() {
             fieldLabel: 'Some name',
             name: 'someName',
             format: 'Y-m-d H:i:s'
+        });
+    });
+
+    it("should allow the user to change the datefield format and only enforce read and write formats", function() {
+        // prepare
+        model('MyTest.model.FormConfigDateFieldTest2');
+
+        // check that all default values are added, as well as name and label
+        var config = Ext.create('Bancha.scaffold.form.Config', {
+            target: 'MyTest.model.FormConfigDateFieldTest',
+            datefieldDefaults: {
+                format: 'd.m.Y'
+            }
+        });
+        var field = Ext.create('Ext.data.Field', {
+            type: 'date',
+            name: 'someName',
+            dateFormat: 'Y-m-d H:i:s'
+        });
+        expect(panel.buildFieldConfig(field, config)).toEqual({
+            xtype : 'datefield',
+            fieldLabel: 'Some name',
+            name: 'someName',
+            format: 'd.m.Y',
+            altFormats: 'm/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j|Y-m-d H:i:s',
+            submitFormat: 'Y-m-d H:i:s'
         });
     });
 
