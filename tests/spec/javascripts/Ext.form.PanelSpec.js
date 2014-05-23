@@ -206,6 +206,31 @@ describe("Ext.form.Panel unit tests",function() {
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTest'));
     });
 
+
+    it("should use only fields from the fields config (component test", function() {
+        // prepare
+        model('MyTest.model.FormConfigFieldsTest');
+
+        var config = Ext.create('Bancha.scaffold.form.Config', {
+            target: 'MyTest.model.FormConfigFieldsTest',
+            fields: ['name', 'email', 'login']
+        });
+
+        // test
+        var result = panel.buildConfig(config, {
+            id: 'MyTest.model.FormConfigTest-id'
+        });
+
+        // check that not-defined fields got excluded
+        expect(result).property('items.length').toEqual(3);
+
+        // check that the order of the fields array was used
+        expect(result).property('items.0.name').toEqual('name');
+        expect(result).property('items.1.name').toEqual('email');
+        expect(result).property('items.2.name').toEqual('login');
+    });
+
+
     it("should consider the exclude property to exclude specific fields from the scaffolding", function() {
         // prepare
         model('MyTest.model.FormConfigExcludeTest');
@@ -219,6 +244,7 @@ describe("Ext.form.Panel unit tests",function() {
             id: 'MyTest.model.FormConfigTest-id'
         })).property('items.length').toEqual(6);
     });
+
 
     it("should clone all configs, so that you can create multiple forms from the same defaults "+
         "(component test)", function() {

@@ -143,6 +143,10 @@ Ext.define('Bancha.scaffold.form.Config', {
     /**
      * @cfg {String[]|false}
      * If this is set to an array, only those fields are displayed.
+     * 
+     * The given order of fields is also applied, so to reorder your fields 
+     * simply defined something like _fields: ['field2','field1']_
+     * 
      * Note that the exclude setting are still applied.
      */
     fields: false,

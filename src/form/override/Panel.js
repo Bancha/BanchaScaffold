@@ -558,7 +558,12 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 var fields = [],
                     model = Ext.ModelManager.getModel(config.target),
                     me = this,
-                    formConfig, id, validations, loadFn;
+                    formConfig,
+                    fieldNames,
+                    modelFields,
+                    validations,
+                    id,
+                    loadFn;
 
                 //<debug>
                 if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
@@ -575,13 +580,16 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 // build initial config
                 formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
-                // create all fields
+                // if there is a fields config, use this for ordering
+                fieldNames = config.fields || model.prototype.fields.keys;
+
+                // build all fields
+                modelFields = model.prototype.fields;
                 validations = model.prototype.validations;
-                model.prototype.fields.each(function (field) {
-                    if((!Ext.isArray(config.fields) || Ext.Array.indexOf(config.fields, field.name) !== -1) &&
-                        Ext.Array.indexOf(config.exclude, field.name) === -1) {
+                Ext.each(fieldNames, function(fieldName) {
+                    if(Ext.Array.indexOf(config.exclude, modelFields.getByKey(fieldName).name) === -1) { // if not excluded
                         fields.push(
-                            me.buildFieldConfig(field, config, validations));
+                            me.buildFieldConfig(modelFields.getByKey(fieldName), config, validations));
                     }
                 });
 
