@@ -101,7 +101,9 @@ Ext.application({
                 target: 'Bancha.model.User',
 
                 // simply add you own buttons
-                buttons: ['->',{
+                buttons: [
+                    '->',
+                    {
                         text: 'Load Sample Record',
                         iconCls: 'icon-edit',
                         handler: function() {
@@ -119,7 +121,10 @@ Ext.application({
                             panel.setTitle('Demonstration of a scaffolded Form - Change Record 1');
                         },
                         scope: 'scaffold-scope-me'
-                    },'reset','save']
+                    },
+                    'reset',
+                    'save'
+                ]
             }, // eo scaffold
 
             api: {
@@ -154,7 +159,7 @@ Ext.application({
                 'Bancha.model.User',
                 'Bancha.model.Book',
                 'Bancha.model.Article'
-                ],
+            ],
 
             // some additional styles
             frame: true,
