@@ -18,6 +18,7 @@
  */
 
 // init Ext.Direct Provider
+Ext.syncRequire('Ext.direct.Manager');
 Ext.direct.Manager.addProvider(Bancha.REMOTE_API);
 
 // define the article model
