@@ -12,7 +12,7 @@
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -117,7 +117,7 @@ Ext.define('Bancha.data.override.Validations', {
  * @since         Bancha Scaffold v 0.2.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -200,7 +200,7 @@ Ext.define('Bancha.scaffold.form.field.override.VTypes', {
  * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -331,6 +331,10 @@ Ext.define('Bancha.scaffold.form.Config', {
     /**
      * @cfg {String[]|false}
      * If this is set to an array, only those fields are displayed.
+     * 
+     * The given order of fields is also applied, so to reorder your fields 
+     * simply defined something like _fields: ['field2','field1']_
+     * 
      * Note that the exclude setting are still applied.
      */
     fields: false,
@@ -587,7 +591,7 @@ Ext.define('Bancha.scaffold.form.Config', {
  * @since         Bancha Scaffold v 1.0.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -716,6 +720,9 @@ Ext.define('Bancha.scaffold.grid.Config', {
     /**
      * @cfg {String[]|false}
      * If this is set to an array, only those fields are displayed.
+     *
+     * The given order of fields is also applied, so to reorder your fields 
+     * simply defined something like _fields: ['field2','field1']_
      *
      * Note that the exclude setting are still applied.
      */
@@ -1081,7 +1088,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
  * @since         Bancha Scaffold v 0.0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1348,7 +1355,7 @@ Ext.define('Bancha.scaffold.Util', {
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -1482,7 +1489,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
          * @private
          */
         initComponent: function () {
-            var isModel, cls, config;
+            var isModel, config;
 
             if(this.scaffold) {
                 // check if the scaffold config is a model class or string
@@ -1496,8 +1503,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 }
 
                 // apply scaffolding
-                cls = Ext.ClassManager.getClass(this); //buildConfig is a static method
-                config = cls.buildConfig(this.scaffold, this.initialConfig);
+                config = Ext.form.Panel.buildConfig(this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
@@ -1744,6 +1750,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     model = config.target,
                     field = this.buildDefaultFieldFromModelType(type, config),
                     Util = Bancha.scaffold.Util,
+                    defaultAltFormats,
                     association;
 
                 // infer name
@@ -1754,7 +1761,21 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
 
                 // infer date format into editor (not needed for editor fields)
                 if(type==='date' && !isEditorfield && modelField.dateFormat) {
-                    field.format = modelField.dateFormat;
+                    if(!field.format) {
+                        // keep it simple and use the model date format as display format
+                        field.format = modelField.dateFormat;
+                    } else {
+                        // allow the developer to override the date format
+
+                        // to make sure reading and writing still works as expected
+                        // add the model date format to altFormats for reading
+                        defaultAltFormats = (((Ext.form.field || {}).Date || {}).prototype || {}).altFormats ||
+                                    'm/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j';
+                        field.altFormats = (field.altFormats || defaultAltFormats)+'|'+modelField.dateFormat;
+
+                        // and enforce the submit value to match the model date format
+                        field.submitFormat = modelField.dateFormat;
+                    }
                 }
 
                 // add some additional validation rules from model validation rules
@@ -1879,7 +1900,12 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 var fields = [],
                     model = Ext.ModelManager.getModel(config.target),
                     me = this,
-                    formConfig, id, validations, loadFn;
+                    formConfig,
+                    fieldNames,
+                    modelFields,
+                    validations,
+                    id,
+                    loadFn;
 
                 //<debug>
                 if(!config.$className) { // normally we would use config.isInstance here, but that was introduced in Ext JS 4.1
@@ -1896,13 +1922,16 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 // build initial config
                 formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
-                // create all fields
+                // if there is a fields config, use this for ordering
+                fieldNames = config.fields || model.prototype.fields.keys;
+
+                // build all fields
+                modelFields = model.prototype.fields;
                 validations = model.prototype.validations;
-                model.prototype.fields.each(function (field) {
-                    if((!Ext.isArray(config.fields) || Ext.Array.indexOf(config.fields, field.name) !== -1) &&
-                        Ext.Array.indexOf(config.exclude, field.name) === -1) {
+                Ext.each(fieldNames, function(fieldName) {
+                    if(Ext.Array.indexOf(config.exclude, modelFields.getByKey(fieldName).name) === -1) { // if not excluded
                         fields.push(
-                            me.buildFieldConfig(field, config, validations));
+                            me.buildFieldConfig(modelFields.getByKey(fieldName), config, validations));
                     }
                 });
 
@@ -1991,7 +2020,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
  * @since         Bancha Scaffold v 0.3.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
@@ -2107,7 +2136,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
     // add scaffolding support
     Ext.override(Ext.grid.Panel, {
         initComponent: function () {
-            var isModel, cls, config;
+            var isModel, config;
 
             if(this.scaffold) {
                 // check is the scaffold config is a model class or string
@@ -2121,8 +2150,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 }
 
                 // apply scaffolding
-                cls = Ext.ClassManager.getClass(this); //buildConfig is a static method
-                config = cls.buildConfig(this.scaffold, this.initialConfig);
+                config = Ext.grid.Panel.buildConfig(this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }
@@ -2249,6 +2277,10 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 // add an editor
                 if(config.editable) {
                     // build the editor field
+                    Ext.syncRequire([
+                        'Ext.form.Panel',
+                        'Bancha.scaffold.form.override.Panel'
+                    ]);
                     column.editor = Ext.form.Panel.buildFieldConfig(field, config.formConfig, validations, true);
 
                     // now make custom field transforms
@@ -2279,7 +2311,10 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 var columns = [],
                     model = config.target,
                     me = this,
-                    validations, button;
+                    fieldNames,
+                    fields,
+                    validations,
+                    button;
 
                 if(!Ext.isArray(config.exclude)) {
                     //<debug>
@@ -2295,13 +2330,16 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                     config.exclude = [];
                 }
 
+                // if there is a fields config, use this for ordering
+                fieldNames = config.fields || model.prototype.fields.keys;
+
                 // build all columns
+                fields = model.prototype.fields;
                 validations = model.prototype.validations;
-                model.prototype.fields.each(function (field) {
-                    if((!Ext.isArray(config.fields) || Ext.Array.indexOf(config.fields, field.name) !== -1) &&
-                        Ext.Array.indexOf(config.exclude, field.name) === -1) {
+                Ext.each(fieldNames, function(fieldName) {
+                    if(Ext.Array.indexOf(config.exclude, fields.getByKey(fieldName).name) === -1) { // if not excluded
                         columns.push(
-                            me.buildColumnConfig(field, config, validations, gridListeners));
+                            me.buildColumnConfig(fields.getByKey(fieldName), config, validations, gridListeners));
                     }
                 });
 
@@ -2428,7 +2466,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
  * @since         Bancha Scaffold v 0.5.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @author        Roland Schuetz <mail@rolandschuetz.at>
- * @version       Bancha Scaffold v 1.0.4
+ * @version       Bancha Scaffold v 1.0.5
  *
  * For more information go to http://scaffold.banchaproject.org
  */
