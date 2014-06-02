@@ -269,6 +269,10 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 // add an editor
                 if(config.editable) {
                     // build the editor field
+                    Ext.syncRequire([
+                        'Ext.form.Panel',
+                        'Bancha.scaffold.form.override.Panel'
+                    ]);
                     column.editor = Ext.form.Panel.buildFieldConfig(field, config.formConfig, validations, true);
 
                     // now make custom field transforms
