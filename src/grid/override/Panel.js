@@ -128,7 +128,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
     // add scaffolding support
     Ext.override(Ext.grid.Panel, {
         initComponent: function () {
-            var isModel, cls, config;
+            var isModel, config;
 
             if(this.scaffold) {
                 // check is the scaffold config is a model class or string
@@ -142,8 +142,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 }
 
                 // apply scaffolding
-                cls = Ext.ClassManager.getClass(this); //buildConfig is a static method
-                config = cls.buildConfig(this.scaffold, this.initialConfig);
+                config = Ext.grid.Panel.buildConfig(this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }

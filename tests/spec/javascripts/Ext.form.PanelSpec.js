@@ -502,4 +502,21 @@ describe("Ext.form.Panel scaffold extension tests",function() {
         expect(panel.getDockedItems()[0].items.items[2].handler).toEqual(onSave);
     });
 
+    it("should be cleanly subclassable", function() {
+        // prepare
+        model('MyTest.model.FormPanelSubclassingTestModel');
+
+        Ext.define('Bancha.scaffold.test.FormPanel', {
+            extend: 'Ext.form.Panel',
+            scaffold: 'MyTest.model.FormPanelSubclassingTestModel'
+        });
+
+        // try subclassing
+        var panel = Ext.create('Bancha.scaffold.test.FormPanel', {});
+
+        // since this function is using #buildConfig,
+        // just test that it is applied and no error was raised
+
+        expect(panel).property('items.items.length').toEqual(8);
+    });
 });

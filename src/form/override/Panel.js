@@ -146,7 +146,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
          * @private
          */
         initComponent: function () {
-            var isModel, cls, config;
+            var isModel, config;
 
             if(this.scaffold) {
                 // check if the scaffold config is a model class or string
@@ -160,8 +160,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 }
 
                 // apply scaffolding
-                cls = Ext.ClassManager.getClass(this); //buildConfig is a static method
-                config = cls.buildConfig(this.scaffold, this.initialConfig);
+                config = Ext.form.Panel.buildConfig(this.scaffold, this.initialConfig);
                 Ext.apply(this, config);
                 Ext.apply(this.initialConfig, config);
             }

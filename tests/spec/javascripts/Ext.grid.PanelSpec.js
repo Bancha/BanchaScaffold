@@ -645,6 +645,24 @@ describe("Ext.grid.Panel scaffold extension tests",function() {
 		expect(toolbar).property('items.items.3.handler').toEqual(onSave);
 	});
 
+    it("should be cleanly subclassable", function() {
+        // prepare
+        model('MyTest.model.GridPanelSubclassingTestModel');
+
+        Ext.define('Bancha.scaffold.test.GridPanel', {
+            extend: 'Ext.grid.Panel',
+            scaffold: 'MyTest.model.GridPanelSubclassingTestModel'
+        });
+
+        // try subclassing
+        var panel = Ext.create('Bancha.scaffold.test.GridPanel', {});
+
+        // since this function is using #buildConfig,
+        // just test that it is applied and no error was raised
+
+        expect(panel).property('columns.length').toEqual(9); // 8 columns + destroy column
+    });
+
     it('Tear down function, since jasmin doesn\' provide a after suite function', function() {
         Bancha.scaffold.grid.Config.setDefault('storeDefaults', {
             autoLoad: true // reset
