@@ -45,7 +45,7 @@ Ext.define('Bancha.model.Article', {
         }
     },
     idProperty:'id',
-    fields:[
+    fields: [
         {
             name:'id',
             type:'int'
@@ -67,7 +67,7 @@ Ext.define('Bancha.model.Article', {
             type:'int'
         }
     ],
-    validations:[
+    validations: [
         {
             type:'presence',
             field:'title'
@@ -76,7 +76,7 @@ Ext.define('Bancha.model.Article', {
             field:'user_id'
         }
     ],
-    associations:[
+    associations: [
         {
             type:'belongsTo',
             model:'Bancha.model.User',
@@ -229,7 +229,7 @@ Ext.define('Bancha.model.Book', {
             type:'int'
         }
     ],
-    validations:[
+    validations: [
         {
             type:'presence',
             field:'title'
@@ -238,7 +238,7 @@ Ext.define('Bancha.model.Book', {
             field:'user_id'
         }
     ],
-    associations:[
+    associations: [
         {
             type:'belongsTo',
             model:'Bancha.model.User',
