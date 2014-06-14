@@ -191,10 +191,10 @@ Ext.define('Bancha.scaffold.Util', {
      * @param {Ext.data.Model} model The model to look through
      * @return {String} The most accurate field name
      */
-    getDisplayFieldName: function(model) { // Connect with CakePHP
-        // if defined use the display field config
-        if(Ext.isString(model.displayField)) {
-            return model.displayField;
+    getDisplayFieldName: function(model) {
+        // if defined use the display field config (when using CakePHP)
+        if(model.getDisplayField && model.getDisplayField()) {
+            return model.getDisplayField();
         }
 
         // get the field names
