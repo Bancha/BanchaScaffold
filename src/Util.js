@@ -160,8 +160,8 @@ Ext.define('Bancha.scaffold.Util', {
      */
     isModel: function(classOrClassName) {
         try {
-            this.getModel(classOrClassName);
-            return true;
+            // some errors are jsut thrown in debug mode, so check return value
+            return !!this.getModel(classOrClassName);
         } catch(e) {
             return false;
         }
@@ -181,7 +181,7 @@ Ext.define('Bancha.scaffold.Util', {
         if(!className) {
             Ext.Error.raise('No model given to Bancha.scaffold.Util.getModel("' + className + '").');
         }
-        if(Ext.versions.extjs.major===4) {
+        if(Ext.versions.extjs.major === 4) {
             // Ext JS 4
             model = Ext.ModelManager.getModel(className);
             if(!model) {
