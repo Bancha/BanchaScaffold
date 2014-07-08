@@ -79,5 +79,135 @@ describe("Ext.form.Panel unit tests",function() {
         });
     });
 
+    it("should add all format properties to all datefield configs, which are created for an form panel", function() {
+        // prepare
+        model('MyTest.model.FormConfigDateFieldTest');
+
+        // check that all default values are added, as well as name and label
+        var config = Ext.create('Bancha.scaffold.form.Config', {
+            target: 'MyTest.model.FormConfigDateFieldTest'
+        });
+        var field = Ext.create('Ext.data.Field', {
+            type: 'date',
+            name: 'someName',
+            dateFormat: 'Y-m-d H:i:s'
+        });
+        expect(panel.buildFieldConfig(field, config)).toEqual({
+            xtype : 'datefield',
+            fieldLabel: 'Some name',
+            name: 'someName',
+            format: 'Y-m-d H:i:s'
+        });
+    });
+
+    it("should allow the user to change the datefield format and only enforce read and write formats", function() {
+        // prepare
+        model('MyTest.model.FormConfigDateFieldTest2');
+
+        // check that all default values are added, as well as name and label
+        var config = Ext.create('Bancha.scaffold.form.Config', {
+            target: 'MyTest.model.FormConfigDateFieldTest',
+            datefieldDefaults: {
+                format: 'd.m.Y'
+            }
+        });
+        var field = Ext.create('Ext.data.Field', {
+            type: 'date',
+            name: 'someName',
+            dateFormat: 'Y-m-d H:i:s'
+        });
+        expect(panel.buildFieldConfig(field, config)).toEqual({
+            xtype : 'datefield',
+            fieldLabel: 'Some name',
+            name: 'someName',
+            format: 'd.m.Y',
+            altFormats: 'm/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j|Y-m-d H:i:s',
+            submitFormat: 'Y-m-d H:i:s'
+        });
+    });
+
+    // some form-sepcific helper functions
+    var defaultConfig = Bancha.scaffold.form.Config.prototype,
+        getButtonConfig = function(id) {
+        return [{
+            iconCls: 'icon-reset',
+            text: 'Reset',
+            scope: panel.buildButtonScope(id),
+            handler: defaultConfig.onReset
+        }, {
+            iconCls: 'icon-save',
+            text: 'Save',
+            formBind: true,
+            scope: panel.buildButtonScope(id),
+            handler: defaultConfig.onSave
+        }];
+    };
+
+    var getSimpleFormExpectation = function(modelName,config) {
+        return Ext.apply({
+            id: modelName+'-id', // forced
+            // configs for BasicForm
+            api: {
+                // The server-side method to call for load() requests
+                load: BanchaScaffoldSpecHelper.sampleModelData.proxy.api.read
+            },
+            paramOrder : [ 'data' ],
+            items: [{
+                xtype: 'hiddenfield',
+                allowDecimals : false,
+                name: 'id',
+                fieldLabel: 'Id',
+                decimalPrecision: 0
+            },{
+                xtype: 'textfield',
+                name: 'name',
+                fieldLabel: 'Name',
+                allowBlank: false,
+                minLength: 2,
+                maxLength: 64
+            },{
+                xtype: 'textfield',
+                name: 'login',
+                fieldLabel: 'Login'
+            },{
+                xtype: 'datefield',
+                name: 'created',
+                fieldLabel: 'Created',
+                format: 'Y-m-d H:i:s'
+            },{
+                xtype: 'textfield',
+                name: 'email',
+                fieldLabel: 'Email'
+            }, {
+                xtype: 'textfield', // an fileuploadfield is recognized through validation rules
+                name: 'avatar',
+                fieldLabel: 'Avatar'
+            }, {
+                xtype: 'numberfield',
+                name: 'weight',
+                fieldLabel: 'Weight'
+            }, {
+                xtype: 'numberfield',
+                allowDecimals : false,
+                name: 'height',
+                fieldLabel: 'Height'
+            }],
+            buttons: getButtonConfig(modelName+'-id')
+        },config);
+    }; // eo getSimpleFormExpected
+
+    it("should build a form config, where it recognizes the type from the field type, when no "+
+        "validation rules are set in the model (component test)", function() {
+        // prepare
+        model('MyTest.model.FormConfigTest');
+
+        var config = Ext.create('Bancha.scaffold.form.Config', {
+            target: 'MyTest.model.FormConfigTest'
+        });
+
+        expect(panel.buildConfig(config, {
+            id: 'MyTest.model.FormConfigTest-id'
+        })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTest'));
+    });
 
 });
