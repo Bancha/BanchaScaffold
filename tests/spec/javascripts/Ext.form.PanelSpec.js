@@ -156,7 +156,8 @@ describe("Ext.form.Panel unit tests",function() {
                 xtype: 'hiddenfield',
                 allowDecimals : false,
                 name: 'id',
-                fieldLabel: 'Id'
+                fieldLabel: 'Id',
+                decimalPrecision: 0
             },{
                 xtype: 'textfield',
                 name: 'name',
@@ -346,7 +347,8 @@ describe("Ext.form.Panel unit tests",function() {
             }, {
                 xtype: 'numberfield',
                 fieldLabel: 'Weight',
-                name: 'weight'
+                name: 'weight',
+                decimalPrecision: 2
             }, {
                 xtype: 'numberfield',
                 allowDecimals: false,
