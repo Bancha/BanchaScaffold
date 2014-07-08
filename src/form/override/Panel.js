@@ -383,9 +383,9 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             if (Ext.isString(rule._extension)) {
                                 rule._extension = [rule._extension];
                             }
-                            if (Ext.isArray(rule.extension) || Ext.isArray(rule._extension)) {
+                            if (Ext.isArray(rule.extension) || Ext.isArray(rule._extension)) {
                                 field.vtype = 'fileExtension';
-                                field.validExtensions = rule.extension || rule._extension;
+                                field.validExtensions = rule.extension || rule._extension;
                             }
                             break;
                         default:
