@@ -1,5 +1,6 @@
 [![Bancha Scaffold - Easy Prototyping](http://files.banchaproject.org/tl_files/Bancha/images/bancha-scaffold/bancha-scaffold-claim.jpg)](http://scaffold.bancha.io/)
 
+[![Build Status](https://travis-ci.org/Bancha/Bancha.png)](https://travis-ci.org/Bancha/BanchaScaffold)
 
 Bancha Scaffolding Library
 =========================
