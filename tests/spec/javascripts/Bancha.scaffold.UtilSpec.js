@@ -160,8 +160,8 @@ describe("Bancha.scaffold.Util tests",function() {
 
     it("should return a model given when calling getModel, given a model or model name", function() {
         // return null if model doesn't exist
-        expect(util.getModel.bind(util, null)).toThrow();
-        expect(util.getModel.bind(util, 'RANDOM_NONSENSE')).toThrow();
+        expect(Ext.Function.bind(util.getModel, util, [null])).toThrow();
+        expect(Ext.Function.bind(util.getModel, util, ['RANDOM_NONSENSE'])).toThrow();
 
         // return the class is a model is given
         Ext.define('Bancha.model.UtilSpecTestModel2', {
@@ -173,8 +173,8 @@ describe("Bancha.scaffold.Util tests",function() {
         // return null if a class, but not a model
         Ext.define('Bancha.model.UtilSpecTestClass2', {
         });
-        expect(util.getModel.bind(util, 'Bancha.model.UtilSpecTestClass2')).toThrow();
-        expect(util.getModel.bind(util, Bancha.model.UtilSpecTestClass2)).toThrow();
+        expect(Ext.Function.bind(util.getModel, util, ['Bancha.model.UtilSpecTestClass2'])).toThrow();
+        expect(Ext.Function.bind(util.getModel, util, [Bancha.model.UtilSpecTestClass2])).toThrow();
     });
 
 });
