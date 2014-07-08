@@ -67,6 +67,9 @@ Ext.define('Bancha.scaffold.form.Config', {
         modelName = config.target;
         modelName = Ext.isString(modelName) ? modelName : Ext.ClassManager.getName(modelName);
 
+        // make sure it's loaded
+        Ext.syncRequire(modelName);
+
         //<debug>
         if (!Bancha.scaffold.Util.getModel(modelName)) {
             Ext.Error.raise({
