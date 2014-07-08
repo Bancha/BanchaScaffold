@@ -200,7 +200,7 @@ describe("Ext.form.Panel unit tests",function() {
         "validation rules are set in the model (component test)", function() {
         // prepare
         model('MyTest.model.FormConfigTest');
-
+try {
         var config = Ext.create('Bancha.scaffold.form.Config', {
             target: 'MyTest.model.FormConfigTest'
         });
@@ -208,6 +208,9 @@ describe("Ext.form.Panel unit tests",function() {
         expect(panel.buildConfig(config, {
             id: 'MyTest.model.FormConfigTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTest'));
+    } catch(e) {
+        console.error(e);
+    }
     });
 
 });
