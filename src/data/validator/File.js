@@ -25,6 +25,8 @@ if(Ext.versions.extjs.major === 4) {
 }
 
 /**
+ * For Ext JS 5 only, for Ext JS 4 see {@class Ext.data.validations}.
+ *
  * Validates that the filename is one of given {@link #extension}.
  */
 Ext.define('Bancha.scaffold.data.validator.File', {

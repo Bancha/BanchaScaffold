@@ -70,8 +70,6 @@ Ext.define('Bancha.scaffold.data.override.Validations', {
      * Bancha extends Ext.data.validations with two new validation rules:
      * *range* and *file*.
      *
-     * These custom validations are mapped from CakePHP.
-     *
      * @author Roland Schuetz <mail@rolandschuetz.at>
      * @docauthor Roland Schuetz <mail@rolandschuetz.at>
      */
