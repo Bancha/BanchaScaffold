@@ -369,6 +369,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                 if (Ext.isDefined(rule._max)) {
                                     field.maxValue = rule._max;
                                 }
+                                console.error(Ext.encode(rule));
                                 if (Ext.isDefined(rule._precision)) {
                                     field.decimalPrecision = rule._precision;
                                 }
