@@ -4,7 +4,7 @@
 Bancha Scaffolding Library
 =========================
 
-Bancha Scaffold helps you easily prototype Ext.grid.Panel's and Ext.form.Panel's in Ext JS 4, helping you creating beautiful prototypes in minutes. And it it completly free and open source!
+Bancha Scaffold helps you easily prototype Ext.grid.Panel's and Ext.form.Panel's in Ext JS 4 and 5, helping you creating beautiful prototypes in minutes. And it it completly free and open source!
 
 Features
 --------
