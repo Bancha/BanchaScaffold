@@ -285,11 +285,11 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                     field.maxLength = rule.max;
                                 }
                                 // Ext JS 5
-                                if (Ext.isDefined(rule._min)) {
-                                    field.minLength = rule._min;
+                                if (rule.getMin && Ext.isDefined(rule.getMin())) {
+                                    field.minLength = rule.getMin();
                                 }
-                                if (Ext.isDefined(rule._max)) {
-                                    field.maxLength = rule._max;
+                                if (rule.getMax && Ext.isDefined(rule.getMax())) {
+                                    field.maxLength = rule.getMax();
                                 }
                             }
                             break;
@@ -363,15 +363,14 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                                     field.decimalPrecision = rule.precision;
                                 }
                                 // Ext JS 5
-                                if (Ext.isDefined(rule._min)) {
-                                    field.minValue = rule._min;
+                                if (rule.getMin && Ext.isDefined(rule.getMin())) {
+                                    field.minValue = rule.getMin();
                                 }
-                                if (Ext.isDefined(rule._max)) {
-                                    field.maxValue = rule._max;
+                                if (rule.getMax && Ext.isDefined(rule.getMax())) {
+                                    field.maxValue = rule.getMax();
                                 }
-                                console.error(Ext.encode(rule));
-                                if (Ext.isDefined(rule._precision)) {
-                                    field.decimalPrecision = rule._precision;
+                                if (rule.getPrecision && Ext.isDefined(rule.getPrecision())) {
+                                    field.decimalPrecision = rule.getPrecision();
                                 }
                             }
                             break;
@@ -381,15 +380,13 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                             Ext.apply(field, config.fileuploadfieldDefaults);
 
                             // add validation rules
-                            if (Ext.isString(rule.extension)) {
-                                rule.extension = [rule.extension];
+                            var extension = rule.getExtension ? rule.getExtension() : rule.extension;
+                            if (Ext.isString(extension)) {
+                                extension = [extension];
                             }
-                            if (Ext.isString(rule._extension)) {
-                                rule._extension = [rule._extension];
-                            }
-                            if (Ext.isArray(rule.extension) || Ext.isArray(rule._extension)) {
+                            if (Ext.isArray(extension)) {
                                 field.vtype = 'fileExtension';
-                                field.validExtensions = rule.extension || rule._extension;
+                                field.validExtensions = extension;
                             }
                             break;
                         default:
