@@ -19,15 +19,6 @@
  * For more information go to http://scaffold.bancha.io
  */
 
-if(Ext.versions.major === 5) {
-    Ext.define('Bancha.tests.model.Post', {
-        extend: 'Ext.data.Model'
-    });
-    Ext.define('Bancha.tests.model.Country', {
-        extend: 'Ext.data.Model'
-    });
-}
-
 /** helpers */
 BanchaScaffoldSpecHelper = {
     sampleModelData: {
@@ -50,8 +41,8 @@ BanchaScaffoldSpecHelper = {
             {name:'height', type:'int'}
         ],
         associations: [
-            {type:'hasMany', model:'Bancha.tests.model.Post', name:'posts'},
-            {type:'belongsTo', model:'Bancha.tests.model.Country', name:'country'}
+            {type:'hasMany', model:'Post', name:'posts'},
+            {type:'belongsTo', model:'Country', name:'country'}
         ],
         validations: [
             { type:"range", field:"id", precision:0},
@@ -65,7 +56,7 @@ BanchaScaffoldSpecHelper = {
         }]
     },
     getSampleModel: function(name,/*optional*/config) {
-        return Ext.define(name, Ext.applyIf(config || {}, BanchaScaffoldSpecHelper.sampleModelData));
+        return Ext.define(name, Ext.applyIf(config || {}, Ext.clone(BanchaScaffoldSpecHelper.sampleModelData)));
     }
 };
 
