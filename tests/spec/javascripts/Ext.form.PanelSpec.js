@@ -205,6 +205,10 @@ try {
             target: 'MyTest.model.FormConfigTest'
         });
 
+        console.info('result:'+Ext.encode(panel.buildConfig(config, {
+            id: 'MyTest.model.FormConfigTest-id'
+        })));
+        console.info('expected:'+getSimpleFormExpectation('MyTest.model.FormConfigTest'));
         expect(panel.buildConfig(config, {
             id: 'MyTest.model.FormConfigTest-id'
         })).toEqualConfig(getSimpleFormExpectation('MyTest.model.FormConfigTest'));
