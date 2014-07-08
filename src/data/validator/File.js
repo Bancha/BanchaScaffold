@@ -18,6 +18,12 @@
  */
 
 // This code below is a copy from the Bancha package!
+
+// Fake missing classes for production
+if(Ext.versions.extjs.major === 4) {
+    Ext.define('Ext.data.validator.Validator', {});
+}
+
 /**
  * Validates that the filename is one of given {@link #extension}.
  */

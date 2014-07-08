@@ -159,12 +159,23 @@ Ext.define('Bancha.scaffold.Util', {
      * @returns {boolen}
      */
     isModel: function(classOrClassName) {
-        try {
-            // some errors are jsut thrown in debug mode, so check return value
-            return !!this.getModel(classOrClassName);
-        } catch(e) {
+        var className = Ext.isString(classOrClassName) ? classOrClassName : Ext.ClassManager.getName(classOrClassName),
+            model = false;
+        if(!className) {
             return false;
         }
+        if(Ext.versions.extjs.major === 4) {
+            // Ext JS 4
+            return !!Ext.ModelManager.getModel(className);
+        }
+        // Ext JS 5
+        var handle = Ext.Error.handle;
+        Ext.Error.handle = Ext.emptyFn;
+        try {
+            model = Ext.data.schema.Schema.lookupEntity(className);
+        } catch(e) {}
+        Ext.Error.handle = handle;
+        return model;
     },
 
     /**

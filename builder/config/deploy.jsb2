@@ -11,6 +11,14 @@
             path: '../../src/data/override/'
         },
         {
+            text: 'File.js',
+            path: '../../src/data/validator/'
+        },
+        {
+            text: 'Validators.js',
+            path: '../../src/data/'
+        },
+        {
             text: 'VTypes.js',
             path: '../../src/form/field/override/'
         },

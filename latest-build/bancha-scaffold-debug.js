@@ -152,6 +152,164 @@ Ext.define('Bancha.scaffold.data.override.Validations', {
         }
     }); //eo apply
 });
+/*!
+ *
+ * Bancha Scaffolding Library
+ * Copyright 2011-2014 codeQ e.U.
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @package       Bancha.scaffold
+ * @copyright     Copyright 2011-2014 codeQ e.U.
+ * @link          http://scaffold.bancha.io
+ * @since         Bancha Scaffold v 0.3.0
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @author        Roland Schuetz <mail@rolandschuetz.at>
+ * @version       Bancha Scaffold v 2.0.0
+ *
+ * For more information go to http://scaffold.bancha.io
+ */
+
+// This code below is a copy from the Bancha package!
+/**
+ * Validates that the filename is one of given {@link #extension}.
+ */
+Ext.define('Bancha.scaffold.data.validator.File', {
+    extend: 'Ext.data.validator.Validator',
+    alias: 'data.validator.file',
+    alternateClassName: [
+        'Bancha.data.validator.File' // Bancha.Scaffold uses the same class
+    ],
+    
+    type: 'file',
+    
+    config: {
+        /**
+         * @cfg {String} message
+         * The error message to return when the value is not a valid email
+         */
+        message: 'is not a valid file',
+        /**
+         * @cfg {Array} extensions
+         * The allowed filename extensions.
+         */
+        extensions: [],
+        /**
+         * @cfg {Array} extension
+         * @deprecated Please use #extensions instead
+         * Backwards compatibility with Bancha before 2.3
+         */
+        extension: false
+    },
+
+    /**
+     * Validates that the given filename is of the configured extension. Also validates
+     * if no extension are defined and empty values.
+     * 
+     * @param {Object} value The value
+     * @param {Ext.data.Model} record The record
+     * @return {Boolean/String} `true` if the value is valid. A string may be returned if the value 
+     * is not valid, to indicate an error message. Any other non `true` value indicates the value
+     * is not valid.
+     */
+    validate: function(filename, record) {
+        var validExtensions = this.getExtension() || this.getExtensions();
+        if(!filename) {
+            return true; // no file defined (emtpy string or undefined)
+        }
+        if(!Ext.isDefined(validExtensions)) {
+            return true;
+        }
+        var ext = filename.split('.').pop();
+        return Ext.Array.contains(validExtensions,ext) || this.getMessage();
+    }
+});
+/*!
+ *
+ * Bancha Scaffolding Library
+ * Copyright 2011-2014 codeQ e.U.
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @package       Bancha.scaffold
+ * @copyright     Copyright 2011-2014 codeQ e.U.
+ * @link          http://scaffold.bancha.io
+ * @since         Bancha Scaffold v 0.3.0
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @author        Roland Schuetz <mail@rolandschuetz.at>
+ * @version       Bancha Scaffold v 2.0.0
+ *
+ * For more information go to http://scaffold.bancha.io
+ */
+
+// This code below is a copy from the Bancha package!
+
+/**
+ * @private
+ * @class Bancha.scaffold.data.Validators
+ *
+ * For Ext JS 5 it adds a File validation class,
+ * for Ext JS 4 and Sencha Touch it adds a range and 
+ * file validation rule to Ext.data.validations.
+ *
+ * @author Roland Schuetz <mail@rolandschuetz.at>
+ * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+ */
+Ext.define('Bancha.scaffold.data.Validators', {
+    alternateClassName: [
+        'Bancha.data.Validators' // Bancha.Scaffold uses the same class
+    ]
+}, function() {
+
+    //<if ext>
+    if(Ext.versions.extjs && Ext.versions.extjs.major === 5) {
+        // Ext JS 5 doesn't have a validations class anymore, 
+        // so use the range validator and add a file validator
+        Ext.syncRequire('Bancha.scaffold.data.validator.File');
+
+        /**
+         * Fixes issues with the current Range validator
+         *
+         * See http://www.sencha.com/forum/showthread.php?288168
+         * 
+         * @author Roland Schuetz <mail@rolandschuetz.at>
+         * @docauthor Roland Schuetz <mail@rolandschuetz.at>
+         */
+        Ext.define('Ext.data.validator.override.Bound', {
+            override: 'Ext.data.validator.Bound',
+            config: {
+                /**
+                 * @cfg {String} nanMessage
+                 * The error message to return when the value is not a number.
+                 */
+                nanMessage: 'Must be a number'
+            },
+            validate: function(value) {
+                if(isNaN(this.getValue(value))) {
+                    return this._nanMessage;
+                }
+                return this.callParent(arguments);
+            },
+            getValue: function(value) {
+                return parseFloat(value);
+            }
+        });
+        Ext.define('Ext.data.validator.override.Range', {
+            override: 'Ext.data.validator.Range'
+        }, function() {
+            // for some reason setting via config doesn't work
+            this.prototype.setNanMessage('Must be a number');
+        });
+
+    } else {
+    //</if>
+        Ext.syncRequire('Bancha.scaffold.data.override.Validations');
+    //<if ext>
+    }
+    //</if>
+});
 /*
  *
  * Bancha Scaffolding Library
