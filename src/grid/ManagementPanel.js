@@ -19,6 +19,8 @@
 
 /**
  * @class Bancha.scaffold.grid.ManagementPanel
+ * @extends Ext.tab.Panel
+ * 
  * **This is only available inside Ext JS.**
  *
  * This will create a TabPanel with one tab per model.

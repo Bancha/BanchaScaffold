@@ -23,6 +23,8 @@
  * @private
  * @class Bancha.scaffold.data.Validators
  *
+ * This class adds additional validation rules used by Bancha.
+ * 
  * For Ext JS 5 it adds a File validation class,
  * for Ext JS 4 and Sencha Touch it adds a range and 
  * file validation rule to Ext.data.validations.
@@ -43,6 +45,9 @@ Ext.define('Bancha.scaffold.data.Validators', {
         Ext.syncRequire('Bancha.scaffold.data.validator.File');
 
         /**
+         * @private
+         * @class Bancha.data.validator.override.Bound
+         * 
          * Fixes issues with the current Range validator
          *
          * See http://www.sencha.com/forum/showthread.php?288168
@@ -50,8 +55,19 @@ Ext.define('Bancha.scaffold.data.Validators', {
          * @author Roland Schuetz <mail@rolandschuetz.at>
          * @docauthor Roland Schuetz <mail@rolandschuetz.at>
          */
-        Ext.define('Ext.data.validator.override.Bound', {
+        Ext.define('Bancha.data.validator.override.Bound', {
             override: 'Ext.data.validator.Bound',
+            /**
+             * @class Ext.data.validator.Bound
+             *
+             * To normalize the CakePHP, Ext JS 4 and Ext JS 5 validation
+             * handling Bancha adds an additional check to the Ext JS 5
+             * Bound validation rules.
+             *
+             * The effect is that non-numeric values are invalid using
+             * the Range validation rule. For the error message an 
+             * additional config is introduced.
+             */
             config: {
                 /**
                  * @cfg {String} nanMessage
