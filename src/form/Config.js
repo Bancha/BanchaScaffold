@@ -285,6 +285,7 @@ Ext.define('Bancha.scaffold.form.Config', {
      * To change the default scaffolding behaviour just replace this function.
      *
      * The arguments are:
+     * 
      *  - this: The scope described below
      *  - success: True if successfully saved
      *  - action: The request action
