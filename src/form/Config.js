@@ -248,21 +248,57 @@ Ext.define('Bancha.scaffold.form.Config', {
      *  - this.getForm() to get the basic form
      */
     onSave: function () {
-        var form = this.getForm(),
-            msg;
-        if (form.isValid()) {
-            msg = form.hasUpload() ? 'Uploading files...' : 'Saving data..';
-            form.submit({
-                waitMsg: msg,
-                success: function (form, action) {
-                    Ext.MessageBox.alert('Success', action.result.msg || 'Successfully saved data.');
-                },
-                failure: function (form, action) {
+        var me = this,
+            form = me.getForm(),
+            config = me.getPanel().scaffold;
+
+        form.submit({
+            waitMsg: form.hasUpload() ? 'Uploading files...' : 'Saving data..',
+            success: function (form, action) {
+                Ext.MessageBox.alert('Success', action.result.msg || 'Successfully saved data.');
+
+                // load result as record into form
+                var rec = Ext.create(config.target.getName(), action.result.data);
+                form.loadRecord(rec);
+
+                if(config.onSaved) {
+                    config.onSaved.call(me, me, true, action);
+                }
+            },
+            failure: function (form, action) {
+                if(action.result.msg || !action.result.errors) {
+                    // if there is a server-side message or no server-side validation errors are send,
+                    // show a warning alert. Otherwise the errors are rendered in the form and no alert
+                    // is necessary.
                     Ext.MessageBox.alert('Failed', action.result.msg || 'Could not save data, unknown error.');
                 }
-            });
-        }
+
+                if(config.onSaved) {
+                    config.onSaved.call(me, me, false, action);
+                }
+            }
+        });
     },
+    /**
+     * @cfg
+     * Editable function to be called when the record was saved to the server.
+     * To change the default scaffolding behaviour just replace this function.
+     *
+     * The arguments are:
+     *  - this: The scope described below
+     *  - success: True if successfully saved
+     *  - action: The request action
+     *  
+     * The default scope provides two functions:
+     *
+     *  - this.getPanel() to get the form panel
+     *  - this.getForm() to get the basic form
+     *
+     * Note: 
+     * This function is called by onSave, so if you override onSave this function
+     * might note be called anymore.
+     */
+    onSaved: Ext.emptyFn,
     /**
      * @cfg
      * Editable function to be called when the reset button is pressed.
@@ -382,7 +418,7 @@ Ext.define('Bancha.scaffold.form.Config', {
     beforeBuild: function (model, config, initialPanelConfig) {},
     /**
      * @cfg {Function}
-     * This function will be executed after acaffolding as interceptor.
+     * This function will be executed after scaffolding as interceptor.
      * @param {Object} formConfig the just build form panel config
      * @param {Ext.data.Model} model the model used for scaffolding
      * @param {Bancha.scaffold.form.Config} config the scaffold full config for this call
