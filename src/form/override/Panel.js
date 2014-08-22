@@ -625,6 +625,7 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                     model = Bancha.scaffold.Util.getModel(config.target),
                     me = this,
                     formConfig,
+                    prototypeFieldKeys,
                     fieldNames,
                     validations,
                     isExtJS5,
@@ -646,9 +647,12 @@ Ext.define('Bancha.scaffold.form.override.Panel', {
                 // build initial config
                 formConfig = config.beforeBuild(model, config, initialPanelConfig) || {};
 
+                // in Firefox fields.keys is a native function with Ext JS 4
+                prototypeFieldKeys = typeof model.prototype.fields.keys === 'function' ? false : model.prototype.fields.keys;
+
                 // if there is a fields config, use this for ordering
                 // Otherwise use fields.keys for Sencha Touch and Ext JS 4
-                fieldNames = config.fields || model.prototype.fields.keys || Ext.Object.getKeys(model.fieldsMap);
+                fieldNames = config.fields || prototypeFieldKeys || Ext.Object.getKeys(model.fieldsMap);
 
                 // build all columns
                 validations = model.prototype.validations || model.validators; // ST & Ext JS 4 || Ext JS 5

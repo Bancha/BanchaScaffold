@@ -312,6 +312,7 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                 var columns = [],
                     model = config.target,
                     me = this,
+                    prototypeFieldKeys,
                     fieldNames,
                     validations,
                     isExtJS5,
@@ -331,9 +332,12 @@ Ext.define('Bancha.scaffold.grid.override.Panel', {
                     config.exclude = [];
                 }
 
+                // in Firefox fields.keys is a native function with Ext JS 4
+                prototypeFieldKeys = typeof model.prototype.fields.keys === 'function' ? false : model.prototype.fields.keys;
+
                 // if there is a fields config, use this for ordering
                 // Otherwise use fields.keys for Sencha Touch and Ext JS 4
-                fieldNames = config.fields || model.prototype.fields.keys || Ext.Object.getKeys(model.fieldsMap);
+                fieldNames = config.fields || prototypeFieldKeys || Ext.Object.getKeys(model.fieldsMap);
 
                 // build all columns
                 validations = model.prototype.validations || model.validators; // ST & Ext JS 4 || Ext JS 5
