@@ -378,7 +378,7 @@ Ext.define('Bancha.scaffold.grid.Config', {
         // for before-Ext JS 4.1 the callbacks will be ignored,
         // since they were added in 4.1
         store.sync({
-            success: function (record, operation) {
+            success: function (batch, options) {
                 Ext.MessageBox.show({
                     title: displayName + ' record deleted',
                     msg: displayName + ' record was successfully deleted.',
@@ -386,15 +386,20 @@ Ext.define('Bancha.scaffold.grid.Config', {
                     buttons: Ext.Msg.OK
                 });
             },
-            failure: function (record, operation) {
+            failure: function (batch, options) {
 
                 // since it couldn't be deleted, add again
                 store.add(rec);
 
+                var msg = displayName + ' record could not be deleted.';
+                if(batch.getOperations()[0].getError()) {
+                    msg = batch.getOperations()[0].getError();
+                }
+
                 // inform user
                 Ext.MessageBox.show({
                     title: displayName + ' record could not be deleted',
-                    msg: operation.getError() || (displayName + ' record could not be deleted.'),
+                    msg: msg,
                     icon: Ext.MessageBox.ERROR,
                     buttons: Ext.Msg.OK
                 });
