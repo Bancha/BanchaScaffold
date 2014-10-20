@@ -14,6 +14,15 @@
       alert('Please copy the Ext JS 4 or 5 library into tests/lib/ext-all-debug-w-comments.js');
       console.info('Please copy the Ext JS 4 or 5library into tests/lib/ext-all-debug-w-comments.js');
     }
+
+    // fake some shim classes
+    if(Ext.versions.extjs.major === 5) {
+      Ext.define('Ext.data.validations', {});
+    } else {
+      Ext.define('Ext.data.validator.Validator', {});
+      Ext.define('Ext.data.validator.Bound', {});
+      Ext.define('Ext.data.validator.Range', {});
+    }
   </script>
 
   <script type="text/javascript" src="../src/data/override/Validations.js"></script>
